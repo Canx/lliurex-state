@@ -468,7 +468,7 @@
                 let componentsHTML = '';
                 for (const [compName, compData] of Object.entries(components)) {
                     componentsHTML += `
-                        <div class="component-card">
+                        <div class="component-card" id="component-${compName}">
                             <h3>📁 ${compName}</h3>
                             <div class="component-stats">
                                 <div class="component-stat">
@@ -480,16 +480,38 @@
                                     <span class="component-stat-value">${formatSize(compData.total_size || 0)}</span>
                                 </div>
                             </div>
-                            ${createPackageTable(
-                                compData.packages ||
-                                compData.latest_packages ||
-                                (compData.packages_dict ? Object.values(compData.packages_dict) : []),
-                                compName
-                            )}
+                            <div class="loading">Cargando paquetes...</div>
                         </div>`;
                 }
 
                 document.getElementById('components').innerHTML = componentsHTML;
+
+                // Load full package lists from separate files
+                for (const [compName, compData] of Object.entries(components)) {
+                    try {
+                        const packagesFile = `packages_${version}_${compName}.json`;
+                        const packagesRes = await fetch(packagesFile);
+                        if (packagesRes.ok) {
+                            const packages = await packagesRes.json();
+                            const componentDiv = document.getElementById(`component-${compName}`);
+                            const loadingDiv = componentDiv.querySelector('.loading');
+                            loadingDiv.outerHTML = createPackageTable(packages, compName);
+                        } else {
+                            // Fallback to latest_packages if separate file not available
+                            const componentDiv = document.getElementById(`component-${compName}`);
+                            const loadingDiv = componentDiv.querySelector('.loading');
+                            loadingDiv.outerHTML = createPackageTable(
+                                compData.latest_packages || [],
+                                compName
+                            );
+                        }
+                    } catch (e) {
+                        console.warn(`Could not load packages for ${compName}:`, e);
+                        const componentDiv = document.getElementById(`component-${compName}`);
+                        const loadingDiv = componentDiv.querySelector('.loading');
+                        loadingDiv.outerHTML = '<p style="color: #999;">No se pudieron cargar los paquetes</p>';
+                    }
+                }
 
                 // Show content
                 document.getElementById('loading').style.display = 'none';

@@ -237,13 +237,25 @@ def get_package_summary(packages: List[Dict], version: str = None, component: st
         reverse=True
     )[:10]
 
+    # Create lightweight package list (only essential fields for display)
+    packages_for_web = []
+    for pkg in packages_list:
+        packages_for_web.append({
+            'Package': pkg.get('Package'),
+            'Version': pkg.get('Version'),
+            'Architecture': pkg.get('Architecture'),
+            'Size': pkg.get('Size'),
+            'Description': (pkg.get('Description') or '')[:100]  # Truncate description
+        })
+
     return {
         "total_packages": len(packages_list),
         "total_size": total_size,
         "latest_packages": sorted_by_version,
         "largest_packages": sorted_by_size,
         "recent_changes": recent_changes[:30],  # Limit to 30 most recent changes
-        "packages_dict": {pkg.get('Package'): pkg.get('Version') for pkg in packages_list}
+        "packages": packages_for_web,  # Full package list with essential fields
+        "packages_dict": {pkg.get('Package'): pkg.get('Version') for pkg in packages_list}  # For change detection
     }
 
 def format_size(bytes_size: int) -> str:
@@ -1131,8 +1143,31 @@ def main():
     print("  ✓ Saved packages_state_internal.json (for change detection)")
 
     # Save versions summary for JavaScript pages (public format)
+    # Create lightweight version without full package lists
+    versions_summary_light = {}
+    for version, data in versions_summary.items():
+        versions_summary_light[version] = {
+            'status': data.get('status'),
+            'components': {}
+        }
+        for comp_name, comp_data in data.get('components', {}).items():
+            versions_summary_light[version]['components'][comp_name] = {
+                'total_packages': comp_data.get('total_packages'),
+                'total_size': comp_data.get('total_size'),
+                'recent_changes': comp_data.get('recent_changes'),
+                'latest_packages': comp_data.get('latest_packages'),
+                'largest_packages': comp_data.get('largest_packages')
+            }
+            # Save full package list in separate file per version-component
+            packages = comp_data.get('packages', [])
+            if packages:
+                filename = f"packages_{version}_{comp_name}.json"
+                with open(filename, "w") as pf:
+                    json.dump(packages, pf, indent=2)
+                print(f"  ✓ Saved {filename} ({len(packages)} packages)")
+
     with open("packages_state.json", "w") as f:
-        json.dump(versions_summary, f, indent=2)
+        json.dump(versions_summary_light, f, indent=2)
     print("  ✓ Saved packages_state.json (for web pages)")
 
     # HTML generation removed - pages now load data dynamically via JavaScript
