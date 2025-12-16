@@ -130,6 +130,66 @@
         footer a:hover {
             text-decoration: underline;
         }
+        .status-section {
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+        .status-section h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+        }
+        .status-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        .status-box {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            border-left: 4px solid #667eea;
+        }
+        .status-box h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 1.1em;
+        }
+        .status-box .stat {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #dee2e6;
+        }
+        .status-box .stat:last-child {
+            border-bottom: none;
+        }
+        .status-box .stat-label {
+            color: #666;
+            font-size: 0.9em;
+        }
+        .status-box .stat-value {
+            font-weight: 600;
+            color: #333;
+        }
+        .status-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.85em;
+            font-weight: 600;
+        }
+        .status-badge.online {
+            background: #d4edda;
+            color: #155724;
+        }
+        .status-badge.offline {
+            background: #f8d7da;
+            color: #721c24;
+        }
     </style>
 </head>
 <body>
@@ -137,8 +197,56 @@
         <header>
             <h1>🐧 LliureX Repository Monitor</h1>
             <p class="subtitle">Monitor de repositorios de paquetes LliureX para Ubuntu</p>
-            <p style="margin-top: 15px; color: #999;">Última actualización: 16/12/2025 11:00 UTC</p>
+            <p style="margin-top: 15px; color: #999;">Última actualización: 16/12/2025 12:51 UTC</p>
         </header>
+
+        <div class="status-section">
+            <h2>📊 Estado de Conectividad</h2>
+            <div class="status-grid">
+                <div class="status-box">
+                    <h3>🌍 Estado Externo (GitHub Actions)</h3>
+                    <div class="stat">
+                        <span class="stat-label">20.04 (Focal)</span>
+                        <span class="status-badge online">✓ Online</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-label">22.04 (Jammy)</span>
+                        <span class="status-badge online">✓ Online</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-label">24.04 (Noble)</span>
+                        <span class="status-badge online">✓ Online</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-label">Última actualización</span>
+                        <span class="stat-value" style="font-size: 0.85em;">2025-12-16 12:15:47</span>
+                    </div>
+                </div>
+                <div class="status-box">
+                    <h3>🏠 Estado Local (Red LliureX)</h3>
+                    <div class="stat">
+                        <span class="stat-label">20.04 (Focal)</span>
+                        <span class="status-badge online">✓ Online</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-label">22.04 (Jammy)</span>
+                        <span class="status-badge online">✓ Online</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-label">24.04 (Noble)</span>
+                        <span class="status-badge online">✓ Online</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-label">Servidor</span>
+                        <span class="stat-value" style="font-size: 0.85em;">sauron</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-label">Última actualización</span>
+                        <span class="stat-value" style="font-size: 0.85em;">2025-12-16 12:45:42</span>
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <div class="cards">
 
@@ -196,7 +304,7 @@
                 <div class="stats">
                     <div class="stat">
                         <span class="stat-label">📦 Paquetes totales</span>
-                        <span class="stat-value">7,174</span>
+                        <span class="stat-value">7,252</span>
                     </div>
                     <div class="stat">
                         <span class="stat-label">💾 Tamaño total</span>
@@ -204,7 +312,7 @@
                     </div>
                     <div class="stat">
                         <span class="stat-label">🔄 Cambios recientes</span>
-                        <span class="stat-value">4</span>
+                        <span class="stat-value">30</span>
                     </div>
                 </div>
 

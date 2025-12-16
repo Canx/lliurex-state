@@ -4,15 +4,45 @@ Script to fetch detailed package information from LliureX repositories
 """
 import requests
 from datetime import datetime
-from typing import List, Dict
+from typing import List, Dict, Optional
 import gzip
 import io
 import re
 import json
+import os
 
 LLIUREX_BASE_URL = "http://lliurex.net"
 UBUNTU_VERSIONS = ["focal", "jammy", "noble"]
 COMPONENTS = ["main", "import", "testing"]
+
+def load_status_data() -> Dict:
+    """Load both external and local status data"""
+    status_data = {
+        'external': None,
+        'local': None
+    }
+
+    # Load external status (GitHub Actions)
+    try:
+        if os.path.exists("history.json"):
+            with open("history.json", "r") as f:
+                history = json.load(f)
+                if history:
+                    status_data['external'] = history[-1]
+    except Exception as e:
+        print(f"Warning: Could not load history.json: {e}")
+
+    # Load local status
+    try:
+        if os.path.exists("local_status.json"):
+            with open("local_status.json", "r") as f:
+                local_history = json.load(f)
+                if local_history:
+                    status_data['local'] = local_history[-1]
+    except Exception as e:
+        print(f"Warning: Could not load local_status.json: {e}")
+
+    return status_data
 
 def parse_packages_file(content: str) -> List[Dict]:
     """Parse a Packages file and extract package information"""
@@ -220,7 +250,7 @@ def format_size(bytes_size: int) -> str:
         bytes_size /= 1024.0
     return f"{bytes_size:.1f} TB"
 
-def generate_html_page(version: str, summary: Dict, components_data: Dict) -> str:
+def generate_html_page(version: str, summary: Dict, components_data: Dict, status_data: Optional[Dict] = None) -> str:
     """Generate HTML page for a specific Ubuntu version"""
     version_names = {
         "focal": "20.04 LTS (Focal Fossa)",
@@ -368,6 +398,53 @@ def generate_html_page(version: str, summary: Dict, components_data: Dict) -> st
         .tab-content.active {{
             display: block;
         }}
+        .status-badge {{
+            display: inline-block;
+            padding: 6px 16px;
+            border-radius: 15px;
+            font-size: 0.9em;
+            font-weight: 600;
+            margin-left: 10px;
+        }}
+        .status-badge.online {{
+            background: #d4edda;
+            color: #155724;
+        }}
+        .status-badge.offline {{
+            background: #f8d7da;
+            color: #721c24;
+        }}
+        .connectivity-section {{
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            border-left: 4px solid #667eea;
+        }}
+        .connectivity-section h3 {{
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 1.1em;
+        }}
+        .connectivity-grid {{
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+        }}
+        .connectivity-item {{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #dee2e6;
+        }}
+        .connectivity-item:last-child {{
+            border-bottom: none;
+        }}
+        .connectivity-label {{
+            color: #666;
+            font-size: 0.9em;
+        }}
     </style>
 </head>
 <body>
@@ -376,7 +453,75 @@ def generate_html_page(version: str, summary: Dict, components_data: Dict) -> st
 
         <h1>Ubuntu {version_names.get(version, version.capitalize())}</h1>
         <p class="subtitle">Repositorio LliureX - Actualizado el {datetime.utcnow().strftime('%d/%m/%Y %H:%M')} UTC</p>
+"""
 
+    # Add connectivity status if available
+    if status_data:
+        ext_status = None
+        local_status = None
+
+        if status_data.get('external'):
+            ext_data = status_data['external'].get('repos', {}).get(version, {})
+            if ext_data:
+                ext_status = ext_data.get('status', 'unknown')
+
+        if status_data.get('local'):
+            local_data = status_data['local'].get('repos', {}).get(version, {})
+            if local_data:
+                local_status = local_data.get('status', 'unknown')
+
+        if ext_status or local_status:
+            html += """
+        <div class="connectivity-section">
+            <h3>📡 Estado de Conectividad</h3>
+            <div class="connectivity-grid">
+"""
+
+            if ext_status:
+                status_badge = 'online' if ext_status == 'online' else 'offline'
+                status_text = '✓ Online' if ext_status == 'online' else '✗ Offline'
+                timestamp = status_data['external'].get('timestamp', 'N/A')
+                html += f"""
+                <div>
+                    <div class="connectivity-item">
+                        <span class="connectivity-label">🌍 Estado Externo</span>
+                        <span class="status-badge {status_badge}">{status_text}</span>
+                    </div>
+                    <div class="connectivity-item">
+                        <span class="connectivity-label">Última verificación</span>
+                        <span style="font-size: 0.85em;">{timestamp}</span>
+                    </div>
+                </div>
+"""
+
+            if local_status:
+                status_badge = 'online' if local_status == 'online' else 'offline'
+                status_text = '✓ Online' if local_status == 'online' else '✗ Offline'
+                timestamp = status_data['local'].get('timestamp', 'N/A')
+                hostname = status_data['local'].get('hostname', 'N/A')
+                html += f"""
+                <div>
+                    <div class="connectivity-item">
+                        <span class="connectivity-label">🏠 Estado Local</span>
+                        <span class="status-badge {status_badge}">{status_text}</span>
+                    </div>
+                    <div class="connectivity-item">
+                        <span class="connectivity-label">Servidor</span>
+                        <span style="font-size: 0.85em;">{hostname}</span>
+                    </div>
+                    <div class="connectivity-item">
+                        <span class="connectivity-label">Última verificación</span>
+                        <span style="font-size: 0.85em;">{timestamp}</span>
+                    </div>
+                </div>
+"""
+
+            html += """
+            </div>
+        </div>
+"""
+
+    html += """
         <div class="stats">
 """
 
@@ -572,7 +717,7 @@ def generate_html_page(version: str, summary: Dict, components_data: Dict) -> st
 
     return html
 
-def generate_index_page(versions_summary: Dict) -> str:
+def generate_index_page(versions_summary: Dict, status_data: Optional[Dict] = None) -> str:
     """Generate main index.html page"""
     html = """<!DOCTYPE html>
 <html lang="es">
@@ -706,6 +851,66 @@ def generate_index_page(versions_summary: Dict) -> str:
         footer a:hover {
             text-decoration: underline;
         }
+        .status-section {
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+        .status-section h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+        }
+        .status-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        .status-box {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            border-left: 4px solid #667eea;
+        }
+        .status-box h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 1.1em;
+        }
+        .status-box .stat {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #dee2e6;
+        }
+        .status-box .stat:last-child {
+            border-bottom: none;
+        }
+        .status-box .stat-label {
+            color: #666;
+            font-size: 0.9em;
+        }
+        .status-box .stat-value {
+            font-weight: 600;
+            color: #333;
+        }
+        .status-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.85em;
+            font-weight: 600;
+        }
+        .status-badge.online {
+            background: #d4edda;
+            color: #155724;
+        }
+        .status-badge.offline {
+            background: #f8d7da;
+            color: #721c24;
+        }
     </style>
 </head>
 <body>
@@ -716,7 +921,87 @@ def generate_index_page(versions_summary: Dict) -> str:
             <p style="margin-top: 15px; color: #999;">Última actualización: """ + datetime.utcnow().strftime('%d/%m/%Y %H:%M UTC') + """</p>
         </header>
 
-        <div class="cards">
+"""
+
+    # Add status section if data is available
+    if status_data:
+        html += """        <div class="status-section">
+            <h2>📊 Estado de Conectividad</h2>
+            <div class="status-grid">
+"""
+
+        # External status
+        if status_data.get('external'):
+            ext_data = status_data['external']
+            html += """                <div class="status-box">
+                    <h3>🌍 Estado Externo (GitHub Actions)</h3>
+"""
+            for version in UBUNTU_VERSIONS:
+                repo_info = ext_data.get('repos', {}).get(version, {})
+                status = repo_info.get('status', 'unknown')
+                status_badge = 'online' if status == 'online' else 'offline'
+                status_text = '✓ Online' if status == 'online' else '✗ Offline'
+
+                version_names = {
+                    'focal': '20.04 (Focal)',
+                    'jammy': '22.04 (Jammy)',
+                    'noble': '24.04 (Noble)'
+                }
+
+                html += f"""                    <div class="stat">
+                        <span class="stat-label">{version_names.get(version, version)}</span>
+                        <span class="status-badge {status_badge}">{status_text}</span>
+                    </div>
+"""
+
+            html += f"""                    <div class="stat">
+                        <span class="stat-label">Última actualización</span>
+                        <span class="stat-value" style="font-size: 0.85em;">{ext_data.get('timestamp', 'N/A')}</span>
+                    </div>
+                </div>
+"""
+
+        # Local status
+        if status_data.get('local'):
+            local_data = status_data['local']
+            html += """                <div class="status-box">
+                    <h3>🏠 Estado Local (Red LliureX)</h3>
+"""
+            for version in UBUNTU_VERSIONS:
+                repo_info = local_data.get('repos', {}).get(version, {})
+                status = repo_info.get('status', 'unknown')
+                status_badge = 'online' if status == 'online' else 'offline'
+                status_text = '✓ Online' if status == 'online' else '✗ Offline'
+
+                version_names = {
+                    'focal': '20.04 (Focal)',
+                    'jammy': '22.04 (Jammy)',
+                    'noble': '24.04 (Noble)'
+                }
+
+                html += f"""                    <div class="stat">
+                        <span class="stat-label">{version_names.get(version, version)}</span>
+                        <span class="status-badge {status_badge}">{status_text}</span>
+                    </div>
+"""
+
+            html += f"""                    <div class="stat">
+                        <span class="stat-label">Servidor</span>
+                        <span class="stat-value" style="font-size: 0.85em;">{local_data.get('hostname', 'N/A')}</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-label">Última actualización</span>
+                        <span class="stat-value" style="font-size: 0.85em;">{local_data.get('timestamp', 'N/A')}</span>
+                    </div>
+                </div>
+"""
+
+        html += """            </div>
+        </div>
+
+"""
+
+    html += """        <div class="cards">
 """
 
     version_names = {
@@ -780,6 +1065,9 @@ def generate_index_page(versions_summary: Dict) -> str:
 def main():
     print("🔍 Fetching package information from LliureX repositories...\n")
 
+    # Load status data
+    status_data = load_status_data()
+
     versions_summary = {}
     all_packages_state = {}
 
@@ -814,7 +1102,7 @@ def main():
 
         if components_data:
             print(f"\n📝 Generating HTML page for {version}...")
-            html = generate_html_page(version, None, components_data)
+            html = generate_html_page(version, None, components_data, status_data)
 
             with open(f"{version}.html", "w", encoding='utf-8') as f:
                 f.write(html)
@@ -841,7 +1129,7 @@ def main():
     print("📝 Generating index.html...")
     print('='*60)
 
-    index_html = generate_index_page(versions_summary)
+    index_html = generate_index_page(versions_summary, status_data)
     with open("index.html", "w", encoding='utf-8') as f:
         f.write(index_html)
 

@@ -138,6 +138,53 @@
         .tab-content.active {
             display: block;
         }
+        .status-badge {
+            display: inline-block;
+            padding: 6px 16px;
+            border-radius: 15px;
+            font-size: 0.9em;
+            font-weight: 600;
+            margin-left: 10px;
+        }
+        .status-badge.online {
+            background: #d4edda;
+            color: #155724;
+        }
+        .status-badge.offline {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        .connectivity-section {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            border-left: 4px solid #667eea;
+        }
+        .connectivity-section h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 1.1em;
+        }
+        .connectivity-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+        }
+        .connectivity-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #dee2e6;
+        }
+        .connectivity-item:last-child {
+            border-bottom: none;
+        }
+        .connectivity-label {
+            color: #666;
+            font-size: 0.9em;
+        }
     </style>
 </head>
 <body>
@@ -145,13 +192,46 @@
         <a href="index.html" class="back-link">← Volver al índice</a>
 
         <h1>Ubuntu 24.04 LTS (Noble Numbat)</h1>
-        <p class="subtitle">Repositorio LliureX - Actualizado el 16/12/2025 11:00 UTC</p>
+        <p class="subtitle">Repositorio LliureX - Actualizado el 16/12/2025 12:51 UTC</p>
+
+        <div class="connectivity-section">
+            <h3>📡 Estado de Conectividad</h3>
+            <div class="connectivity-grid">
+
+                <div>
+                    <div class="connectivity-item">
+                        <span class="connectivity-label">🌍 Estado Externo</span>
+                        <span class="status-badge online">✓ Online</span>
+                    </div>
+                    <div class="connectivity-item">
+                        <span class="connectivity-label">Última verificación</span>
+                        <span style="font-size: 0.85em;">2025-12-16 12:15:47</span>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="connectivity-item">
+                        <span class="connectivity-label">🏠 Estado Local</span>
+                        <span class="status-badge online">✓ Online</span>
+                    </div>
+                    <div class="connectivity-item">
+                        <span class="connectivity-label">Servidor</span>
+                        <span style="font-size: 0.85em;">sauron</span>
+                    </div>
+                    <div class="connectivity-item">
+                        <span class="connectivity-label">Última verificación</span>
+                        <span style="font-size: 0.85em;">2025-12-16 12:45:42</span>
+                    </div>
+                </div>
+
+            </div>
+        </div>
 
         <div class="stats">
 
             <div class="stat-card">
                 <h3>Total de Paquetes</h3>
-                <div class="value">7174</div>
+                <div class="value">7252</div>
             </div>
             <div class="stat-card">
                 <h3>Tamaño Total</h3>
@@ -159,7 +239,7 @@
             </div>
             <div class="stat-card">
                 <h3>Cambios Recientes</h3>
-                <div class="value">4</div>
+                <div class="value">30</div>
             </div>
         </div>
 
@@ -185,39 +265,273 @@
                     <tbody>
 
                         <tr>
-                            <td><span style="background: #fff3cd; color: #856404; padding: 3px 8px; border-radius: 3px; font-size: 0.85em; font-weight: 600;">ACTUALIZADO</span></td>
-                            <td class="package-name">cpp-13-x86-64-linux-gnu</td>
-                            <td>13.2.0-23ubuntu4cross1</td>
-                            <td><strong>13.2.0-23ubuntu4</strong></td>
-                            <td>10.6 MB</td>
-                            <td style="font-size: 0.9em; color: #666;">16/12/2025 10:59</td>
+                            <td><span style="background: #d4edda; color: #155724; padding: 3px 8px; border-radius: 3px; font-size: 0.85em; font-weight: 600;">NUEVO</span></td>
+                            <td class="package-name">accesswizard</td>
+                            <td>-</td>
+                            <td><strong>0.1.4-0lliurex25</strong></td>
+                            <td>268.7 KB</td>
+                            <td style="font-size: 0.9em; color: #666;">16/12/2025 10:16</td>
                         </tr>
 
                         <tr>
-                            <td><span style="background: #fff3cd; color: #856404; padding: 3px 8px; border-radius: 3px; font-size: 0.85em; font-weight: 600;">ACTUALIZADO</span></td>
-                            <td class="package-name">g++-13-x86-64-linux-gnu</td>
-                            <td>13.2.0-23ubuntu4cross1</td>
-                            <td><strong>13.2.0-23ubuntu4</strong></td>
-                            <td>12.0 MB</td>
-                            <td style="font-size: 0.9em; color: #666;">16/12/2025 10:59</td>
+                            <td><span style="background: #d4edda; color: #155724; padding: 3px 8px; border-radius: 3px; font-size: 0.85em; font-weight: 600;">NUEVO</span></td>
+                            <td class="package-name">accesswizard-dbus</td>
+                            <td>-</td>
+                            <td><strong>0.1.4-0lliurex25</strong></td>
+                            <td>2.7 KB</td>
+                            <td style="font-size: 0.9em; color: #666;">16/12/2025 10:16</td>
                         </tr>
 
                         <tr>
-                            <td><span style="background: #fff3cd; color: #856404; padding: 3px 8px; border-radius: 3px; font-size: 0.85em; font-weight: 600;">ACTUALIZADO</span></td>
-                            <td class="package-name">gcc-13-x86-64-linux-gnu</td>
-                            <td>13.2.0-23ubuntu4cross1</td>
-                            <td><strong>13.2.0-23ubuntu4</strong></td>
-                            <td>20.9 MB</td>
-                            <td style="font-size: 0.9em; color: #666;">16/12/2025 10:59</td>
+                            <td><span style="background: #d4edda; color: #155724; padding: 3px 8px; border-radius: 3px; font-size: 0.85em; font-weight: 600;">NUEVO</span></td>
+                            <td class="package-name">accesswizard-kwin-ocrwindow</td>
+                            <td>-</td>
+                            <td><strong>0.1.4-0lliurex25</strong></td>
+                            <td>7.8 KB</td>
+                            <td style="font-size: 0.9em; color: #666;">16/12/2025 10:16</td>
                         </tr>
 
                         <tr>
-                            <td><span style="background: #fff3cd; color: #856404; padding: 3px 8px; border-radius: 3px; font-size: 0.85em; font-weight: 600;">ACTUALIZADO</span></td>
-                            <td class="package-name">live-build</td>
-                            <td>3.0~a57+p24.04+vrelease+git20240828.2240</td>
-                            <td><strong>1:20240811-lliurex1+symlinkpacth</strong></td>
-                            <td>196.2 KB</td>
-                            <td style="font-size: 0.9em; color: #666;">16/12/2025 10:59</td>
+                            <td><span style="background: #d4edda; color: #155724; padding: 3px 8px; border-radius: 3px; font-size: 0.85em; font-weight: 600;">NUEVO</span></td>
+                            <td class="package-name">accesswizard-plasmoid</td>
+                            <td>-</td>
+                            <td><strong>0.1.4-0lliurex25</strong></td>
+                            <td>4.6 KB</td>
+                            <td style="font-size: 0.9em; color: #666;">16/12/2025 10:16</td>
+                        </tr>
+
+                        <tr>
+                            <td><span style="background: #d4edda; color: #155724; padding: 3px 8px; border-radius: 3px; font-size: 0.85em; font-weight: 600;">NUEVO</span></td>
+                            <td class="package-name">libblkid-dev</td>
+                            <td>-</td>
+                            <td><strong>2.39.3-9ubuntu6</strong></td>
+                            <td>199.4 KB</td>
+                            <td style="font-size: 0.9em; color: #666;">16/12/2025 10:16</td>
+                        </tr>
+
+                        <tr>
+                            <td><span style="background: #d4edda; color: #155724; padding: 3px 8px; border-radius: 3px; font-size: 0.85em; font-weight: 600;">NUEVO</span></td>
+                            <td class="package-name">libdrm-dev</td>
+                            <td>-</td>
+                            <td><strong>2.4.120-2build1</strong></td>
+                            <td>301.7 KB</td>
+                            <td style="font-size: 0.9em; color: #666;">16/12/2025 10:16</td>
+                        </tr>
+
+                        <tr>
+                            <td><span style="background: #d4edda; color: #155724; padding: 3px 8px; border-radius: 3px; font-size: 0.85em; font-weight: 600;">NUEVO</span></td>
+                            <td class="package-name">libegl-dev</td>
+                            <td>-</td>
+                            <td><strong>1.7.0-1build1</strong></td>
+                            <td>17.8 KB</td>
+                            <td style="font-size: 0.9em; color: #666;">16/12/2025 10:16</td>
+                        </tr>
+
+                        <tr>
+                            <td><span style="background: #d4edda; color: #155724; padding: 3px 8px; border-radius: 3px; font-size: 0.85em; font-weight: 600;">NUEVO</span></td>
+                            <td class="package-name">libevdev-dev</td>
+                            <td>-</td>
+                            <td><strong>1.13.1+dfsg-1build1</strong></td>
+                            <td>52.5 KB</td>
+                            <td style="font-size: 0.9em; color: #666;">16/12/2025 10:16</td>
+                        </tr>
+
+                        <tr>
+                            <td><span style="background: #d4edda; color: #155724; padding: 3px 8px; border-radius: 3px; font-size: 0.85em; font-weight: 600;">NUEVO</span></td>
+                            <td class="package-name">libffi-dev</td>
+                            <td>-</td>
+                            <td><strong>3.4.6-1build1</strong></td>
+                            <td>61.3 KB</td>
+                            <td style="font-size: 0.9em; color: #666;">16/12/2025 10:16</td>
+                        </tr>
+
+                        <tr>
+                            <td><span style="background: #d4edda; color: #155724; padding: 3px 8px; border-radius: 3px; font-size: 0.85em; font-weight: 600;">NUEVO</span></td>
+                            <td class="package-name">libgbm-dev</td>
+                            <td>-</td>
+                            <td><strong>24.0.5-1ubuntu1</strong></td>
+                            <td>9.3 KB</td>
+                            <td style="font-size: 0.9em; color: #666;">16/12/2025 10:16</td>
+                        </tr>
+
+                        <tr>
+                            <td><span style="background: #d4edda; color: #155724; padding: 3px 8px; border-radius: 3px; font-size: 0.85em; font-weight: 600;">NUEVO</span></td>
+                            <td class="package-name">libgirepository-2.0-0</td>
+                            <td>-</td>
+                            <td><strong>2.80.0-6ubuntu1</strong></td>
+                            <td>71.8 KB</td>
+                            <td style="font-size: 0.9em; color: #666;">16/12/2025 10:16</td>
+                        </tr>
+
+                        <tr>
+                            <td><span style="background: #d4edda; color: #155724; padding: 3px 8px; border-radius: 3px; font-size: 0.85em; font-weight: 600;">NUEVO</span></td>
+                            <td class="package-name">libgl-dev</td>
+                            <td>-</td>
+                            <td><strong>1.7.0-1build1</strong></td>
+                            <td>100.0 KB</td>
+                            <td style="font-size: 0.9em; color: #666;">16/12/2025 10:16</td>
+                        </tr>
+
+                        <tr>
+                            <td><span style="background: #d4edda; color: #155724; padding: 3px 8px; border-radius: 3px; font-size: 0.85em; font-weight: 600;">NUEVO</span></td>
+                            <td class="package-name">libglib2.0-dev</td>
+                            <td>-</td>
+                            <td><strong>2.80.0-6ubuntu1</strong></td>
+                            <td>1.8 MB</td>
+                            <td style="font-size: 0.9em; color: #666;">16/12/2025 10:16</td>
+                        </tr>
+
+                        <tr>
+                            <td><span style="background: #d4edda; color: #155724; padding: 3px 8px; border-radius: 3px; font-size: 0.85em; font-weight: 600;">NUEVO</span></td>
+                            <td class="package-name">libglib2.0-dev-bin</td>
+                            <td>-</td>
+                            <td><strong>2.80.0-6ubuntu1</strong></td>
+                            <td>134.7 KB</td>
+                            <td style="font-size: 0.9em; color: #666;">16/12/2025 10:16</td>
+                        </tr>
+
+                        <tr>
+                            <td><span style="background: #d4edda; color: #155724; padding: 3px 8px; border-radius: 3px; font-size: 0.85em; font-weight: 600;">NUEVO</span></td>
+                            <td class="package-name">libglx-dev</td>
+                            <td>-</td>
+                            <td><strong>1.7.0-1build1</strong></td>
+                            <td>13.8 KB</td>
+                            <td style="font-size: 0.9em; color: #666;">16/12/2025 10:16</td>
+                        </tr>
+
+                        <tr>
+                            <td><span style="background: #d4edda; color: #155724; padding: 3px 8px; border-radius: 3px; font-size: 0.85em; font-weight: 600;">NUEVO</span></td>
+                            <td class="package-name">libgudev-1.0-dev</td>
+                            <td>-</td>
+                            <td><strong>1:238-5ubuntu1</strong></td>
+                            <td>26.6 KB</td>
+                            <td style="font-size: 0.9em; color: #666;">16/12/2025 10:16</td>
+                        </tr>
+
+                        <tr>
+                            <td><span style="background: #d4edda; color: #155724; padding: 3px 8px; border-radius: 3px; font-size: 0.85em; font-weight: 600;">NUEVO</span></td>
+                            <td class="package-name">libmount-dev</td>
+                            <td>-</td>
+                            <td><strong>2.39.3-9ubuntu6</strong></td>
+                            <td>14.5 KB</td>
+                            <td style="font-size: 0.9em; color: #666;">16/12/2025 10:16</td>
+                        </tr>
+
+                        <tr>
+                            <td><span style="background: #d4edda; color: #155724; padding: 3px 8px; border-radius: 3px; font-size: 0.85em; font-weight: 600;">NUEVO</span></td>
+                            <td class="package-name">libmtdev-dev</td>
+                            <td>-</td>
+                            <td><strong>1.1.6-1.1build1</strong></td>
+                            <td>5.0 KB</td>
+                            <td style="font-size: 0.9em; color: #666;">16/12/2025 10:16</td>
+                        </tr>
+
+                        <tr>
+                            <td><span style="background: #d4edda; color: #155724; padding: 3px 8px; border-radius: 3px; font-size: 0.85em; font-weight: 600;">NUEVO</span></td>
+                            <td class="package-name">libopengl-dev</td>
+                            <td>-</td>
+                            <td><strong>1.7.0-1build1</strong></td>
+                            <td>3.4 KB</td>
+                            <td style="font-size: 0.9em; color: #666;">16/12/2025 10:16</td>
+                        </tr>
+
+                        <tr>
+                            <td><span style="background: #d4edda; color: #155724; padding: 3px 8px; border-radius: 3px; font-size: 0.85em; font-weight: 600;">NUEVO</span></td>
+                            <td class="package-name">libpciaccess-dev</td>
+                            <td>-</td>
+                            <td><strong>0.17-3build1</strong></td>
+                            <td>21.5 KB</td>
+                            <td style="font-size: 0.9em; color: #666;">16/12/2025 10:16</td>
+                        </tr>
+
+                        <tr>
+                            <td><span style="background: #d4edda; color: #155724; padding: 3px 8px; border-radius: 3px; font-size: 0.85em; font-weight: 600;">NUEVO</span></td>
+                            <td class="package-name">libpcre2-dev</td>
+                            <td>-</td>
+                            <td><strong>10.42-4ubuntu2</strong></td>
+                            <td>719.3 KB</td>
+                            <td style="font-size: 0.9em; color: #666;">16/12/2025 10:16</td>
+                        </tr>
+
+                        <tr>
+                            <td><span style="background: #d4edda; color: #155724; padding: 3px 8px; border-radius: 3px; font-size: 0.85em; font-weight: 600;">NUEVO</span></td>
+                            <td class="package-name">libpcre2-posix3</td>
+                            <td>-</td>
+                            <td><strong>10.42-4ubuntu2</strong></td>
+                            <td>6.5 KB</td>
+                            <td style="font-size: 0.9em; color: #666;">16/12/2025 10:16</td>
+                        </tr>
+
+                        <tr>
+                            <td><span style="background: #d4edda; color: #155724; padding: 3px 8px; border-radius: 3px; font-size: 0.85em; font-weight: 600;">NUEVO</span></td>
+                            <td class="package-name">libpkgconf3</td>
+                            <td>-</td>
+                            <td><strong>1.8.1-2build1</strong></td>
+                            <td>29.9 KB</td>
+                            <td style="font-size: 0.9em; color: #666;">16/12/2025 10:16</td>
+                        </tr>
+
+                        <tr>
+                            <td><span style="background: #d4edda; color: #155724; padding: 3px 8px; border-radius: 3px; font-size: 0.85em; font-weight: 600;">NUEVO</span></td>
+                            <td class="package-name">libpthread-stubs0-dev</td>
+                            <td>-</td>
+                            <td><strong>0.4-1build3</strong></td>
+                            <td>4.6 KB</td>
+                            <td style="font-size: 0.9em; color: #666;">16/12/2025 10:16</td>
+                        </tr>
+
+                        <tr>
+                            <td><span style="background: #d4edda; color: #155724; padding: 3px 8px; border-radius: 3px; font-size: 0.85em; font-weight: 600;">NUEVO</span></td>
+                            <td class="package-name">librhash0</td>
+                            <td>-</td>
+                            <td><strong>1.4.3-3build1</strong></td>
+                            <td>125.7 KB</td>
+                            <td style="font-size: 0.9em; color: #666;">16/12/2025 10:16</td>
+                        </tr>
+
+                        <tr>
+                            <td><span style="background: #d4edda; color: #155724; padding: 3px 8px; border-radius: 3px; font-size: 0.85em; font-weight: 600;">NUEVO</span></td>
+                            <td class="package-name">libselinux1-dev</td>
+                            <td>-</td>
+                            <td><strong>3.5-2ubuntu2</strong></td>
+                            <td>159.9 KB</td>
+                            <td style="font-size: 0.9em; color: #666;">16/12/2025 10:16</td>
+                        </tr>
+
+                        <tr>
+                            <td><span style="background: #d4edda; color: #155724; padding: 3px 8px; border-radius: 3px; font-size: 0.85em; font-weight: 600;">NUEVO</span></td>
+                            <td class="package-name">libsepol-dev</td>
+                            <td>-</td>
+                            <td><strong>3.5-2build1</strong></td>
+                            <td>374.7 KB</td>
+                            <td style="font-size: 0.9em; color: #666;">16/12/2025 10:16</td>
+                        </tr>
+
+                        <tr>
+                            <td><span style="background: #d4edda; color: #155724; padding: 3px 8px; border-radius: 3px; font-size: 0.85em; font-weight: 600;">NUEVO</span></td>
+                            <td class="package-name">libudev-dev</td>
+                            <td>-</td>
+                            <td><strong>255.4-1ubuntu8</strong></td>
+                            <td>21.5 KB</td>
+                            <td style="font-size: 0.9em; color: #666;">16/12/2025 10:16</td>
+                        </tr>
+
+                        <tr>
+                            <td><span style="background: #d4edda; color: #155724; padding: 3px 8px; border-radius: 3px; font-size: 0.85em; font-weight: 600;">NUEVO</span></td>
+                            <td class="package-name">libvulkan-dev</td>
+                            <td>-</td>
+                            <td><strong>1.3.275.0-1build1</strong></td>
+                            <td>1.2 MB</td>
+                            <td style="font-size: 0.9em; color: #666;">16/12/2025 10:16</td>
+                        </tr>
+
+                        <tr>
+                            <td><span style="background: #d4edda; color: #155724; padding: 3px 8px; border-radius: 3px; font-size: 0.85em; font-weight: 600;">NUEVO</span></td>
+                            <td class="package-name">libwacom-dev</td>
+                            <td>-</td>
+                            <td><strong>2.10.0-2</strong></td>
+                            <td>7.4 KB</td>
+                            <td style="font-size: 0.9em; color: #666;">16/12/2025 10:16</td>
                         </tr>
 
                     </tbody>
