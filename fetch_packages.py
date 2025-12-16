@@ -99,7 +99,7 @@ def fetch_packages_for_version(version: str, component: str = "main") -> List[Di
 def load_previous_packages(version: str, component: str) -> Dict:
     """Load previous package state from file"""
     try:
-        with open(f"packages_state.json", "r") as f:
+        with open(f"packages_state_internal.json", "r") as f:
             content = f.read().strip()
             if not content:
                 return {}
@@ -109,8 +109,8 @@ def load_previous_packages(version: str, component: str) -> Dict:
         return {}
 
 def save_packages_state(all_packages_state: Dict):
-    """Save current package state to file"""
-    with open("packages_state.json", "w") as f:
+    """Save current package state to file (internal format)"""
+    with open("packages_state_internal.json", "w") as f:
         json.dump(all_packages_state, f, indent=2)
 
 def load_change_timestamps() -> Dict:
@@ -1122,12 +1122,18 @@ def main():
                 'components': {}
             }
 
-    # Save current packages state for next run
+    # Save current packages state for next run (internal format for comparison)
     print(f"\n{'='*60}")
     print("💾 Saving packages state...")
     print('='*60)
-    save_packages_state(all_packages_state)
-    print("  ✓ Saved packages_state.json")
+    with open("packages_state_internal.json", "w") as f:
+        json.dump(all_packages_state, f, indent=2)
+    print("  ✓ Saved packages_state_internal.json (for change detection)")
+
+    # Save versions summary for JavaScript pages (public format)
+    with open("packages_state.json", "w") as f:
+        json.dump(versions_summary, f, indent=2)
+    print("  ✓ Saved packages_state.json (for web pages)")
 
     # HTML generation removed - pages now load data dynamically via JavaScript
     # print(f"\n{'='*60}")

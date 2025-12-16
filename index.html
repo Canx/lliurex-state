@@ -269,7 +269,8 @@
 
             // Don't show card if no real data (offline or empty)
             const components = summary.components || {};
-            const totalPackages = Object.values(components).reduce((sum, c) => sum + (c.package_count || 0), 0);
+            const totalPackages = Object.values(components).reduce(
+                (sum, c) => sum + (c.total_packages || c.package_count || 0), 0);
 
             // Skip if no packages (offline or no data)
             if (totalPackages === 0 || summary.status === 'offline') {

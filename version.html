@@ -369,7 +369,7 @@
                 // Overall stats
                 const components = versionData.components || {};
                 const totalPackages = Object.values(components).reduce(
-                    (sum, c) => sum + (c.package_count || 0), 0
+                    (sum, c) => sum + (c.total_packages || c.package_count || 0), 0
                 );
                 const totalSize = Object.values(components).reduce(
                     (sum, c) => sum + (c.total_size || 0), 0
@@ -437,14 +437,14 @@
                             <div class="component-stats">
                                 <div class="component-stat">
                                     <span class="component-stat-label">Paquetes</span>
-                                    <span class="component-stat-value">${formatNumber(compData.package_count || 0)}</span>
+                                    <span class="component-stat-value">${formatNumber(compData.total_packages || compData.package_count || 0)}</span>
                                 </div>
                                 <div class="component-stat">
                                     <span class="component-stat-label">Tamaño</span>
                                     <span class="component-stat-value">${formatSize(compData.total_size || 0)}</span>
                                 </div>
                             </div>
-                            ${createPackageTable(compData.packages, compName)}
+                            ${createPackageTable(compData.latest_packages || compData.packages || [], compName)}
                         </div>`;
                 }
 
