@@ -129,12 +129,16 @@ def get_github_repo() -> str:
 def generate_readme(repo_data: Dict) -> str:
     """Generate README.md content"""
     github_repo = get_github_repo()
+    github_user = github_repo.split('/')[0]
+    github_project = github_repo.split('/')[1]
 
     readme = f"""# LliureX Repository Status
 
 [![Update Status](https://github.com/{github_repo}/actions/workflows/update-status.yml/badge.svg)](https://github.com/{github_repo}/actions/workflows/update-status.yml)
 
 Este repositorio monitorea automáticamente el estado de los repositorios de LliureX para diferentes versiones de Ubuntu.
+
+**🌐 [Ver página con información detallada de paquetes](https://{github_user}.github.io/{github_project}/)**
 
 ## 📊 Estado Actual
 
