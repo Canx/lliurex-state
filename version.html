@@ -308,11 +308,8 @@
                 return nameA.localeCompare(nameB);
             });
 
-            // Limit to first 500 packages for performance
-            const displayLimit = 500;
-            const displayPackages = sortedPackages.slice(0, displayLimit);
-
-            for (const pkg of displayPackages) {
+            // Show all packages (no limit)
+            for (const pkg of sortedPackages) {
                 html += `
                     <tr>
                         <td class="package-name">${pkg.Package || 'N/A'}</td>
@@ -326,14 +323,9 @@
                     </tbody>
                 </table>`;
 
-            if (packages.length > displayLimit) {
+            if (packages.length > 0) {
                 html += `<p style="text-align: center; color: #666; margin-top: 10px;">
-                    Mostrando ${formatNumber(displayLimit)} de ${formatNumber(packages.length)} paquetes (ordenados alfabéticamente).
-                    <br>Usa el filtro de búsqueda para encontrar paquetes específicos.
-                </p>`;
-            } else if (packages.length > 0) {
-                html += `<p style="text-align: center; color: #666; margin-top: 10px;">
-                    Mostrando todos los ${formatNumber(packages.length)} paquetes (ordenados alfabéticamente)
+                    ${formatNumber(packages.length)} paquetes (ordenados alfabéticamente). Usa el filtro de búsqueda para encontrar paquetes específicos.
                 </p>`;
             }
 
