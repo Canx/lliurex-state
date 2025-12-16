@@ -229,5 +229,32 @@
         "http_code": 200
       }
     }
+  },
+  {
+    "timestamp": "2025-12-16 12:54:53",
+    "source": "github-actions",
+    "repos": {
+      "focal": {
+        "status": "online",
+        "url": "http://lliurex.net/focal/",
+        "last_update": "Tue, 29 Jul 2025 12:39:16 UTC",
+        "packages": 41190156,
+        "http_code": 200
+      },
+      "jammy": {
+        "status": "online",
+        "url": "http://lliurex.net/jammy/",
+        "last_update": "Thu, 11 Dec 2025 12:26:11 UTC",
+        "packages": 53198148,
+        "http_code": 200
+      },
+      "noble": {
+        "status": "online",
+        "url": "http://lliurex.net/noble/",
+        "last_update": "Tue, 29 Jul 2025 12:42:15 UTC",
+        "packages": 48038211,
+        "http_code": 200
+      }
+    }
   }
 ]
