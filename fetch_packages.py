@@ -732,6 +732,7 @@ def generate_index_page(versions_summary: Dict) -> str:
 
         total_packages = sum(data['total_packages'] for data in summary.get('components', {}).values())
         total_size = sum(data['total_size'] for data in summary.get('components', {}).values())
+        total_changes = sum(len(data.get('recent_changes', [])) for data in summary.get('components', {}).values())
 
         html += f"""
             <div class="card">
@@ -749,8 +750,8 @@ def generate_index_page(versions_summary: Dict) -> str:
                         <span class="stat-value">{format_size(total_size)}</span>
                     </div>
                     <div class="stat">
-                        <span class="stat-label">🔧 Componentes</span>
-                        <span class="stat-value">{len(summary.get('components', {}))}</span>
+                        <span class="stat-label">🔄 Cambios recientes</span>
+                        <span class="stat-value">{total_changes}</span>
                     </div>
                 </div>
 
