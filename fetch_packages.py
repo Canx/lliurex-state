@@ -79,32 +79,72 @@ def save_packages_state(all_packages_state: Dict):
     with open("packages_state.json", "w") as f:
         json.dump(all_packages_state, f, indent=2)
 
-def compare_packages(current_packages: List[Dict], previous_packages: Dict) -> List[Dict]:
+def load_change_timestamps() -> Dict:
+    """Load timestamps of when changes were detected"""
+    try:
+        with open("changes_timestamps.json", "r") as f:
+            content = f.read().strip()
+            if not content:
+                return {}
+            return json.loads(content)
+    except (FileNotFoundError, json.JSONDecodeError):
+        return {}
+
+def save_change_timestamps(timestamps: Dict):
+    """Save timestamps of changes"""
+    with open("changes_timestamps.json", "w") as f:
+        json.dump(timestamps, f, indent=2)
+
+def compare_packages(current_packages: List[Dict], previous_packages: Dict, version: str, component: str) -> List[Dict]:
     """Compare current packages with previous state and find updates"""
     updated = []
     new = []
+    current_time = datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S")
+
+    # Load existing timestamps
+    all_timestamps = load_change_timestamps()
+    if version not in all_timestamps:
+        all_timestamps[version] = {}
+    if component not in all_timestamps[version]:
+        all_timestamps[version][component] = {}
+
+    timestamps = all_timestamps[version][component]
 
     for pkg in current_packages:
         name = pkg.get('Package', '')
-        version = pkg.get('Version', '')
+        version_str = pkg.get('Version', '')
+        pkg_key = f"{name}:{version_str}"
 
         if name in previous_packages:
             # Package existed before, check if version changed
-            if previous_packages[name] != version:
+            if previous_packages[name] != version_str:
+                # Version changed - record timestamp if not already recorded
+                if pkg_key not in timestamps:
+                    timestamps[pkg_key] = current_time
+
                 updated.append({
                     **pkg,
                     'previous_version': previous_packages[name],
-                    'change_type': 'updated'
+                    'change_type': 'updated',
+                    'detected_at': timestamps[pkg_key]
                 })
         else:
-            # New package
+            # New package - record timestamp if not already recorded
+            if pkg_key not in timestamps:
+                timestamps[pkg_key] = current_time
+
             new.append({
                 **pkg,
-                'change_type': 'new'
+                'change_type': 'new',
+                'detected_at': timestamps[pkg_key]
             })
 
-    # Combine and sort by change type (new first, then updated)
+    # Save updated timestamps
+    save_change_timestamps(all_timestamps)
+
+    # Combine and sort by detection time (most recent first)
     changes = new + updated
+    changes.sort(key=lambda x: x.get('detected_at', ''), reverse=True)
     return changes
 
 def get_package_summary(packages: List[Dict], version: str = None, component: str = None) -> Dict:
@@ -138,7 +178,7 @@ def get_package_summary(packages: List[Dict], version: str = None, component: st
     recent_changes = []
     if version and component:
         previous_state = load_previous_packages(version, component)
-        recent_changes = compare_packages(packages_list, previous_state)
+        recent_changes = compare_packages(packages_list, previous_state, version, component)
 
     # Calculate total size
     total_size = 0
@@ -396,6 +436,7 @@ def generate_html_page(version: str, summary: Dict, components_data: Dict) -> st
                             <th>Versión Anterior</th>
                             <th>Versión Nueva</th>
                             <th>Tamaño</th>
+                            <th>Detectado</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -407,6 +448,17 @@ def generate_html_page(version: str, summary: Dict, components_data: Dict) -> st
                     old_version = pkg.get('previous_version', '-')
                     size = format_size(int(pkg.get('Size', '0')))
                     change_type = pkg.get('change_type', 'unknown')
+                    detected_at = pkg.get('detected_at', 'N/A')
+
+                    # Format timestamp to be more readable
+                    try:
+                        if detected_at != 'N/A':
+                            dt = datetime.strptime(detected_at, "%Y-%m-%d %H:%M:%S")
+                            detected_display = dt.strftime("%d/%m/%Y %H:%M")
+                        else:
+                            detected_display = 'N/A'
+                    except:
+                        detected_display = detected_at
 
                     if change_type == 'new':
                         status_badge = '<span style="background: #d4edda; color: #155724; padding: 3px 8px; border-radius: 3px; font-size: 0.85em; font-weight: 600;">NUEVO</span>'
@@ -420,6 +472,7 @@ def generate_html_page(version: str, summary: Dict, components_data: Dict) -> st
                             <td>{old_version}</td>
                             <td><strong>{new_version}</strong></td>
                             <td>{size}</td>
+                            <td style="font-size: 0.9em; color: #666;">{detected_display}</td>
                         </tr>
 """
 
@@ -798,6 +851,7 @@ def main():
     for version in UBUNTU_VERSIONS:
         print(f"  - {version}.html (Ubuntu {version} details)")
     print("  - packages_state.json (package state for change tracking)")
+    print("  - changes_timestamps.json (timestamps of detected changes)")
 
 if __name__ == "__main__":
     main()
