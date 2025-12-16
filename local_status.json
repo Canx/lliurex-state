@@ -1,226 +1,28 @@
-[
-  {
-    "timestamp": "2025-12-16 12:11:37",
-    "source": "local",
-    "hostname": "sauron",
-    "repos": {
-      "focal": {
-        "status": "online",
-        "url": "http://lliurex.net/focal/",
-        "last_update": "Tue, 29 Jul 2025 12:39:16 UTC",
-        "packages": 41190156,
-        "http_code": 200
-      },
-      "jammy": {
-        "status": "online",
-        "url": "http://lliurex.net/jammy/",
-        "last_update": "Thu, 11 Dec 2025 12:26:11 UTC",
-        "packages": 53198148,
-        "http_code": 200
-      },
-      "noble": {
-        "status": "online",
-        "url": "http://lliurex.net/noble/",
-        "last_update": "Thu, 31 Jul 2025 10:25:45 UTC",
-        "packages": 48819825,
-        "http_code": 200
-      }
-    }
-  },
-  {
-    "timestamp": "2025-12-16 12:15:52",
-    "source": "local",
-    "hostname": "sauron",
-    "repos": {
-      "focal": {
-        "status": "online",
-        "url": "http://lliurex.net/focal/",
-        "last_update": "Tue, 29 Jul 2025 12:39:16 UTC",
-        "packages": 41190156,
-        "http_code": 200
-      },
-      "jammy": {
-        "status": "online",
-        "url": "http://lliurex.net/jammy/",
-        "last_update": "Thu, 11 Dec 2025 12:26:11 UTC",
-        "packages": 53198148,
-        "http_code": 200
-      },
-      "noble": {
-        "status": "online",
-        "url": "http://lliurex.net/noble/",
-        "last_update": "Thu, 31 Jul 2025 10:25:45 UTC",
-        "packages": 48819825,
-        "http_code": 200
-      }
-    }
-  },
-  {
-    "timestamp": "2025-12-16 12:43:30",
-    "source": "local",
-    "hostname": "sauron",
-    "repos": {
-      "focal": {
-        "status": "online",
-        "url": "http://lliurex.net/focal/",
-        "last_update": "Tue, 29 Jul 2025 12:39:16 UTC",
-        "packages": 41190156,
-        "http_code": 200
-      },
-      "jammy": {
-        "status": "online",
-        "url": "http://lliurex.net/jammy/",
-        "last_update": "Thu, 11 Dec 2025 12:26:11 UTC",
-        "packages": 53198148,
-        "http_code": 200
-      },
-      "noble": {
-        "status": "online",
-        "url": "http://lliurex.net/noble/",
-        "last_update": "Thu, 31 Jul 2025 10:25:45 UTC",
-        "packages": 48819825,
-        "http_code": 200
-      }
-    }
-  },
-  {
-    "timestamp": "2025-12-16 12:45:42",
-    "source": "local",
-    "hostname": "sauron",
-    "repos": {
-      "focal": {
-        "status": "online",
-        "url": "http://lliurex.net/focal/",
-        "last_update": "Tue, 29 Jul 2025 12:39:16 UTC",
-        "packages": 41190156,
-        "http_code": 200
-      },
-      "jammy": {
-        "status": "online",
-        "url": "http://lliurex.net/jammy/",
-        "last_update": "Thu, 11 Dec 2025 12:26:11 UTC",
-        "packages": 53198148,
-        "http_code": 200
-      },
-      "noble": {
-        "status": "online",
-        "url": "http://lliurex.net/noble/",
-        "last_update": "Thu, 31 Jul 2025 10:25:45 UTC",
-        "packages": 48819825,
-        "http_code": 200
-      }
-    }
-  },
-  {
-    "timestamp": "2025-12-16 13:56:18",
-    "source": "local",
-    "hostname": "sauron",
-    "repos": {
-      "focal": {
-        "status": "online",
-        "url": "http://lliurex.net/focal/",
-        "last_update": "Tue, 29 Jul 2025 12:39:16 UTC",
-        "packages": 41190156,
-        "http_code": 200
-      },
-      "jammy": {
-        "status": "online",
-        "url": "http://lliurex.net/jammy/",
-        "last_update": "Thu, 11 Dec 2025 12:26:11 UTC",
-        "packages": 53198148,
-        "http_code": 200
-      },
-      "noble": {
-        "status": "online",
-        "url": "http://lliurex.net/noble/",
-        "last_update": "Thu, 31 Jul 2025 10:25:45 UTC",
-        "packages": 48819825,
-        "http_code": 200
-      }
-    }
-  },
-  {
-    "timestamp": "2025-12-16 14:00:03",
-    "source": "local",
-    "hostname": "sauron",
-    "repos": {
-      "focal": {
-        "status": "online",
-        "url": "http://lliurex.net/focal/",
-        "last_update": "Tue, 29 Jul 2025 12:39:16 UTC",
-        "packages": 41190156,
-        "http_code": 200
-      },
-      "jammy": {
-        "status": "online",
-        "url": "http://lliurex.net/jammy/",
-        "last_update": "Thu, 11 Dec 2025 12:26:11 UTC",
-        "packages": 53198148,
-        "http_code": 200
-      },
-      "noble": {
-        "status": "online",
-        "url": "http://lliurex.net/noble/",
-        "last_update": "Thu, 31 Jul 2025 10:25:45 UTC",
-        "packages": 48819825,
-        "http_code": 200
-      }
-    }
-  },
-  {
-    "timestamp": "2025-12-16 15:00:04",
-    "source": "local",
-    "hostname": "sauron",
-    "repos": {
-      "focal": {
-        "status": "online",
-        "url": "http://lliurex.net/focal/",
-        "last_update": "Tue, 29 Jul 2025 12:39:16 UTC",
-        "packages": 41190156,
-        "http_code": 200
-      },
-      "jammy": {
-        "status": "online",
-        "url": "http://lliurex.net/jammy/",
-        "last_update": "Thu, 11 Dec 2025 12:26:11 UTC",
-        "packages": 53198148,
-        "http_code": 200
-      },
-      "noble": {
-        "status": "online",
-        "url": "http://lliurex.net/noble/",
-        "last_update": "Thu, 31 Jul 2025 10:25:45 UTC",
-        "packages": 48819825,
-        "http_code": 200
-      }
-    }
-  },
-  {
-    "timestamp": "2025-12-16 16:00:04",
-    "source": "local",
-    "hostname": "sauron",
-    "repos": {
-      "focal": {
-        "status": "online",
-        "url": "http://lliurex.net/focal/",
-        "last_update": "Tue, 29 Jul 2025 12:39:16 UTC",
-        "packages": 41190156,
-        "http_code": 200
-      },
-      "jammy": {
-        "status": "online",
-        "url": "http://lliurex.net/jammy/",
-        "last_update": "Thu, 11 Dec 2025 12:26:11 UTC",
-        "packages": 53198148,
-        "http_code": 200
-      },
-      "noble": {
-        "status": "online",
-        "url": "http://lliurex.net/noble/",
-        "last_update": "Thu, 31 Jul 2025 10:25:45 UTC",
-        "packages": 48819825,
-        "http_code": 200
-      }
+{
+  "timestamp": "2025-12-16 16:22:15",
+  "source": "local",
+  "hostname": "sauron",
+  "repos": {
+    "focal": {
+      "status": "online",
+      "url": "http://lliurex.net/focal/",
+      "last_update": "Tue, 29 Jul 2025 12:39:16 UTC",
+      "packages": 41190156,
+      "http_code": 200
+    },
+    "jammy": {
+      "status": "online",
+      "url": "http://lliurex.net/jammy/",
+      "last_update": "Thu, 11 Dec 2025 12:26:11 UTC",
+      "packages": 53198148,
+      "http_code": 200
+    },
+    "noble": {
+      "status": "online",
+      "url": "http://lliurex.net/noble/",
+      "last_update": "Thu, 31 Jul 2025 10:25:45 UTC",
+      "packages": 48819825,
+      "http_code": 200
     }
   }
-]
+}

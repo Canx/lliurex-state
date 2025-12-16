@@ -70,9 +70,12 @@ def load_local_status() -> Optional[Dict]:
     """Load the latest local status from local_status.json"""
     try:
         with open("local_status.json", "r") as f:
-            history = json.load(f)
-            if history:
-                return history[-1]  # Return most recent entry
+            status = json.load(f)
+            # Handle both old format (array) and new format (object)
+            if isinstance(status, list):
+                return status[-1] if status else None
+            elif isinstance(status, dict):
+                return status
     except FileNotFoundError:
         pass
     return None

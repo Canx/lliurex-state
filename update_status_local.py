@@ -93,21 +93,9 @@ def fetch_all_repos() -> Dict:
     return repo_data
 
 def save_local_status(repo_data: Dict):
-    """Save local status data"""
-    try:
-        with open("local_status.json", "r") as f:
-            history = json.load(f)
-    except FileNotFoundError:
-        history = []
-
-    history.append(repo_data)
-
-    # Keep only last 30 entries
-    if len(history) > 30:
-        history = history[-30:]
-
+    """Save local status data (overwrites with current state only)"""
     with open("local_status.json", "w") as f:
-        json.dump(history, f, indent=2)
+        json.dump(repo_data, f, indent=2)
 
 def main():
     print("🔍 Fetching LliureX repository status from LOCAL network...")
