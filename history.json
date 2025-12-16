@@ -1,0 +1,48 @@
+[
+  {
+    "timestamp": "2025-12-16 09:38:16",
+    "repos": {
+      "focal": {
+        "status": "offline",
+        "url": "https://lliurex.net/focal/",
+        "error": "HTTPSConnectionPool(host='lliurex.net', port=443): Max retries exceeded with url: /focal/ (Caused by SSLError(SSLError(1, '[SSL: TLSV1_UNRECOGNIZED_NAME] tlsv1 unrecognized name (_ssl.c:1006)')))"
+      },
+      "jammy": {
+        "status": "offline",
+        "url": "https://lliurex.net/jammy/",
+        "error": "HTTPSConnectionPool(host='lliurex.net', port=443): Max retries exceeded with url: /jammy/ (Caused by SSLError(SSLError(1, '[SSL: TLSV1_UNRECOGNIZED_NAME] tlsv1 unrecognized name (_ssl.c:1006)')))"
+      },
+      "noble": {
+        "status": "offline",
+        "url": "https://lliurex.net/noble/",
+        "error": "HTTPSConnectionPool(host='lliurex.net', port=443): Max retries exceeded with url: /noble/ (Caused by SSLError(SSLError(1, '[SSL: TLSV1_UNRECOGNIZED_NAME] tlsv1 unrecognized name (_ssl.c:1006)')))"
+      }
+    }
+  },
+  {
+    "timestamp": "2025-12-16 09:38:55",
+    "repos": {
+      "focal": {
+        "status": "online",
+        "url": "http://lliurex.net/focal/",
+        "last_update": "Tue, 29 Jul 2025 12:39:16 UTC",
+        "packages": 41190156,
+        "http_code": 200
+      },
+      "jammy": {
+        "status": "online",
+        "url": "http://lliurex.net/jammy/",
+        "last_update": "Thu, 11 Dec 2025 12:26:11 UTC",
+        "packages": 53198148,
+        "http_code": 200
+      },
+      "noble": {
+        "status": "online",
+        "url": "http://lliurex.net/noble/",
+        "last_update": "Thu, 31 Jul 2025 10:25:45 UTC",
+        "packages": 48819825,
+        "http_code": 200
+      }
+    }
+  }
+]
