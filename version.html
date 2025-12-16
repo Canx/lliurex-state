@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="page-title">LliureX - Repositorio de Paquetes</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            padding: 40px;
+        }
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        .back-link:hover {
+            text-decoration: underline;
+        }
+        h1 {
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+        }
+        .subtitle {
+            color: #666;
+            font-size: 1.2em;
+            margin-bottom: 30px;
+        }
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+        .stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .stat-card h3 {
+            font-size: 0.9em;
+            margin-bottom: 10px;
+            opacity: 0.9;
+        }
+        .stat-card .value {
+            font-size: 2em;
+            font-weight: 700;
+        }
+        .section {
+            margin-bottom: 40px;
+        }
+        .section h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #667eea;
+        }
+        .component-card {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .component-card h3 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 1.4em;
+        }
+        .component-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        .component-stat {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px;
+            background: white;
+            border-radius: 5px;
+        }
+        .component-stat-label {
+            color: #666;
+        }
+        .component-stat-value {
+            font-weight: 600;
+            color: #667eea;
+        }
+        .packages-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        .packages-table th {
+            background: #667eea;
+            color: white;
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+        }
+        .packages-table td {
+            padding: 12px;
+            border-bottom: 1px solid #eee;
+        }
+        .packages-table tr:hover {
+            background: #f8f9fa;
+        }
+        .package-name {
+            font-weight: 600;
+            color: #667eea;
+        }
+        .package-version {
+            color: #666;
+            font-family: monospace;
+            font-size: 0.9em;
+        }
+        .package-size {
+            color: #666;
+        }
+        .filter-box {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        .filter-box input {
+            width: 100%;
+            padding: 12px;
+            font-size: 1em;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            transition: border-color 0.3s;
+        }
+        .filter-box input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        .change-badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.85em;
+            font-weight: 600;
+            margin-left: 10px;
+        }
+        .change-badge.new {
+            background: #d1fae5;
+            color: #065f46;
+        }
+        .change-badge.updated {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+        .change-badge.removed {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #667eea;
+            font-size: 1.2em;
+        }
+        .error {
+            background: #fee2e2;
+            color: #991b1b;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        .pagination button {
+            padding: 10px 20px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+        .pagination button:hover {
+            background: #5568d3;
+        }
+        .pagination button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="index.html" class="back-link">← Volver al índice</a>
+
+        <div class="loading" id="loading">Cargando datos...</div>
+
+        <div id="content" style="display:none;">
+            <h1 id="version-title"></h1>
+            <p class="subtitle" id="version-subtitle"></p>
+
+            <!-- Overall Stats -->
+            <div class="stats" id="overall-stats"></div>
+
+            <!-- Recent Changes -->
+            <div class="section" id="recent-changes-section" style="display:none;">
+                <h2>🔄 Cambios Recientes</h2>
+                <div id="recent-changes"></div>
+            </div>
+
+            <!-- Components -->
+            <div class="section">
+                <h2>📦 Componentes y Paquetes</h2>
+                <div id="components"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const VERSION_INFO = {
+            'focal': { name: 'Ubuntu 20.04 LTS', codename: 'Focal Fossa' },
+            'jammy': { name: 'Ubuntu 22.04 LTS', codename: 'Jammy Jellyfish' },
+            'noble': { name: 'Ubuntu 24.04 LTS', codename: 'Noble Numbat' }
+        };
+
+        // Get version from URL parameter or filename
+        function getVersion() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const paramVersion = urlParams.get('version');
+            if (paramVersion) return paramVersion;
+
+            // Try to get from filename
+            const path = window.location.pathname;
+            const filename = path.substring(path.lastIndexOf('/') + 1);
+            const match = filename.match(/^(focal|jammy|noble)\.html$/);
+            return match ? match[1] : 'focal';
+        }
+
+        function formatSize(bytes) {
+            if (!bytes) return 'N/A';
+            const units = ['B', 'KB', 'MB', 'GB', 'TB'];
+            let size = bytes;
+            let unitIndex = 0;
+            while (size >= 1024 && unitIndex < units.length - 1) {
+                size /= 1024;
+                unitIndex++;
+            }
+            return `${size.toFixed(2)} ${units[unitIndex]}`;
+        }
+
+        function formatNumber(num) {
+            return num ? num.toLocaleString('es-ES') : '0';
+        }
+
+        function createPackageTable(packages, componentName) {
+            if (!packages || packages.length === 0) {
+                return '<p style="color: #666;">No hay paquetes disponibles</p>';
+            }
+
+            let html = `
+                <div class="filter-box">
+                    <input type="text"
+                           id="filter-${componentName}"
+                           placeholder="Filtrar paquetes por nombre..."
+                           onkeyup="filterPackages('${componentName}')">
+                </div>
+                <table class="packages-table" id="table-${componentName}">
+                    <thead>
+                        <tr>
+                            <th>Paquete</th>
+                            <th>Versión</th>
+                            <th>Arquitectura</th>
+                            <th>Tamaño</th>
+                        </tr>
+                    </thead>
+                    <tbody>`;
+
+            // Limit to first 100 packages for performance
+            const displayPackages = packages.slice(0, 100);
+
+            for (const pkg of displayPackages) {
+                html += `
+                    <tr>
+                        <td class="package-name">${pkg.Package || 'N/A'}</td>
+                        <td class="package-version">${pkg.Version || 'N/A'}</td>
+                        <td>${pkg.Architecture || 'N/A'}</td>
+                        <td class="package-size">${formatSize(parseInt(pkg.Size || 0))}</td>
+                    </tr>`;
+            }
+
+            html += `
+                    </tbody>
+                </table>`;
+
+            if (packages.length > 100) {
+                html += `<p style="text-align: center; color: #666; margin-top: 10px;">
+                    Mostrando 100 de ${formatNumber(packages.length)} paquetes
+                </p>`;
+            }
+
+            return html;
+        }
+
+        function filterPackages(componentName) {
+            const input = document.getElementById(`filter-${componentName}`);
+            const filter = input.value.toLowerCase();
+            const table = document.getElementById(`table-${componentName}`);
+            const rows = table.getElementsByTagName('tr');
+
+            for (let i = 1; i < rows.length; i++) {
+                const nameCell = rows[i].getElementsByClassName('package-name')[0];
+                if (nameCell) {
+                    const name = nameCell.textContent.toLowerCase();
+                    rows[i].style.display = name.includes(filter) ? '' : 'none';
+                }
+            }
+        }
+
+        async function loadVersionData(version) {
+            try {
+                const response = await fetch('packages_state.json');
+                if (!response.ok) {
+                    throw new Error('No se pudo cargar packages_state.json');
+                }
+
+                const data = await response.json();
+                const versionData = data[version];
+
+                if (!versionData) {
+                    throw new Error(`No hay datos para la versión ${version}`);
+                }
+
+                const versionInfo = VERSION_INFO[version];
+
+                // Update title
+                document.getElementById('page-title').textContent =
+                    `LliureX ${versionInfo.name} - Repositorio de Paquetes`;
+                document.getElementById('version-title').textContent =
+                    `${versionInfo.name} (${version})`;
+                document.getElementById('version-subtitle').textContent =
+                    versionInfo.codename;
+
+                // Overall stats
+                const components = versionData.components || {};
+                const totalPackages = Object.values(components).reduce(
+                    (sum, c) => sum + (c.package_count || 0), 0
+                );
+                const totalSize = Object.values(components).reduce(
+                    (sum, c) => sum + (c.total_size || 0), 0
+                );
+                const totalChanges = Object.values(components).reduce(
+                    (sum, c) => sum + (c.recent_changes?.length || 0), 0
+                );
+
+                document.getElementById('overall-stats').innerHTML = `
+                    <div class="stat-card">
+                        <h3>Total de Paquetes</h3>
+                        <div class="value">${formatNumber(totalPackages)}</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Tamaño Total</h3>
+                        <div class="value">${formatSize(totalSize)}</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Cambios Recientes</h3>
+                        <div class="value">${formatNumber(totalChanges)}</div>
+                    </div>
+                `;
+
+                // Recent changes
+                if (totalChanges > 0) {
+                    let changesHTML = '';
+                    for (const [compName, compData] of Object.entries(components)) {
+                        if (compData.recent_changes && compData.recent_changes.length > 0) {
+                            changesHTML += `<div class="component-card">
+                                <h3>${compName}</h3>
+                                <ul>`;
+
+                            for (const change of compData.recent_changes.slice(0, 10)) {
+                                const badgeClass = change.type || 'updated';
+                                const badgeText = {
+                                    'new': 'NUEVO',
+                                    'updated': 'ACTUALIZADO',
+                                    'removed': 'ELIMINADO'
+                                }[badgeClass] || 'MODIFICADO';
+
+                                changesHTML += `
+                                    <li>
+                                        <strong>${change.package}</strong>
+                                        <span class="change-badge ${badgeClass}">${badgeText}</span>
+                                        ${change.version ? `<span class="package-version">${change.version}</span>` : ''}
+                                    </li>`;
+                            }
+
+                            changesHTML += '</ul></div>';
+                        }
+                    }
+
+                    if (changesHTML) {
+                        document.getElementById('recent-changes').innerHTML = changesHTML;
+                        document.getElementById('recent-changes-section').style.display = 'block';
+                    }
+                }
+
+                // Components
+                let componentsHTML = '';
+                for (const [compName, compData] of Object.entries(components)) {
+                    componentsHTML += `
+                        <div class="component-card">
+                            <h3>📁 ${compName}</h3>
+                            <div class="component-stats">
+                                <div class="component-stat">
+                                    <span class="component-stat-label">Paquetes</span>
+                                    <span class="component-stat-value">${formatNumber(compData.package_count || 0)}</span>
+                                </div>
+                                <div class="component-stat">
+                                    <span class="component-stat-label">Tamaño</span>
+                                    <span class="component-stat-value">${formatSize(compData.total_size || 0)}</span>
+                                </div>
+                            </div>
+                            ${createPackageTable(compData.packages, compName)}
+                        </div>`;
+                }
+
+                document.getElementById('components').innerHTML = componentsHTML;
+
+                // Show content
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('content').style.display = 'block';
+
+            } catch (error) {
+                console.error('Error loading data:', error);
+                document.getElementById('loading').innerHTML =
+                    `<div class="error">Error al cargar los datos: ${error.message}</div>`;
+            }
+        }
+
+        // Load data when page loads
+        const version = getVersion();
+        loadVersionData(version);
+    </script>
+</body>
+</html>

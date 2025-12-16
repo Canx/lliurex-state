@@ -1105,17 +1105,17 @@ def main():
                     print(f"  Summary: {summary['total_packages']} unique packages, {format_size(summary['total_size'])}")
 
         if components_data:
-            print(f"\n📝 Generating HTML page for {version}...")
-            html = generate_html_page(version, None, components_data, status_data)
-
-            with open(f"{version}.html", "w", encoding='utf-8') as f:
-                f.write(html)
+            # HTML generation removed - pages now load data dynamically via JavaScript
+            # print(f"\n📝 Generating HTML page for {version}...")
+            # html = generate_html_page(version, None, components_data, status_data)
+            # with open(f"{version}.html", "w", encoding='utf-8') as f:
+            #     f.write(html)
 
             versions_summary[version] = {
                 'status': 'online',
                 'components': components_data
             }
-            print(f"  ✓ Created {version}.html")
+            print(f"  ✓ Processed {version} data")
         else:
             versions_summary[version] = {
                 'status': 'offline',
@@ -1129,22 +1129,23 @@ def main():
     save_packages_state(all_packages_state)
     print("  ✓ Saved packages_state.json")
 
-    print(f"\n{'='*60}")
-    print("📝 Generating index.html...")
-    print('='*60)
+    # HTML generation removed - pages now load data dynamically via JavaScript
+    # print(f"\n{'='*60}")
+    # print("📝 Generating index.html...")
+    # print('='*60)
+    # index_html = generate_index_page(versions_summary, status_data)
+    # with open("index.html", "w", encoding='utf-8') as f:
+    #     f.write(index_html)
+    # print("  ✓ Created index.html")
 
-    index_html = generate_index_page(versions_summary, status_data)
-    with open("index.html", "w", encoding='utf-8') as f:
-        f.write(index_html)
-
-    print("  ✓ Created index.html")
-    print("\n✅ All pages generated successfully!")
+    print("\n✅ Package data processing completed!")
     print("\nGenerated files:")
-    print("  - index.html (main page)")
-    for version in UBUNTU_VERSIONS:
-        print(f"  - {version}.html (Ubuntu {version} details)")
-    print("  - packages_state.json (package state for change tracking)")
+    print("  - packages_state.json (package state for JavaScript pages)")
     print("  - changes_timestamps.json (timestamps of detected changes)")
+    print("\nHTML pages (static, load data dynamically):")
+    print("  - index.html")
+    for version in UBUNTU_VERSIONS:
+        print(f"  - {version}.html")
 
 if __name__ == "__main__":
     main()
