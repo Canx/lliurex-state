@@ -36,9 +36,13 @@ def load_status_data() -> Dict:
     try:
         if os.path.exists("local_status.json"):
             with open("local_status.json", "r") as f:
-                local_history = json.load(f)
-                if local_history:
-                    status_data['local'] = local_history[-1]
+                local_status = json.load(f)
+                if local_status:
+                    # Handle both old format (array) and new format (object)
+                    if isinstance(local_status, list):
+                        status_data['local'] = local_status[-1] if local_status else None
+                    elif isinstance(local_status, dict):
+                        status_data['local'] = local_status
     except Exception as e:
         print(f"Warning: Could not load local_status.json: {e}")
 
