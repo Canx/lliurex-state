@@ -8,6 +8,7 @@ from typing import List, Dict
 import gzip
 import io
 import re
+import json
 
 LLIUREX_BASE_URL = "http://lliurex.net"
 UBUNTU_VERSIONS = ["focal", "jammy", "noble"]
@@ -61,31 +62,83 @@ def fetch_packages_for_version(version: str, component: str = "main") -> List[Di
 
     return packages
 
-def get_package_summary(packages: List[Dict]) -> Dict:
+def load_previous_packages(version: str, component: str) -> Dict:
+    """Load previous package state from file"""
+    try:
+        with open(f"packages_state.json", "r") as f:
+            content = f.read().strip()
+            if not content:
+                return {}
+            state = json.loads(content)
+            return state.get(version, {}).get(component, {})
+    except (FileNotFoundError, json.JSONDecodeError):
+        return {}
+
+def save_packages_state(all_packages_state: Dict):
+    """Save current package state to file"""
+    with open("packages_state.json", "w") as f:
+        json.dump(all_packages_state, f, indent=2)
+
+def compare_packages(current_packages: List[Dict], previous_packages: Dict) -> List[Dict]:
+    """Compare current packages with previous state and find updates"""
+    updated = []
+    new = []
+
+    for pkg in current_packages:
+        name = pkg.get('Package', '')
+        version = pkg.get('Version', '')
+
+        if name in previous_packages:
+            # Package existed before, check if version changed
+            if previous_packages[name] != version:
+                updated.append({
+                    **pkg,
+                    'previous_version': previous_packages[name],
+                    'change_type': 'updated'
+                })
+        else:
+            # New package
+            new.append({
+                **pkg,
+                'change_type': 'new'
+            })
+
+    # Combine and sort by change type (new first, then updated)
+    changes = new + updated
+    return changes
+
+def get_package_summary(packages: List[Dict], version: str = None, component: str = None) -> Dict:
     """Generate summary statistics from package list"""
     if not packages:
         return {
             "total_packages": 0,
             "total_size": 0,
             "latest_packages": [],
-            "largest_packages": []
+            "largest_packages": [],
+            "recent_changes": []
         }
 
     # Get unique packages (by name)
     unique_packages = {}
     for pkg in packages:
         name = pkg.get('Package', '')
-        version = pkg.get('Version', '')
+        version_str = pkg.get('Version', '')
         if name:
             # Keep the latest version
             if name not in unique_packages:
                 unique_packages[name] = pkg
             else:
                 # Simple version comparison (not perfect but works for most cases)
-                if version > unique_packages[name].get('Version', ''):
+                if version_str > unique_packages[name].get('Version', ''):
                     unique_packages[name] = pkg
 
     packages_list = list(unique_packages.values())
+
+    # Load previous state and compare
+    recent_changes = []
+    if version and component:
+        previous_state = load_previous_packages(version, component)
+        recent_changes = compare_packages(packages_list, previous_state)
 
     # Calculate total size
     total_size = 0
@@ -114,7 +167,9 @@ def get_package_summary(packages: List[Dict]) -> Dict:
         "total_packages": len(packages_list),
         "total_size": total_size,
         "latest_packages": sorted_by_version,
-        "largest_packages": sorted_by_size
+        "largest_packages": sorted_by_size,
+        "recent_changes": recent_changes[:30],  # Limit to 30 most recent changes
+        "packages_dict": {pkg.get('Package'): pkg.get('Version') for pkg in packages_list}
     }
 
 def format_size(bytes_size: int) -> str:
@@ -292,6 +347,9 @@ def generate_html_page(version: str, summary: Dict, components_data: Dict) -> st
         total_packages += data['total_packages']
         total_size += data['total_size']
 
+    # Count total changes
+    total_changes = sum(len(data.get('recent_changes', [])) for data in components_data.values())
+
     html += f"""
             <div class="stat-card">
                 <h3>Total de Paquetes</h3>
@@ -302,9 +360,76 @@ def generate_html_page(version: str, summary: Dict, components_data: Dict) -> st
                 <div class="value">{format_size(total_size)}</div>
             </div>
             <div class="stat-card">
-                <h3>Componentes</h3>
-                <div class="value">{len(components_data)}</div>
+                <h3>Cambios Recientes</h3>
+                <div class="value">{total_changes}</div>
             </div>
+        </div>
+"""
+
+    # Recent changes section (if any)
+    if total_changes > 0:
+        html += """
+        <div class="section">
+            <h2>🔄 Cambios Desde la Última Actualización</h2>
+            <div class="tabs">
+"""
+
+        for i, component in enumerate(components_data.keys()):
+            if len(components_data[component].get('recent_changes', [])) > 0:
+                active = "active" if i == 0 else ""
+                html += f'<button class="tab {active}" onclick="showTab(\'changes-{component}\')">{component.capitalize()}</button>\n'
+
+        html += """
+            </div>
+"""
+
+        for i, (component, data) in enumerate(components_data.items()):
+            if len(data.get('recent_changes', [])) > 0:
+                active = "active" if i == 0 else ""
+                html += f"""
+            <div id="changes-{component}" class="tab-content {active}">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Estado</th>
+                            <th>Paquete</th>
+                            <th>Versión Anterior</th>
+                            <th>Versión Nueva</th>
+                            <th>Tamaño</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+"""
+
+                for pkg in data['recent_changes'][:30]:
+                    name = pkg.get('Package', 'N/A')
+                    new_version = pkg.get('Version', 'N/A')
+                    old_version = pkg.get('previous_version', '-')
+                    size = format_size(int(pkg.get('Size', '0')))
+                    change_type = pkg.get('change_type', 'unknown')
+
+                    if change_type == 'new':
+                        status_badge = '<span style="background: #d4edda; color: #155724; padding: 3px 8px; border-radius: 3px; font-size: 0.85em; font-weight: 600;">NUEVO</span>'
+                    else:
+                        status_badge = '<span style="background: #fff3cd; color: #856404; padding: 3px 8px; border-radius: 3px; font-size: 0.85em; font-weight: 600;">ACTUALIZADO</span>'
+
+                    html += f"""
+                        <tr>
+                            <td>{status_badge}</td>
+                            <td class="package-name">{name}</td>
+                            <td>{old_version}</td>
+                            <td><strong>{new_version}</strong></td>
+                            <td>{size}</td>
+                        </tr>
+"""
+
+                html += """
+                    </tbody>
+                </table>
+            </div>
+"""
+
+        html += """
         </div>
 """
 
@@ -602,6 +727,7 @@ def main():
     print("🔍 Fetching package information from LliureX repositories...\n")
 
     versions_summary = {}
+    all_packages_state = {}
 
     for version in UBUNTU_VERSIONS:
         print(f"\n{'='*60}")
@@ -609,15 +735,28 @@ def main():
         print('='*60)
 
         components_data = {}
+        all_packages_state[version] = {}
 
         for component in COMPONENTS:
             print(f"\nFetching {component} packages:")
             packages = fetch_packages_for_version(version, component)
 
             if packages:
-                summary = get_package_summary(packages)
+                summary = get_package_summary(packages, version, component)
                 components_data[component] = summary
-                print(f"  Summary: {summary['total_packages']} unique packages, {format_size(summary['total_size'])}")
+
+                # Store current state
+                all_packages_state[version][component] = summary['packages_dict']
+
+                # Show summary with changes
+                changes_count = len(summary['recent_changes'])
+                if changes_count > 0:
+                    new_count = len([c for c in summary['recent_changes'] if c.get('change_type') == 'new'])
+                    updated_count = len([c for c in summary['recent_changes'] if c.get('change_type') == 'updated'])
+                    print(f"  Summary: {summary['total_packages']} unique packages, {format_size(summary['total_size'])}")
+                    print(f"  Changes: {new_count} new, {updated_count} updated")
+                else:
+                    print(f"  Summary: {summary['total_packages']} unique packages, {format_size(summary['total_size'])}")
 
         if components_data:
             print(f"\n📝 Generating HTML page for {version}...")
@@ -637,6 +776,13 @@ def main():
                 'components': {}
             }
 
+    # Save current packages state for next run
+    print(f"\n{'='*60}")
+    print("💾 Saving packages state...")
+    print('='*60)
+    save_packages_state(all_packages_state)
+    print("  ✓ Saved packages_state.json")
+
     print(f"\n{'='*60}")
     print("📝 Generating index.html...")
     print('='*60)
@@ -651,6 +797,7 @@ def main():
     print("  - index.html (main page)")
     for version in UBUNTU_VERSIONS:
         print(f"  - {version}.html (Ubuntu {version} details)")
+    print("  - packages_state.json (package state for change tracking)")
 
 if __name__ == "__main__":
     main()
