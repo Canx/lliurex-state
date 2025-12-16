@@ -2,8 +2,8 @@ name: Update LliureX Status
 
 on:
   schedule:
-    # Ejecutar todos los días a las 00:00 UTC
-    - cron: '0 0 * * *'
+    # Ejecutar cada hora
+    - cron: '0 * * * *'
   workflow_dispatch: # Permite ejecutar manualmente el workflow
 
 permissions:
@@ -14,6 +14,8 @@ permissions:
 jobs:
   update-status:
     runs-on: ubuntu-latest
+    outputs:
+      has_changes: ${{ steps.check_changes.outputs.has_changes }}
 
     steps:
     - name: Checkout repository
@@ -40,7 +42,19 @@ jobs:
       run: |
         python fetch_packages.py
 
+    - name: Check for state changes
+      id: check_changes
+      run: |
+        if python check_state_changes.py; then
+          echo "has_changes=true" >> $GITHUB_OUTPUT
+          echo "✨ Changes detected - will commit"
+        else
+          echo "has_changes=false" >> $GITHUB_OUTPUT
+          echo "✓ No changes - skipping commit"
+        fi
+
     - name: Commit and push changes
+      if: steps.check_changes.outputs.has_changes == 'true'
       uses: stefanzweifel/git-auto-commit-action@v5
       with:
         commit_message: "🤖 Update LliureX repository status and package pages"
@@ -52,12 +66,14 @@ jobs:
         push_options: '--force-with-lease'
 
     - name: Upload Pages artifact
+      if: steps.check_changes.outputs.has_changes == 'true'
       uses: actions/upload-pages-artifact@v3
       with:
         path: '.'
 
   deploy:
     needs: update-status
+    if: needs.update-status.outputs.has_changes == 'true'
     runs-on: ubuntu-latest
 
     permissions:
