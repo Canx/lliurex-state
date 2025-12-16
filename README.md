@@ -1,18 +1,18 @@
 # LliureX Repository Status
 
-[![Update Status](https://github.com/Canx/lliurex-state/actions/workflows/update-status.yml/badge.svg)](https://github.com/Canx/lliurex-state/actions/workflows/update-status.yml)
+[![Update Status](https://github.com/{username}/{repo}/actions/workflows/update-status.yml/badge.svg)](https://github.com/{username}/{repo}/actions/workflows/update-status.yml)
 
 Este repositorio monitorea automáticamente el estado de los repositorios de LliureX para diferentes versiones de Ubuntu.
 
 ## 📊 Estado Actual
 
-**Última actualización:** 2025-12-16 09:38:55 UTC
+**Última actualización:** 2025-12-16 09:48:16 UTC
 
 | Versión Ubuntu | Estado | Última Actualización Repo | URL |
 |----------------|--------|---------------------------|-----|
 | Ubuntu 20.04 LTS (focal) | ✅ online | Tue, 29 Jul 2025 12:39:16 UTC | [Link](http://lliurex.net/focal/) |
 | Ubuntu 22.04 LTS (jammy) | ✅ online | Thu, 11 Dec 2025 12:26:11 UTC | [Link](http://lliurex.net/jammy/) |
-| Ubuntu 24.04 LTS (noble) | ✅ online | Thu, 31 Jul 2025 10:25:45 UTC | [Link](http://lliurex.net/noble/) |
+| Ubuntu 24.04 LTS (noble) | ✅ online | Tue, 29 Jul 2025 12:42:15 UTC | [Link](http://lliurex.net/noble/) |
 
 
 ## 📦 Repositorios de LliureX
