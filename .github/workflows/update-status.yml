@@ -8,6 +8,8 @@ on:
 
 permissions:
   contents: write
+  pages: write
+  id-token: write
 
 jobs:
   update-status:
@@ -33,11 +35,37 @@ jobs:
       run: |
         python update_status.py
 
+    - name: Generate package pages
+      run: |
+        python fetch_packages.py
+
     - name: Commit and push changes
       uses: stefanzweifel/git-auto-commit-action@v5
       with:
-        commit_message: "🤖 Update LliureX repository status"
+        commit_message: "🤖 Update LliureX repository status and package pages"
         commit_user_name: "github-actions[bot]"
         commit_user_email: "github-actions[bot]@users.noreply.github.com"
         commit_author: "github-actions[bot] <github-actions[bot]@users.noreply.github.com>"
-        file_pattern: "README.md history.json"
+        file_pattern: "README.md history.json *.html"
+
+    - name: Upload Pages artifact
+      uses: actions/upload-pages-artifact@v3
+      with:
+        path: '.'
+
+  deploy:
+    needs: update-status
+    runs-on: ubuntu-latest
+
+    permissions:
+      pages: write
+      id-token: write
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+    - name: Deploy to GitHub Pages
+      id: deployment
+      uses: actions/deploy-pages@v4

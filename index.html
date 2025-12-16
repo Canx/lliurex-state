@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LliureX - Monitor de Repositorios</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        header {
+            background: white;
+            border-radius: 10px;
+            padding: 40px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            text-align: center;
+        }
+        h1 {
+            color: #667eea;
+            font-size: 3em;
+            margin-bottom: 10px;
+        }
+        .subtitle {
+            color: #666;
+            font-size: 1.2em;
+        }
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+        .card {
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 50px rgba(0,0,0,0.3);
+        }
+        .card h2 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 1.8em;
+        }
+        .card .version {
+            color: #999;
+            font-size: 0.9em;
+            margin-bottom: 20px;
+        }
+        .card .stats {
+            margin: 20px 0;
+        }
+        .card .stat {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+        }
+        .card .stat:last-child {
+            border-bottom: none;
+        }
+        .card .stat-label {
+            color: #666;
+        }
+        .card .stat-value {
+            font-weight: 600;
+            color: #667eea;
+        }
+        .card .btn {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 12px 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: 600;
+            transition: opacity 0.3s;
+        }
+        .card .btn:hover {
+            opacity: 0.9;
+        }
+        .status {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+        .status.online {
+            background: #d4edda;
+            color: #155724;
+        }
+        .status.offline {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        footer {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            text-align: center;
+            color: #666;
+        }
+        footer a {
+            color: #667eea;
+            text-decoration: none;
+        }
+        footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🐧 LliureX Repository Monitor</h1>
+            <p class="subtitle">Monitor de repositorios de paquetes LliureX para Ubuntu</p>
+            <p style="margin-top: 15px; color: #999;">Última actualización: 16/12/2025 10:02 UTC</p>
+        </header>
+
+        <div class="cards">
+
+            <div class="card">
+                <span class="status online">✓ Online</span>
+                <h2>Ubuntu 20.04 LTS</h2>
+                <div class="version">Focal Fossa</div>
+
+                <div class="stats">
+                    <div class="stat">
+                        <span class="stat-label">📦 Paquetes totales</span>
+                        <span class="stat-value">6,826</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-label">💾 Tamaño total</span>
+                        <span class="stat-value">19.6 GB</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-label">🔧 Componentes</span>
+                        <span class="stat-value">1</span>
+                    </div>
+                </div>
+
+                <a href="focal.html" class="btn">Ver detalles →</a>
+            </div>
+
+            <div class="card">
+                <span class="status online">✓ Online</span>
+                <h2>Ubuntu 22.04 LTS</h2>
+                <div class="version">Jammy Jellyfish</div>
+
+                <div class="stats">
+                    <div class="stat">
+                        <span class="stat-label">📦 Paquetes totales</span>
+                        <span class="stat-value">7,153</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-label">💾 Tamaño total</span>
+                        <span class="stat-value">18.7 GB</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-label">🔧 Componentes</span>
+                        <span class="stat-value">1</span>
+                    </div>
+                </div>
+
+                <a href="jammy.html" class="btn">Ver detalles →</a>
+            </div>
+
+            <div class="card">
+                <span class="status online">✓ Online</span>
+                <h2>Ubuntu 24.04 LTS</h2>
+                <div class="version">Noble Numbat</div>
+
+                <div class="stats">
+                    <div class="stat">
+                        <span class="stat-label">📦 Paquetes totales</span>
+                        <span class="stat-value">7,252</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-label">💾 Tamaño total</span>
+                        <span class="stat-value">19.7 GB</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-label">🔧 Componentes</span>
+                        <span class="stat-value">1</span>
+                    </div>
+                </div>
+
+                <a href="noble.html" class="btn">Ver detalles →</a>
+            </div>
+
+        </div>
+
+        <footer>
+            <p><strong>LliureX</strong> - Distribución Linux educativa de la Generalitat Valenciana</p>
+            <p style="margin-top: 10px;">
+                <a href="https://lliurex.net" target="_blank">Web oficial</a> ·
+                <a href="https://wiki.lliurex.net" target="_blank">Wiki</a> ·
+                <a href="https://github.com/Canx/lliurex-state" target="_blank">GitHub</a>
+            </p>
+        </footer>
+    </div>
+</body>
+</html>

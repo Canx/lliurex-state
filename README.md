@@ -4,6 +4,16 @@
 
 Este repositorio monitorea automáticamente el estado de los repositorios de LliureX para diferentes versiones de Ubuntu.
 
+## 🌐 Ver Detalles Completos
+
+**[📊 Ver información detallada de paquetes en GitHub Pages](https://canx.github.io/lliurex-state/)**
+
+Consulta las páginas web generadas automáticamente con información completa sobre:
+- Listado de paquetes por versión de Ubuntu
+- Últimas actualizaciones de paquetes
+- Estadísticas de repositorio
+- Tamaños y versiones de paquetes
+
 ## 📊 Estado Actual
 
 **Última actualización:** 2025-12-16 09:51:27 UTC
