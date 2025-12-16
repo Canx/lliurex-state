@@ -301,8 +301,16 @@
                     </thead>
                     <tbody>`;
 
-            // Limit to first 100 packages for performance
-            const displayPackages = packages.slice(0, 100);
+            // Sort packages alphabetically by name for better browsing
+            const sortedPackages = [...packages].sort((a, b) => {
+                const nameA = (a.Package || '').toLowerCase();
+                const nameB = (b.Package || '').toLowerCase();
+                return nameA.localeCompare(nameB);
+            });
+
+            // Limit to first 500 packages for performance
+            const displayLimit = 500;
+            const displayPackages = sortedPackages.slice(0, displayLimit);
 
             for (const pkg of displayPackages) {
                 html += `
@@ -318,9 +326,14 @@
                     </tbody>
                 </table>`;
 
-            if (packages.length > 100) {
+            if (packages.length > displayLimit) {
                 html += `<p style="text-align: center; color: #666; margin-top: 10px;">
-                    Mostrando 100 de ${formatNumber(packages.length)} paquetes
+                    Mostrando ${formatNumber(displayLimit)} de ${formatNumber(packages.length)} paquetes (ordenados alfabéticamente).
+                    <br>Usa el filtro de búsqueda para encontrar paquetes específicos.
+                </p>`;
+            } else if (packages.length > 0) {
+                html += `<p style="text-align: center; color: #666; margin-top: 10px;">
+                    Mostrando todos los ${formatNumber(packages.length)} paquetes (ordenados alfabéticamente)
                 </p>`;
             }
 
@@ -467,7 +480,12 @@
                                     <span class="component-stat-value">${formatSize(compData.total_size || 0)}</span>
                                 </div>
                             </div>
-                            ${createPackageTable(compData.latest_packages || compData.packages || [], compName)}
+                            ${createPackageTable(
+                                compData.packages ||
+                                compData.latest_packages ||
+                                (compData.packages_dict ? Object.values(compData.packages_dict) : []),
+                                compName
+                            )}
                         </div>`;
                 }
 
