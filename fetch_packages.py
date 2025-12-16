@@ -52,15 +52,26 @@ def parse_packages_file(content: str) -> List[Dict]:
     """Parse a Packages file and extract package information"""
     packages = []
     current_package = {}
+    current_field = None
 
     for line in content.split('\n'):
         if line.strip() == '':
+            # Empty line marks end of package entry
             if current_package:
                 packages.append(current_package)
                 current_package = {}
+                current_field = None
+        elif line.startswith(' ') or line.startswith('\t'):
+            # Continuation of previous field (multiline value)
+            if current_field and current_field in current_package:
+                current_package[current_field] += ' ' + line.strip()
         elif ':' in line:
+            # New field
             key, value = line.split(':', 1)
-            current_package[key.strip()] = value.strip()
+            key = key.strip()
+            value = value.strip()
+            current_package[key] = value
+            current_field = key
 
     if current_package:
         packages.append(current_package)
