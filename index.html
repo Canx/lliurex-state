@@ -39,6 +39,61 @@
             color: #666;
             font-size: 1.2em;
         }
+        .status-section {
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+        .status-section h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+        }
+        .status-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+        }
+        .status-item {
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+        .status-item.online {
+            border-left-color: #10b981;
+        }
+        .status-item.offline {
+            border-left-color: #ef4444;
+        }
+        .status-item h3 {
+            color: #333;
+            font-size: 1.2em;
+            margin-bottom: 10px;
+        }
+        .status-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.85em;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        .status-badge.online {
+            background: #d1fae5;
+            color: #065f46;
+        }
+        .status-badge.offline {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+        .status-info {
+            font-size: 0.9em;
+            color: #666;
+            margin-top: 5px;
+        }
         .cards {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
@@ -99,96 +154,37 @@
         .card .btn:hover {
             opacity: 0.9;
         }
-        .status {
-            display: inline-block;
-            padding: 5px 15px;
-            border-radius: 20px;
-            font-size: 0.9em;
-            font-weight: 600;
-            margin-bottom: 15px;
-        }
-        .status.online {
-            background: #d4edda;
-            color: #155724;
-        }
-        .status.offline {
-            background: #f8d7da;
-            color: #721c24;
-        }
         footer {
-            background: white;
-            border-radius: 10px;
-            padding: 20px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
             text-align: center;
-            color: #666;
+            color: white;
+            padding: 30px;
+            margin-top: 30px;
         }
         footer a {
-            color: #667eea;
+            color: white;
             text-decoration: none;
+            margin: 0 10px;
         }
         footer a:hover {
             text-decoration: underline;
         }
-        .status-section {
-            background: white;
-            border-radius: 10px;
-            padding: 30px;
-            margin-bottom: 30px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: white;
+            font-size: 1.2em;
         }
-        .status-section h2 {
-            color: #667eea;
-            margin-bottom: 20px;
-            font-size: 1.5em;
-        }
-        .status-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
-        }
-        .status-box {
-            background: #f8f9fa;
-            border-radius: 8px;
+        .error {
+            background: #fee2e2;
+            color: #991b1b;
             padding: 20px;
-            border-left: 4px solid #667eea;
+            border-radius: 8px;
+            margin: 20px 0;
         }
-        .status-box h3 {
-            color: #667eea;
-            margin-bottom: 15px;
-            font-size: 1.1em;
-        }
-        .status-box .stat {
-            display: flex;
-            justify-content: space-between;
-            padding: 8px 0;
-            border-bottom: 1px solid #dee2e6;
-        }
-        .status-box .stat:last-child {
-            border-bottom: none;
-        }
-        .status-box .stat-label {
+        .last-update {
             color: #666;
             font-size: 0.9em;
-        }
-        .status-box .stat-value {
-            font-weight: 600;
-            color: #333;
-        }
-        .status-badge {
-            display: inline-block;
-            padding: 4px 12px;
-            border-radius: 12px;
-            font-size: 0.85em;
-            font-weight: 600;
-        }
-        .status-badge.online {
-            background: #d4edda;
-            color: #155724;
-        }
-        .status-badge.offline {
-            background: #f8d7da;
-            color: #721c24;
+            margin-top: 10px;
         }
     </style>
 </head>
@@ -197,106 +193,26 @@
         <header>
             <h1>🐧 LliureX Repository Monitor</h1>
             <p class="subtitle">Monitor de repositorios de paquetes LliureX para Ubuntu</p>
-            <p style="margin-top: 15px; color: #999;">Última actualización: 16/12/2025 16:33 UTC</p>
         </header>
 
-        <div class="status-section">
-            <h2>📊 Estado de Conectividad</h2>
-            <div class="status-grid">
-                <div class="status-box">
-                    <h3>🌍 Estado Externo (GitHub Actions)</h3>
-                    <div class="stat">
-                        <span class="stat-label">20.04 (Focal)</span>
-                        <span class="status-badge online">✓ Online</span>
-                    </div>
-                    <div class="stat">
-                        <span class="stat-label">22.04 (Jammy)</span>
-                        <span class="status-badge online">✓ Online</span>
-                    </div>
-                    <div class="stat">
-                        <span class="stat-label">24.04 (Noble)</span>
-                        <span class="status-badge online">✓ Online</span>
-                    </div>
-                    <div class="stat">
-                        <span class="stat-label">Última actualización</span>
-                        <span class="stat-value" style="font-size: 0.85em;">2025-12-16 12:54:53</span>
-                    </div>
-                </div>
-            </div>
+        <div class="loading" id="loading">Cargando datos...</div>
+
+        <!-- External Status -->
+        <div class="status-section" id="external-status" style="display:none;">
+            <h2>🌍 Estado Externo (GitHub Actions)</h2>
+            <p class="last-update" id="external-timestamp"></p>
+            <div class="status-grid" id="external-repos"></div>
         </div>
 
-        <div class="cards">
-
-            <div class="card">
-                <span class="status online">✓ Online</span>
-                <h2>Ubuntu 20.04 LTS</h2>
-                <div class="version">Focal Fossa</div>
-
-                <div class="stats">
-                    <div class="stat">
-                        <span class="stat-label">📦 Paquetes totales</span>
-                        <span class="stat-value">6,826</span>
-                    </div>
-                    <div class="stat">
-                        <span class="stat-label">💾 Tamaño total</span>
-                        <span class="stat-value">19.6 GB</span>
-                    </div>
-                    <div class="stat">
-                        <span class="stat-label">🔄 Cambios recientes</span>
-                        <span class="stat-value">0</span>
-                    </div>
-                </div>
-
-                <a href="focal.html" class="btn">Ver detalles →</a>
-            </div>
-
-            <div class="card">
-                <span class="status online">✓ Online</span>
-                <h2>Ubuntu 22.04 LTS</h2>
-                <div class="version">Jammy Jellyfish</div>
-
-                <div class="stats">
-                    <div class="stat">
-                        <span class="stat-label">📦 Paquetes totales</span>
-                        <span class="stat-value">7,153</span>
-                    </div>
-                    <div class="stat">
-                        <span class="stat-label">💾 Tamaño total</span>
-                        <span class="stat-value">18.7 GB</span>
-                    </div>
-                    <div class="stat">
-                        <span class="stat-label">🔄 Cambios recientes</span>
-                        <span class="stat-value">0</span>
-                    </div>
-                </div>
-
-                <a href="jammy.html" class="btn">Ver detalles →</a>
-            </div>
-
-            <div class="card">
-                <span class="status online">✓ Online</span>
-                <h2>Ubuntu 24.04 LTS</h2>
-                <div class="version">Noble Numbat</div>
-
-                <div class="stats">
-                    <div class="stat">
-                        <span class="stat-label">📦 Paquetes totales</span>
-                        <span class="stat-value">7,174</span>
-                    </div>
-                    <div class="stat">
-                        <span class="stat-label">💾 Tamaño total</span>
-                        <span class="stat-value">19.7 GB</span>
-                    </div>
-                    <div class="stat">
-                        <span class="stat-label">🔄 Cambios recientes</span>
-                        <span class="stat-value">0</span>
-                    </div>
-                </div>
-
-                <a href="noble.html" class="btn">Ver detalles →</a>
-            </div>
-
+        <!-- Local Status -->
+        <div class="status-section" id="local-status" style="display:none;">
+            <h2>🏠 Estado Local (Red Aulas)</h2>
+            <p class="last-update" id="local-timestamp"></p>
+            <div class="status-grid" id="local-repos"></div>
         </div>
+
+        <!-- Package Cards -->
+        <div class="cards" id="package-cards"></div>
 
         <footer>
             <p><strong>LliureX</strong> - Distribución Linux educativa de la Generalitat Valenciana</p>
@@ -307,5 +223,159 @@
             </p>
         </footer>
     </div>
+
+    <script>
+        const VERSIONS = {
+            'focal': { name: 'Ubuntu 20.04 LTS', codename: 'Focal Fossa' },
+            'jammy': { name: 'Ubuntu 22.04 LTS', codename: 'Jammy Jellyfish' },
+            'noble': { name: 'Ubuntu 24.04 LTS', codename: 'Noble Numbat' }
+        };
+
+        function formatSize(bytes) {
+            if (!bytes) return 'N/A';
+            const units = ['B', 'KB', 'MB', 'GB', 'TB'];
+            let size = bytes;
+            let unitIndex = 0;
+            while (size >= 1024 && unitIndex < units.length - 1) {
+                size /= 1024;
+                unitIndex++;
+            }
+            return `${size.toFixed(2)} ${units[unitIndex]}`;
+        }
+
+        function formatNumber(num) {
+            return num ? num.toLocaleString('es-ES') : '0';
+        }
+
+        function createStatusItem(version, info) {
+            const versionInfo = VERSIONS[version];
+            const status = info.status === 'online' ? 'online' : 'offline';
+            const statusText = status === 'online' ? '✓ Online' : '✗ Offline';
+
+            return `
+                <div class="status-item ${status}">
+                    <h3>${versionInfo.name}</h3>
+                    <span class="status-badge ${status}">${statusText}</span>
+                    <div class="status-info">
+                        <div><strong>Codename:</strong> ${versionInfo.codename}</div>
+                        <div><strong>Última actualización:</strong> ${info.last_update || 'N/A'}</div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function createPackageCard(version, summary) {
+            const versionInfo = VERSIONS[version];
+            const status = summary.status || 'unknown';
+            const statusText = status === 'online' ? '✓ Online' : '✗ Offline';
+
+            const components = summary.components || {};
+            const totalPackages = Object.values(components).reduce((sum, c) => sum + (c.package_count || 0), 0);
+            const totalSize = Object.values(components).reduce((sum, c) => sum + (c.total_size || 0), 0);
+            const totalChanges = Object.values(components).reduce((sum, c) => sum + (c.recent_changes?.length || 0), 0);
+
+            return `
+                <div class="card">
+                    <span class="status-badge ${status}">${statusText}</span>
+                    <h2>${versionInfo.name}</h2>
+                    <div class="version">${versionInfo.codename}</div>
+                    <div class="stats">
+                        <div class="stat">
+                            <span class="stat-label">📦 Paquetes totales</span>
+                            <span class="stat-value">${formatNumber(totalPackages)}</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-label">💾 Tamaño total</span>
+                            <span class="stat-value">${formatSize(totalSize)}</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-label">🔄 Cambios recientes</span>
+                            <span class="stat-value">${formatNumber(totalChanges)}</span>
+                        </div>
+                    </div>
+                    <a href="${version}.html" class="btn">Ver detalles →</a>
+                </div>
+            `;
+        }
+
+        async function loadData() {
+            try {
+                // Load external status (from history.json)
+                try {
+                    const historyRes = await fetch('history.json');
+                    if (historyRes.ok) {
+                        const history = await historyRes.json();
+                        if (history && history.length > 0) {
+                            const external = history[history.length - 1];
+                            document.getElementById('external-timestamp').textContent =
+                                `Última actualización: ${external.timestamp} UTC`;
+
+                            let externalHTML = '';
+                            for (const [version, info] of Object.entries(external.repos)) {
+                                externalHTML += createStatusItem(version, info);
+                            }
+                            document.getElementById('external-repos').innerHTML = externalHTML;
+                            document.getElementById('external-status').style.display = 'block';
+                        }
+                    }
+                } catch (e) {
+                    console.warn('Could not load external status:', e);
+                }
+
+                // Load local status
+                try {
+                    const localRes = await fetch('local_status.json');
+                    if (localRes.ok) {
+                        const local = await localRes.json();
+                        // Handle both formats
+                        const localData = Array.isArray(local) ? local[local.length - 1] : local;
+
+                        if (localData && localData.repos) {
+                            document.getElementById('local-timestamp').textContent =
+                                `Última actualización: ${localData.timestamp} UTC`;
+
+                            let localHTML = '';
+                            for (const [version, info] of Object.entries(localData.repos)) {
+                                localHTML += createStatusItem(version, info);
+                            }
+                            document.getElementById('local-repos').innerHTML = localHTML;
+                            document.getElementById('local-status').style.display = 'block';
+                        }
+                    }
+                } catch (e) {
+                    console.warn('Could not load local status:', e);
+                }
+
+                // Load package state
+                try {
+                    const packagesRes = await fetch('packages_state.json');
+                    if (packagesRes.ok) {
+                        const packagesState = await packagesRes.json();
+
+                        let cardsHTML = '';
+                        for (const version of ['focal', 'jammy', 'noble']) {
+                            if (packagesState[version]) {
+                                cardsHTML += createPackageCard(version, packagesState[version]);
+                            }
+                        }
+                        document.getElementById('package-cards').innerHTML = cardsHTML;
+                    }
+                } catch (e) {
+                    console.error('Could not load package state:', e);
+                    document.getElementById('package-cards').innerHTML =
+                        '<div class="error">Error al cargar información de paquetes</div>';
+                }
+
+                document.getElementById('loading').style.display = 'none';
+            } catch (error) {
+                console.error('Error loading data:', error);
+                document.getElementById('loading').innerHTML =
+                    '<div class="error">Error al cargar los datos</div>';
+            }
+        }
+
+        // Load data when page loads
+        loadData();
+    </script>
 </body>
 </html>
