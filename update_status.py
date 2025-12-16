@@ -7,6 +7,8 @@ from datetime import datetime
 from typing import Dict
 import json
 import re
+import subprocess
+import os
 
 LLIUREX_BASE_URL = "http://lliurex.net"
 UBUNTU_VERSIONS = [
@@ -87,11 +89,50 @@ def get_version_name(codename: str) -> str:
     }
     return versions.get(codename, codename)
 
+def get_github_repo() -> str:
+    """Get GitHub repository from git remote or environment variable"""
+    # Try from environment (GitHub Actions)
+    github_repo = os.environ.get('GITHUB_REPOSITORY')
+    if github_repo:
+        return github_repo
+
+    # Try from git remote
+    try:
+        result = subprocess.run(
+            ['git', 'config', '--get', 'remote.origin.url'],
+            capture_output=True,
+            text=True,
+            check=True
+        )
+        remote_url = result.stdout.strip()
+
+        # Parse GitHub URL
+        if 'github.com' in remote_url:
+            # Handle both HTTPS and SSH URLs
+            if remote_url.startswith('https://'):
+                # https://github.com/user/repo.git
+                parts = remote_url.replace('https://github.com/', '').replace('.git', '')
+            elif remote_url.startswith('git@'):
+                # git@github.com:user/repo.git
+                parts = remote_url.replace('git@github.com:', '').replace('.git', '')
+            else:
+                parts = None
+
+            if parts:
+                return parts
+    except:
+        pass
+
+    # Fallback
+    return "Canx/lliurex-state"
+
 def generate_readme(repo_data: Dict) -> str:
     """Generate README.md content"""
+    github_repo = get_github_repo()
+
     readme = f"""# LliureX Repository Status
 
-[![Update Status](https://github.com/{{username}}/{{repo}}/actions/workflows/update-status.yml/badge.svg)](https://github.com/{{username}}/{{repo}}/actions/workflows/update-status.yml)
+[![Update Status](https://github.com/{github_repo}/actions/workflows/update-status.yml/badge.svg)](https://github.com/{github_repo}/actions/workflows/update-status.yml)
 
 Este repositorio monitorea automáticamente el estado de los repositorios de LliureX para diferentes versiones de Ubuntu.
 
