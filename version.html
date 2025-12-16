@@ -403,18 +403,41 @@
                                 <ul>`;
 
                             for (const change of compData.recent_changes.slice(0, 10)) {
-                                const badgeClass = change.type || 'updated';
+                                const changeType = change.change_type || change.type || 'updated';
+                                const packageName = change.Package || change.package || 'Unknown';
+                                const version = change.Version || change.version;
+                                const detectedAt = change.detected_at;
+
+                                const badgeClass = changeType;
                                 const badgeText = {
                                     'new': 'NUEVO',
                                     'updated': 'ACTUALIZADO',
                                     'removed': 'ELIMINADO'
-                                }[badgeClass] || 'MODIFICADO';
+                                }[changeType] || 'MODIFICADO';
+
+                                // Format date if available
+                                let dateStr = '';
+                                if (detectedAt) {
+                                    try {
+                                        const date = new Date(detectedAt);
+                                        dateStr = ` - ${date.toLocaleDateString('es-ES', {
+                                            day: '2-digit',
+                                            month: '2-digit',
+                                            year: 'numeric',
+                                            hour: '2-digit',
+                                            minute: '2-digit'
+                                        })}`;
+                                    } catch (e) {
+                                        dateStr = '';
+                                    }
+                                }
 
                                 changesHTML += `
                                     <li>
-                                        <strong>${change.package}</strong>
+                                        <strong>${packageName}</strong>
                                         <span class="change-badge ${badgeClass}">${badgeText}</span>
-                                        ${change.version ? `<span class="package-version">${change.version}</span>` : ''}
+                                        ${version ? `<span class="package-version">${version}</span>` : ''}
+                                        ${dateStr ? `<span style="color: #999; font-size: 0.9em;">${dateStr}</span>` : ''}
                                     </li>`;
                             }
 
