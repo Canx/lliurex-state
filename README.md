@@ -1,6 +1,6 @@
 # LliureX Repository Status
 
-[![Update Status](https://github.com/{username}/{repo}/actions/workflows/update-status.yml/badge.svg)](https://github.com/{username}/{repo}/actions/workflows/update-status.yml)
+[![Update Status](https://github.com/Canx/lliurex-state/actions/workflows/update-status.yml/badge.svg)](https://github.com/Canx/lliurex-state/actions/workflows/update-status.yml)
 
 Este repositorio monitorea automáticamente el estado de los repositorios de LliureX para diferentes versiones de Ubuntu.
 
