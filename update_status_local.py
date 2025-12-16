@@ -1,15 +1,16 @@
 #!/usr/bin/env python3
 """
-Script to fetch LliureX repository status from external (GitHub Actions)
-and update history.json
+Script to fetch LliureX repository status from LOCAL network
+This script is meant to be run from cron or manually to check
+if repositories are accessible from the local network.
 """
 import requests
 from datetime import datetime
 from typing import Dict
 import json
 import re
+import socket
 import subprocess
-import os
 import sys
 
 LLIUREX_BASE_URL = "http://lliurex.net"
@@ -18,6 +19,13 @@ UBUNTU_VERSIONS = [
     "jammy",    # Ubuntu 22.04 LTS
     "noble",    # Ubuntu 24.04 LTS
 ]
+
+def get_local_hostname() -> str:
+    """Get the local hostname for identification"""
+    try:
+        return socket.gethostname()
+    except:
+        return "unknown"
 
 def fetch_repo_info(version: str) -> Dict:
     """Fetch information from a specific Ubuntu version repository"""
@@ -73,49 +81,52 @@ def fetch_all_repos() -> Dict:
     """Fetch information from all repositories"""
     repo_data = {
         "timestamp": datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S"),
-        "source": "github-actions",
+        "source": "local",
+        "hostname": get_local_hostname(),
         "repos": {}
     }
 
     for version in UBUNTU_VERSIONS:
-        print(f"Checking {version}...")
+        print(f"Checking {version} from local network...")
         repo_data["repos"][version] = fetch_repo_info(version)
 
     return repo_data
 
-def save_history(repo_data: Dict):
-    """Save historical data"""
+def save_local_status(repo_data: Dict):
+    """Save local status data"""
     try:
-        with open("history.json", "r") as f:
+        with open("local_status.json", "r") as f:
             history = json.load(f)
     except FileNotFoundError:
         history = []
 
     history.append(repo_data)
 
-    # Keep only last 30 days
+    # Keep only last 30 entries
     if len(history) > 30:
         history = history[-30:]
 
-    with open("history.json", "w") as f:
+    with open("local_status.json", "w") as f:
         json.dump(history, f, indent=2)
 
 def main():
-    print("🔍 Fetching LliureX repository status (external)...")
+    print("🔍 Fetching LliureX repository status from LOCAL network...")
+    print(f"📍 Running from: {get_local_hostname()}")
+
     repo_data = fetch_all_repos()
 
-    print("💾 Saving external status to history.json...")
-    save_history(repo_data)
+    print("\n💾 Saving local status to local_status.json...")
+    save_local_status(repo_data)
 
     print("📝 Regenerating README.md...")
     subprocess.run([sys.executable, "generate_readme.py"], check=True)
 
-    print("\n✅ External status update completed!")
+    print("\n✅ Local status update completed!")
 
     # Print summary
     online_count = sum(1 for r in repo_data["repos"].values() if r["status"] == "online")
     total_count = len(repo_data["repos"])
-    print(f"\n📊 Summary: {online_count}/{total_count} repositories online")
+    print(f"\n📊 Summary: {online_count}/{total_count} repositories online from local network")
 
     for repo_name, info in sorted(repo_data["repos"].items()):
         status = "✅" if info["status"] == "online" else "❌"

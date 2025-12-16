@@ -8,13 +8,27 @@ Este repositorio monitorea automáticamente el estado de los repositorios de Lli
 
 ## 📊 Estado Actual
 
-**Última actualización:** 2025-12-16 10:51:52 UTC
+### 🌍 Estado Externo (GitHub Actions)
+
+**Última actualización:** 2025-12-16 12:15:47 UTC
 
 | Versión Ubuntu | Estado | Última Actualización Repo | URL |
 |----------------|--------|---------------------------|-----|
 | Ubuntu 20.04 LTS (focal) | ✅ online | Tue, 29 Jul 2025 12:39:16 UTC | [Link](http://lliurex.net/focal/) |
 | Ubuntu 22.04 LTS (jammy) | ✅ online | Thu, 11 Dec 2025 12:26:11 UTC | [Link](http://lliurex.net/jammy/) |
-| Ubuntu 24.04 LTS (noble) | ✅ online | Tue, 29 Jul 2025 12:42:15 UTC | [Link](http://lliurex.net/noble/) |
+| Ubuntu 24.04 LTS (noble) | ✅ online | Thu, 31 Jul 2025 10:25:45 UTC | [Link](http://lliurex.net/noble/) |
+
+
+### 🏠 Estado Local (Red LliureX)
+
+**Última actualización:** 2025-12-16 12:15:52 UTC
+**Servidor:** sauron
+
+| Versión Ubuntu | Estado | Última Actualización Repo | URL |
+|----------------|--------|---------------------------|-----|
+| Ubuntu 20.04 LTS (focal) | ✅ online | Tue, 29 Jul 2025 12:39:16 UTC | [Link](http://lliurex.net/focal/) |
+| Ubuntu 22.04 LTS (jammy) | ✅ online | Thu, 11 Dec 2025 12:26:11 UTC | [Link](http://lliurex.net/jammy/) |
+| Ubuntu 24.04 LTS (noble) | ✅ online | Thu, 31 Jul 2025 10:25:45 UTC | [Link](http://lliurex.net/noble/) |
 
 
 ## 📦 Repositorios de LliureX
@@ -29,7 +43,11 @@ Cada repositorio contiene los paquetes específicos de LliureX adaptados para es
 
 ## 🔄 Actualización Automática
 
-Este repositorio se actualiza automáticamente cada día a las 00:00 UTC mediante GitHub Actions.
+### Estado Externo
+Este repositorio se actualiza automáticamente cada día a las 00:00 UTC mediante GitHub Actions, verificando el estado de los repositorios desde fuera de la red LliureX.
+
+### Estado Local
+Para monitorizar el estado desde la red local, ejecuta `update_status_local.py` manualmente o configura un cron job. El README se regenera automáticamente cada vez que se actualiza cualquiera de los dos estados. Ver `cron-example.txt` para más detalles.
 
 ## 📖 Acerca de LliureX
 

@@ -47,7 +47,7 @@ jobs:
         commit_user_name: "github-actions[bot]"
         commit_user_email: "github-actions[bot]@users.noreply.github.com"
         commit_author: "github-actions[bot] <github-actions[bot]@users.noreply.github.com>"
-        file_pattern: "README.md history.json packages_state.json changes_timestamps.json *.html"
+        file_pattern: "README.md history.json local_status.json packages_state.json changes_timestamps.json *.html"
         pull_options: '--rebase --autostash'
         push_options: '--force-with-lease'
 

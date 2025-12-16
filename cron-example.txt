@@ -1,0 +1,47 @@
+# Ejemplo de configuración de cron para actualizar el estado local
+# Este script debe ejecutarse desde un servidor dentro de la red local LliureX
+# para verificar que los repositorios son accesibles desde la red interna.
+
+# IMPORTANTE: El script update_status_local.py automáticamente:
+# 1. Verifica el acceso a los repositorios desde la red local
+# 2. Guarda los resultados en local_status.json
+# 3. Regenera el README.md con la información actualizada
+
+# Ejecutar cada 6 horas (0:00, 6:00, 12:00, 18:00)
+0 */6 * * * cd /ruta/a/lliurex-state && /usr/bin/python3 update_status_local.py >> /var/log/lliurex-status-local.log 2>&1
+
+# O ejecutar una vez al día a las 3:00 AM
+# 0 3 * * * cd /ruta/a/lliurex-state && /usr/bin/python3 update_status_local.py >> /var/log/lliurex-status-local.log 2>&1
+
+# Instrucciones de instalación:
+# 1. Clona este repositorio en tu servidor local:
+#    git clone https://github.com/Canx/lliurex-state.git
+#    cd lliurex-state
+#
+# 2. Instala las dependencias:
+#    pip install -r requirements.txt
+#
+# 3. Edita este archivo y ajusta la ruta al repositorio
+#
+# 4. Añade la línea elegida a tu crontab:
+#    crontab -e
+#
+# 5. Pega la línea correspondiente y guarda
+#
+# 6. Para verificar que se ha añadido correctamente:
+#    crontab -l
+
+# Opción 1: Solo actualizar local, sin subir a GitHub
+# (El README se actualizará localmente cada vez que se ejecute el script)
+0 */6 * * * cd /ruta/a/lliurex-state && /usr/bin/python3 update_status_local.py >> /var/log/lliurex-status-local.log 2>&1
+
+# Opción 2: Actualizar local Y subir automáticamente a GitHub
+# (Requiere configurar credenciales de git)
+# El README.md se regenera automáticamente y se sube junto con local_status.json
+0 */6 * * * cd /ruta/a/lliurex-state && git pull && /usr/bin/python3 update_status_local.py && git add local_status.json README.md && git commit -m "🏠 Update local status from $(hostname)" && git push >> /var/log/lliurex-status-local.log 2>&1
+
+# Nota sobre conflictos:
+# - update_status.py (GitHub Actions) modifica: history.json y README.md
+# - update_status_local.py (Local) modifica: local_status.json y README.md
+# - Ambos llaman a generate_readme.py que regenera README.md leyendo ambos archivos JSON
+# - Para evitar conflictos, se hace 'git pull' antes de actualizar (Opción 2)
