@@ -28,21 +28,16 @@ def get_repo_state(repo_info):
 def main():
     # Load current history
     history = load_json('history.json')
-    if not history or len(history) == 0:
-        print("No history found - this is the first run")
+    if not history or len(history) < 2:
+        print("No history found or insufficient history - this is the first run")
         sys.exit(0)  # Consider first run as a change
 
-    # Load current packages state
-    packages_state = load_json('packages_state.json')
-    if not packages_state:
-        print("No packages_state.json found - cannot compare")
-        sys.exit(0)  # Assume changes if we can't compare
+    # Get the last two entries from history to compare
+    current_entry = history[-1]
+    last_entry = history[-2]
 
-    # Get the last recorded state from history
-    last_entry = history[-1]
-
-    # Compare repository states
-    current_repos = packages_state.get('repos', {})
+    # Compare repository states from history (not packages_state.json)
+    current_repos = current_entry.get('repos', {})
     last_repos = last_entry.get('repos', {})
 
     changes_detected = False

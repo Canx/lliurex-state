@@ -1,9 +1,9 @@
-name: Update LliureX Status
+name: Update Package Information
 
 on:
   schedule:
-    # Ejecutar cada hora
-    - cron: '0 * * * *'
+    # Ejecutar todos los domingos a las 02:00 UTC
+    - cron: '0 2 * * 0'
   workflow_dispatch: # Permite ejecutar manualmente el workflow
 
 permissions:
@@ -12,10 +12,8 @@ permissions:
   id-token: write
 
 jobs:
-  update-status:
+  update-packages:
     runs-on: ubuntu-latest
-    outputs:
-      has_changes: ${{ steps.check_changes.outputs.has_changes }}
 
     steps:
     - name: Checkout repository
@@ -34,46 +32,28 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
 
-    - name: Update repository status
-      run: |
-        python update_status.py
-
-    - name: Generate package pages
+    - name: Fetch package information
       run: |
         python fetch_packages.py
 
-    - name: Check for state changes
-      id: check_changes
-      run: |
-        if python check_state_changes.py; then
-          echo "has_changes=true" >> $GITHUB_OUTPUT
-          echo "✨ Changes detected - will commit"
-        else
-          echo "has_changes=false" >> $GITHUB_OUTPUT
-          echo "✓ No changes - skipping commit"
-        fi
-
-    - name: Commit and push changes
-      if: steps.check_changes.outputs.has_changes == 'true'
+    - name: Commit and push package changes
       uses: stefanzweifel/git-auto-commit-action@v5
       with:
-        commit_message: "🤖 Update LliureX repository status and package pages"
+        commit_message: "📦 Update package information (weekly)"
         commit_user_name: "github-actions[bot]"
         commit_user_email: "github-actions[bot]@users.noreply.github.com"
         commit_author: "github-actions[bot] <github-actions[bot]@users.noreply.github.com>"
-        file_pattern: "README.md history.json local_status.json packages_state.json changes_timestamps.json *.html"
+        file_pattern: "packages_state.json changes_timestamps.json *.html"
         pull_options: '--rebase --autostash'
         push_options: '--force-with-lease'
 
     - name: Upload Pages artifact
-      if: steps.check_changes.outputs.has_changes == 'true'
       uses: actions/upload-pages-artifact@v3
       with:
         path: '.'
 
   deploy:
-    needs: update-status
-    if: needs.update-status.outputs.has_changes == 'true'
+    needs: update-packages
     runs-on: ubuntu-latest
 
     permissions:

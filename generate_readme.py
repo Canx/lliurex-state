@@ -88,7 +88,8 @@ def generate_readme() -> str:
 
     readme = f"""# LliureX Repository Status
 
-[![Update Status](https://github.com/{github_repo}/actions/workflows/update-status.yml/badge.svg)](https://github.com/{github_repo}/actions/workflows/update-status.yml)
+[![Check Status](https://github.com/{github_repo}/actions/workflows/check-status.yml/badge.svg)](https://github.com/{github_repo}/actions/workflows/check-status.yml)
+[![Update Packages](https://github.com/{github_repo}/actions/workflows/update-packages.yml/badge.svg)](https://github.com/{github_repo}/actions/workflows/update-packages.yml)
 
 Este repositorio monitorea automáticamente el estado de los repositorios de LliureX para diferentes versiones de Ubuntu.
 
@@ -165,11 +166,14 @@ Cada repositorio contiene los paquetes específicos de LliureX adaptados para es
 
 ## 🔄 Actualización Automática
 
-### Estado Externo
-Este repositorio se actualiza automáticamente cada día a las 00:00 UTC mediante GitHub Actions, verificando el estado de los repositorios desde fuera de la red LliureX.
+### Estado de Repositorios
+Se verifica cada hora mediante GitHub Actions, comprobando el estado de disponibilidad y última actualización de los repositorios desde fuera de la red LliureX.
+
+### Información de Paquetes
+Se actualiza semanalmente (domingos a las 02:00 UTC) mediante GitHub Actions, generando páginas HTML con información detallada de todos los paquetes disponibles.
 
 ### Estado Local
-Para monitorizar el estado desde la red local, ejecuta `update_status_local.py` manualmente o configura un cron job. El README se regenera automáticamente cada vez que se actualiza cualquiera de los dos estados. Ver `cron-example.txt` para más detalles.
+Para monitorizar el estado desde la red local, ejecuta `update_status_local.py` manualmente o configura un cron job. El README se regenera automáticamente cada vez que se actualiza cualquiera de los estados.
 
 ## 📖 Acerca de LliureX
 
