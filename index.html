@@ -266,11 +266,18 @@
 
         function createPackageCard(version, summary) {
             const versionInfo = VERSIONS[version];
-            const status = summary.status || 'unknown';
-            const statusText = status === 'online' ? '✓ Online' : '✗ Offline';
 
+            // Don't show card if no real data (offline or empty)
             const components = summary.components || {};
             const totalPackages = Object.values(components).reduce((sum, c) => sum + (c.package_count || 0), 0);
+
+            // Skip if no packages (offline or no data)
+            if (totalPackages === 0 || summary.status === 'offline') {
+                return '';
+            }
+
+            const status = summary.status || 'unknown';
+            const statusText = status === 'online' ? '✓ Online' : '✗ Offline';
             const totalSize = Object.values(components).reduce((sum, c) => sum + (c.total_size || 0), 0);
             const totalChanges = Object.values(components).reduce((sum, c) => sum + (c.recent_changes?.length || 0), 0);
 
@@ -358,12 +365,22 @@
                                 cardsHTML += createPackageCard(version, packagesState[version]);
                             }
                         }
-                        document.getElementById('package-cards').innerHTML = cardsHTML;
+
+                        if (cardsHTML) {
+                            document.getElementById('package-cards').innerHTML = cardsHTML;
+                        } else {
+                            // No package data available yet
+                            document.getElementById('package-cards').innerHTML = `
+                                <div style="background: white; padding: 40px; border-radius: 10px; text-align: center; box-shadow: 0 10px 40px rgba(0,0,0,0.2);">
+                                    <p style="color: #666; font-size: 1.1em;">
+                                        📦 La información detallada de paquetes se actualizará semanalmente.
+                                    </p>
+                                </div>`;
+                        }
                     }
                 } catch (e) {
-                    console.error('Could not load package state:', e);
-                    document.getElementById('package-cards').innerHTML =
-                        '<div class="error">Error al cargar información de paquetes</div>';
+                    console.warn('Could not load package state:', e);
+                    // Don't show error, just hide the section
                 }
 
                 document.getElementById('loading').style.display = 'none';
