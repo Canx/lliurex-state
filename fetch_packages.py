@@ -156,6 +156,35 @@ def save_change_timestamps(timestamps: Dict):
     with open("changes_timestamps.json", "w") as f:
         json.dump(timestamps, f, indent=2)
 
+def get_package_modification_date(version: str, filename: str) -> Optional[str]:
+    """Get the Last-Modified date of a package file from the repository
+
+    Args:
+        version: Ubuntu version (focal, jammy, noble)
+        filename: Relative path to the .deb file (e.g., "pool/main/a/package_1.0_amd64.deb")
+
+    Returns:
+        ISO formatted timestamp or None if not available
+    """
+    try:
+        url = f"{LLIUREX_BASE_URL}/{version}/{filename}"
+        # Use HEAD request to only get headers, not download the file
+        response = requests.head(url, timeout=10, allow_redirects=True)
+
+        if response.status_code == 200 and 'Last-Modified' in response.headers:
+            last_modified = response.headers['Last-Modified']
+            # Convert to ISO format
+            try:
+                from email.utils import parsedate_to_datetime
+                dt = parsedate_to_datetime(last_modified)
+                return dt.strftime("%Y-%m-%d %H:%M:%S")
+            except:
+                return None
+    except:
+        pass
+
+    return None
+
 def compare_packages(current_packages: List[Dict], previous_packages: Dict, version: str, component: str, repo_last_modified: Optional[str] = None) -> List[Dict]:
     """Compare current packages with previous state and find updates
 
@@ -164,15 +193,13 @@ def compare_packages(current_packages: List[Dict], previous_packages: Dict, vers
         previous_packages: Dictionary of previous packages {name: version}
         version: Ubuntu version (focal, jammy, noble)
         component: Component name (main, import, testing)
-        repo_last_modified: Last-Modified date from repository (for new changes)
+        repo_last_modified: Last-Modified date from repository (for new changes) - NOT USED anymore
     """
     from datetime import timedelta
 
     updated = []
     new = []
     current_time = datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S")
-    # Use repository modification time if available, otherwise use current time
-    change_time = repo_last_modified if repo_last_modified else current_time
 
     # Load existing timestamps
     all_timestamps = load_change_timestamps()
@@ -193,7 +220,11 @@ def compare_packages(current_packages: List[Dict], previous_packages: Dict, vers
             if previous_packages[name] != version_str:
                 # Version changed - record timestamp if not already recorded
                 if pkg_key not in timestamps:
-                    timestamps[pkg_key] = change_time
+                    # Try to get the actual modification date of the .deb file
+                    filename = pkg.get('Filename', '')
+                    pkg_mod_date = get_package_modification_date(version, filename) if filename else None
+                    timestamps[pkg_key] = pkg_mod_date if pkg_mod_date else current_time
+                    print(f"    New update: {name} {version_str} (modified: {timestamps[pkg_key]})")
 
                 updated.append({
                     **pkg,
@@ -204,7 +235,11 @@ def compare_packages(current_packages: List[Dict], previous_packages: Dict, vers
         else:
             # New package - record timestamp if not already recorded
             if pkg_key not in timestamps:
-                timestamps[pkg_key] = change_time
+                # Try to get the actual modification date of the .deb file
+                filename = pkg.get('Filename', '')
+                pkg_mod_date = get_package_modification_date(version, filename) if filename else None
+                timestamps[pkg_key] = pkg_mod_date if pkg_mod_date else current_time
+                print(f"    New package: {name} {version_str} (modified: {timestamps[pkg_key]})")
 
             new.append({
                 **pkg,
