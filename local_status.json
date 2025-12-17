@@ -1,5 +1,5 @@
 {
-  "timestamp": "2025-12-17 08:00:02",
+  "timestamp": "2025-12-17 10:00:12",
   "source": "local",
   "hostname": "sauron",
   "repos": {
@@ -20,8 +20,8 @@
     "noble": {
       "status": "online",
       "url": "http://lliurex.net/noble/",
-      "last_update": "Thu, 31 Jul 2025 10:25:45 UTC",
-      "packages": 48819825,
+      "last_update": "Tue, 29 Jul 2025 12:42:15 UTC",
+      "packages": 48038211,
       "http_code": 200
     }
   }

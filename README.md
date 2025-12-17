@@ -22,14 +22,14 @@ Este repositorio monitorea automáticamente el estado de los repositorios de Lli
 
 ### 🏠 Estado Local (Red LliureX)
 
-**Última actualización:** 2025-12-17 08:00:02 UTC
+**Última actualización:** 2025-12-17 10:00:12 UTC
 **Servidor:** sauron
 
 | Versión Ubuntu | Estado | Última Actualización Repo | URL |
 |----------------|--------|---------------------------|-----|
 | Ubuntu 20.04 LTS (focal) | ✅ online | Tue, 29 Jul 2025 12:39:16 UTC | [Link](http://lliurex.net/focal/) |
 | Ubuntu 22.04 LTS (jammy) | ✅ online | Thu, 11 Dec 2025 12:26:11 UTC | [Link](http://lliurex.net/jammy/) |
-| Ubuntu 24.04 LTS (noble) | ✅ online | Thu, 31 Jul 2025 10:25:45 UTC | [Link](http://lliurex.net/noble/) |
+| Ubuntu 24.04 LTS (noble) | ✅ online | Tue, 29 Jul 2025 12:42:15 UTC | [Link](http://lliurex.net/noble/) |
 
 
 ## 📦 Repositorios de LliureX
