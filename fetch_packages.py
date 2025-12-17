@@ -166,6 +166,8 @@ def compare_packages(current_packages: List[Dict], previous_packages: Dict, vers
         component: Component name (main, import, testing)
         repo_last_modified: Last-Modified date from repository (for new changes)
     """
+    from datetime import timedelta
+
     updated = []
     new = []
     current_time = datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S")
@@ -218,7 +220,6 @@ def compare_packages(current_packages: List[Dict], previous_packages: Dict, vers
     changes.sort(key=lambda x: x.get('detected_at', ''), reverse=True)
 
     # Filter to show only changes from the last 7 days
-    from datetime import datetime, timedelta
     one_week_ago = (datetime.utcnow() - timedelta(days=7)).strftime("%Y-%m-%d %H:%M:%S")
 
     recent_changes = []
