@@ -164,7 +164,6 @@
             border-radius: 4px;
             font-size: 0.85em;
             font-weight: 600;
-            margin-left: 10px;
         }
         .change-badge.new {
             background: #d1fae5;
@@ -177,6 +176,25 @@
         .change-badge.removed {
             background: #fee2e2;
             color: #991b1b;
+        }
+        .sortable {
+            cursor: pointer;
+            user-select: none;
+        }
+        .sortable:hover {
+            background: #5568d3;
+        }
+        .sortable::after {
+            content: ' ↕';
+            opacity: 0.5;
+        }
+        .sortable.asc::after {
+            content: ' ↑';
+            opacity: 1;
+        }
+        .sortable.desc::after {
+            content: ' ↓';
+            opacity: 1;
         }
         .loading {
             text-align: center;
@@ -404,13 +422,23 @@
                     for (const [compName, compData] of Object.entries(components)) {
                         if (compData.recent_changes && compData.recent_changes.length > 0) {
                             changesHTML += `<div class="component-card">
-                                <h3>${compName}</h3>
-                                <ul>`;
+                                <h3>${compName} - ${compData.recent_changes.length} cambios en la última semana</h3>
+                                <table class="packages-table" id="changes-table-${compName}">
+                                    <thead>
+                                        <tr>
+                                            <th>Tipo</th>
+                                            <th>Paquete</th>
+                                            <th>Versión</th>
+                                            <th class="sortable desc" onclick="sortChangesByDate('${compName}')">Fecha de Cambio</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>`;
 
-                            for (const change of compData.recent_changes.slice(0, 10)) {
+                            // Already sorted by date (most recent first) from the backend
+                            for (const change of compData.recent_changes) {
                                 const changeType = change.change_type || change.type || 'updated';
                                 const packageName = change.Package || change.package || 'Unknown';
-                                const version = change.Version || change.version;
+                                const version = change.Version || change.version || 'N/A';
                                 const detectedAt = change.detected_at;
 
                                 const badgeClass = changeType;
@@ -421,32 +449,37 @@
                                 }[changeType] || 'MODIFICADO';
 
                                 // Format date if available
-                                let dateStr = '';
+                                let dateStr = 'N/A';
+                                let dateSort = '';
                                 if (detectedAt) {
                                     try {
                                         const date = new Date(detectedAt);
-                                        dateStr = ` - ${date.toLocaleDateString('es-ES', {
+                                        dateStr = date.toLocaleDateString('es-ES', {
                                             day: '2-digit',
                                             month: '2-digit',
                                             year: 'numeric',
                                             hour: '2-digit',
                                             minute: '2-digit'
-                                        })}`;
+                                        });
+                                        dateSort = detectedAt; // ISO format for sorting
                                     } catch (e) {
-                                        dateStr = '';
+                                        dateSort = '';
                                     }
                                 }
 
                                 changesHTML += `
-                                    <li>
-                                        <strong>${packageName}</strong>
-                                        <span class="change-badge ${badgeClass}">${badgeText}</span>
-                                        ${version ? `<span class="package-version">${version}</span>` : ''}
-                                        ${dateStr ? `<span style="color: #999; font-size: 0.9em;">${dateStr}</span>` : ''}
-                                    </li>`;
+                                    <tr data-date="${dateSort}">
+                                        <td><span class="change-badge ${badgeClass}">${badgeText}</span></td>
+                                        <td class="package-name">${packageName}</td>
+                                        <td class="package-version">${version}</td>
+                                        <td style="color: #666; font-size: 0.9em;">${dateStr}</td>
+                                    </tr>`;
                             }
 
-                            changesHTML += '</ul></div>';
+                            changesHTML += `
+                                    </tbody>
+                                </table>
+                            </div>`;
                         }
                     }
 
@@ -514,6 +547,40 @@
                 document.getElementById('loading').innerHTML =
                     `<div class="error">Error al cargar los datos: ${error.message}</div>`;
             }
+        }
+
+        // Sort changes table by date
+        function sortChangesByDate(componentName) {
+            const table = document.getElementById(`changes-table-${componentName}`);
+            const tbody = table.querySelector('tbody');
+            const rows = Array.from(tbody.querySelectorAll('tr'));
+            const header = table.querySelector('th.sortable');
+
+            // Determine current sort direction
+            const isDesc = header.classList.contains('desc');
+
+            // Remove all sort classes
+            header.classList.remove('asc', 'desc');
+
+            // Sort rows
+            rows.sort((a, b) => {
+                const dateA = a.getAttribute('data-date') || '';
+                const dateB = b.getAttribute('data-date') || '';
+
+                if (isDesc) {
+                    // Switch to ascending
+                    return dateA.localeCompare(dateB);
+                } else {
+                    // Switch to descending
+                    return dateB.localeCompare(dateA);
+                }
+            });
+
+            // Apply new sort class
+            header.classList.add(isDesc ? 'asc' : 'desc');
+
+            // Reorder rows in DOM
+            rows.forEach(row => tbody.appendChild(row));
         }
 
         // Load data when page loads

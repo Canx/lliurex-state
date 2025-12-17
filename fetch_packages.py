@@ -78,9 +78,14 @@ def parse_packages_file(content: str) -> List[Dict]:
 
     return packages
 
-def fetch_packages_for_version(version: str, component: str = "main") -> List[Dict]:
-    """Fetch all packages for a specific Ubuntu version and component"""
+def fetch_packages_for_version(version: str, component: str = "main") -> tuple[List[Dict], Optional[str]]:
+    """Fetch all packages for a specific Ubuntu version and component
+
+    Returns:
+        tuple: (packages list, last_modified timestamp)
+    """
     packages = []
+    last_modified = None
 
     # Try different architectures
     architectures = ["amd64", "i386", "all"]
@@ -93,6 +98,17 @@ def fetch_packages_for_version(version: str, component: str = "main") -> List[Di
             response = requests.get(url, timeout=30)
 
             if response.status_code == 200:
+                # Get Last-Modified header from the first successful response
+                if not last_modified and 'Last-Modified' in response.headers:
+                    last_modified = response.headers['Last-Modified']
+                    # Convert to ISO format
+                    try:
+                        from email.utils import parsedate_to_datetime
+                        dt = parsedate_to_datetime(last_modified)
+                        last_modified = dt.strftime("%Y-%m-%d %H:%M:%S")
+                    except:
+                        pass
+
                 # Decompress gzip content
                 with gzip.GzipFile(fileobj=io.BytesIO(response.content)) as f:
                     content = f.read().decode('utf-8')
@@ -105,7 +121,7 @@ def fetch_packages_for_version(version: str, component: str = "main") -> List[Di
         except Exception as e:
             print(f"✗ Error: {str(e)[:50]}")
 
-    return packages
+    return packages, last_modified
 
 def load_previous_packages(version: str, component: str) -> Dict:
     """Load previous package state from file"""
@@ -140,11 +156,21 @@ def save_change_timestamps(timestamps: Dict):
     with open("changes_timestamps.json", "w") as f:
         json.dump(timestamps, f, indent=2)
 
-def compare_packages(current_packages: List[Dict], previous_packages: Dict, version: str, component: str) -> List[Dict]:
-    """Compare current packages with previous state and find updates"""
+def compare_packages(current_packages: List[Dict], previous_packages: Dict, version: str, component: str, repo_last_modified: Optional[str] = None) -> List[Dict]:
+    """Compare current packages with previous state and find updates
+
+    Args:
+        current_packages: List of current packages
+        previous_packages: Dictionary of previous packages {name: version}
+        version: Ubuntu version (focal, jammy, noble)
+        component: Component name (main, import, testing)
+        repo_last_modified: Last-Modified date from repository (for new changes)
+    """
     updated = []
     new = []
     current_time = datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S")
+    # Use repository modification time if available, otherwise use current time
+    change_time = repo_last_modified if repo_last_modified else current_time
 
     # Load existing timestamps
     all_timestamps = load_change_timestamps()
@@ -165,7 +191,7 @@ def compare_packages(current_packages: List[Dict], previous_packages: Dict, vers
             if previous_packages[name] != version_str:
                 # Version changed - record timestamp if not already recorded
                 if pkg_key not in timestamps:
-                    timestamps[pkg_key] = current_time
+                    timestamps[pkg_key] = change_time
 
                 updated.append({
                     **pkg,
@@ -176,7 +202,7 @@ def compare_packages(current_packages: List[Dict], previous_packages: Dict, vers
         else:
             # New package - record timestamp if not already recorded
             if pkg_key not in timestamps:
-                timestamps[pkg_key] = current_time
+                timestamps[pkg_key] = change_time
 
             new.append({
                 **pkg,
@@ -190,10 +216,28 @@ def compare_packages(current_packages: List[Dict], previous_packages: Dict, vers
     # Combine and sort by detection time (most recent first)
     changes = new + updated
     changes.sort(key=lambda x: x.get('detected_at', ''), reverse=True)
-    return changes
 
-def get_package_summary(packages: List[Dict], version: str = None, component: str = None) -> Dict:
-    """Generate summary statistics from package list"""
+    # Filter to show only changes from the last 7 days
+    from datetime import datetime, timedelta
+    one_week_ago = (datetime.utcnow() - timedelta(days=7)).strftime("%Y-%m-%d %H:%M:%S")
+
+    recent_changes = []
+    for change in changes:
+        detected_at = change.get('detected_at', '')
+        if detected_at >= one_week_ago:
+            recent_changes.append(change)
+
+    return recent_changes
+
+def get_package_summary(packages: List[Dict], version: str = None, component: str = None, repo_last_modified: Optional[str] = None) -> Dict:
+    """Generate summary statistics from package list
+
+    Args:
+        packages: List of packages
+        version: Ubuntu version
+        component: Component name
+        repo_last_modified: Last-Modified timestamp from repository
+    """
     if not packages:
         return {
             "total_packages": 0,
@@ -223,7 +267,7 @@ def get_package_summary(packages: List[Dict], version: str = None, component: st
     recent_changes = []
     if version and component:
         previous_state = load_previous_packages(version, component)
-        recent_changes = compare_packages(packages_list, previous_state, version, component)
+        recent_changes = compare_packages(packages_list, previous_state, version, component, repo_last_modified)
 
     # Calculate total size
     total_size = 0
@@ -264,7 +308,7 @@ def get_package_summary(packages: List[Dict], version: str = None, component: st
         "total_size": total_size,
         "latest_packages": sorted_by_version,
         "largest_packages": sorted_by_size,
-        "recent_changes": recent_changes[:30],  # Limit to 30 most recent changes
+        "recent_changes": recent_changes,  # Already filtered to last 7 days in compare_packages
         "packages": packages_for_web,  # Full package list with essential fields
         "packages_dict": {pkg.get('Package'): pkg.get('Version') for pkg in packages_list}  # For change detection
     }
@@ -1108,10 +1152,12 @@ def main():
 
         for component in COMPONENTS:
             print(f"\nFetching {component} packages:")
-            packages = fetch_packages_for_version(version, component)
+            packages, repo_last_modified = fetch_packages_for_version(version, component)
 
             if packages:
-                summary = get_package_summary(packages, version, component)
+                if repo_last_modified:
+                    print(f"  Repository last modified: {repo_last_modified}")
+                summary = get_package_summary(packages, version, component, repo_last_modified)
                 components_data[component] = summary
 
                 # Store current state
