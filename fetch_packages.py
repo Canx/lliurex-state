@@ -210,6 +210,25 @@ def compare_packages(current_packages: List[Dict], previous_packages: Dict, vers
 
     timestamps = all_timestamps[version][component]
 
+    # First pass: ensure ALL packages have timestamps
+    packages_processed = 0
+    for pkg in current_packages:
+        name = pkg.get('Package', '')
+        version_str = pkg.get('Version', '')
+        pkg_key = f"{name}:{version_str}"
+
+        # If package doesn't have timestamp, get it from the .deb file
+        if pkg_key not in timestamps:
+            filename = pkg.get('Filename', '')
+            pkg_mod_date = get_package_modification_date(version, filename) if filename else None
+            timestamps[pkg_key] = pkg_mod_date if pkg_mod_date else current_time
+            packages_processed += 1
+            if packages_processed % 100 == 0:
+                print(f"    Processed {packages_processed} packages...")
+
+    print(f"  ✓ Assigned timestamps to {packages_processed} packages")
+
+    # Second pass: detect changes for "recent changes" section
     for pkg in current_packages:
         name = pkg.get('Package', '')
         version_str = pkg.get('Version', '')
@@ -218,14 +237,7 @@ def compare_packages(current_packages: List[Dict], previous_packages: Dict, vers
         if name in previous_packages:
             # Package existed before, check if version changed
             if previous_packages[name] != version_str:
-                # Version changed - record timestamp if not already recorded
-                if pkg_key not in timestamps:
-                    # Try to get the actual modification date of the .deb file
-                    filename = pkg.get('Filename', '')
-                    pkg_mod_date = get_package_modification_date(version, filename) if filename else None
-                    timestamps[pkg_key] = pkg_mod_date if pkg_mod_date else current_time
-                    print(f"    New update: {name} {version_str} (modified: {timestamps[pkg_key]})")
-
+                print(f"    Update detected: {name} {version_str} (modified: {timestamps[pkg_key]})")
                 updated.append({
                     **pkg,
                     'previous_version': previous_packages[name],
@@ -233,14 +245,8 @@ def compare_packages(current_packages: List[Dict], previous_packages: Dict, vers
                     'detected_at': timestamps[pkg_key]
                 })
         else:
-            # New package - record timestamp if not already recorded
-            if pkg_key not in timestamps:
-                # Try to get the actual modification date of the .deb file
-                filename = pkg.get('Filename', '')
-                pkg_mod_date = get_package_modification_date(version, filename) if filename else None
-                timestamps[pkg_key] = pkg_mod_date if pkg_mod_date else current_time
-                print(f"    New package: {name} {version_str} (modified: {timestamps[pkg_key]})")
-
+            # New package
+            print(f"    New package: {name} {version_str} (modified: {timestamps[pkg_key]})")
             new.append({
                 **pkg,
                 'change_type': 'new',
@@ -254,16 +260,9 @@ def compare_packages(current_packages: List[Dict], previous_packages: Dict, vers
     changes = new + updated
     changes.sort(key=lambda x: x.get('detected_at', ''), reverse=True)
 
-    # Filter to show only changes from the last 7 days
-    one_week_ago = (datetime.utcnow() - timedelta(days=7)).strftime("%Y-%m-%d %H:%M:%S")
-
-    recent_changes = []
-    for change in changes:
-        detected_at = change.get('detected_at', '')
-        if detected_at >= one_week_ago:
-            recent_changes.append(change)
-
-    return recent_changes
+    # Return ALL changes - filtering by period will be done in the frontend
+    # This allows users to select different time periods dynamically
+    return changes
 
 def get_package_summary(packages: List[Dict], version: str = None, component: str = None, repo_last_modified: Optional[str] = None) -> Dict:
     """Generate summary statistics from package list
