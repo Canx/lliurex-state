@@ -21,6 +21,34 @@
     "Description": "debug symbols for accessibility-inspector"
   },
   {
+    "Package": "accesswizard",
+    "Version": "0.1.4-0lliurex25",
+    "Architecture": "all",
+    "Size": "275148",
+    "Description": "Set accessibility settings AccessHelper it's a common place for the available accessibility options"
+  },
+  {
+    "Package": "accesswizard-dbus",
+    "Version": "0.1.4-0lliurex25",
+    "Architecture": "all",
+    "Size": "2742",
+    "Description": "DBus service for accessibility"
+  },
+  {
+    "Package": "accesswizard-kwin-ocrwindow",
+    "Version": "0.1.4-0lliurex25",
+    "Architecture": "all",
+    "Size": "8036",
+    "Description": "Read window contents with OCR This plugin for KWin captures the active screen and reads the content "
+  },
+  {
+    "Package": "accesswizard-plasmoid",
+    "Version": "0.1.4-0lliurex25",
+    "Architecture": "all",
+    "Size": "4668",
+    "Description": "Plasmoid for accesswizard Gives quick access to accessdock launchers"
+  },
+  {
     "Package": "accounts-qml-module-doc",
     "Version": "0.7+p24.04+vrelease+git20240817.0412-0",
     "Architecture": "all",
@@ -1163,9 +1191,9 @@
   },
   {
     "Package": "calamares-lliurex-settings",
-    "Version": "0.78",
+    "Version": "0.79",
     "Architecture": "all",
-    "Size": "6319650",
+    "Size": "6319750",
     "Description": "LliureX settings for calamares All configure files and branding for calamares installer"
   },
   {
@@ -12439,6 +12467,13 @@
     "Description": "Basic Linear Algebra Reference implementations, shared library BLAS (Basic Linear Algebra Subroutine"
   },
   {
+    "Package": "libblkid-dev",
+    "Version": "2.39.3-9ubuntu6",
+    "Architecture": "amd64",
+    "Size": "204136",
+    "Description": "block device ID library - headers The blkid library allows system programs such as fsck and mount to"
+  },
+  {
     "Package": "libblkid1",
     "Version": "2.39.3-9ubuntu6",
     "Architecture": "amd64",
@@ -13503,6 +13538,13 @@
     "Description": "Userspace interface to kernel DRM services -- common files This library implements the userspace int"
   },
   {
+    "Package": "libdrm-dev",
+    "Version": "2.4.120-2build1",
+    "Architecture": "amd64",
+    "Size": "308892",
+    "Description": "Userspace interface to kernel DRM services -- development files This library implements the userspac"
+  },
+  {
     "Package": "libdrm-intel1",
     "Version": "2.4.120-2build1",
     "Architecture": "amd64",
@@ -13622,6 +13664,13 @@
     "Description": "Library to manage UEFI variables Library to allow for the simple manipulation of UEFI variables."
   },
   {
+    "Package": "libegl-dev",
+    "Version": "1.7.0-1build1",
+    "Architecture": "amd64",
+    "Size": "18204",
+    "Description": "Vendor neutral GL dispatch library -- EGL development files This is an implementation of the vendor-"
+  },
+  {
     "Package": "libegl-mesa0",
     "Version": "24.0.5-1ubuntu1",
     "Architecture": "amd64",
@@ -13739,6 +13788,13 @@
     "Architecture": "amd64",
     "Size": "637264",
     "Description": "library for reading and converting Apple Keynote presentations libetonyek is a library and a set of "
+  },
+  {
+    "Package": "libevdev-dev",
+    "Version": "1.13.1+dfsg-1build1",
+    "Architecture": "amd64",
+    "Size": "53740",
+    "Description": "wrapper library for evdev devices - development files libevdev is a wrapper library for evdev device"
   },
   {
     "Package": "libevdev2",
@@ -13935,6 +13991,13 @@
     "Architecture": "amd64",
     "Size": "146342",
     "Description": "fdisk partitioning library The libfdisk library is used for manipulating partition tables. It is the"
+  },
+  {
+    "Package": "libffi-dev",
+    "Version": "3.4.6-1build1",
+    "Architecture": "amd64",
+    "Size": "62802",
+    "Description": "Foreign Function Interface library (development files) This package contains the headers and static "
   },
   {
     "Package": "libffi8",
@@ -14280,6 +14343,13 @@
     "Description": "GNOME Accessibility Implementation Library -- shared libraries Gail implements ATK interfaces for GT"
   },
   {
+    "Package": "libgbm-dev",
+    "Version": "24.0.5-1ubuntu1",
+    "Architecture": "amd64",
+    "Size": "9544",
+    "Description": "generic buffer management API -- development files This package contains the GBM buffer management l"
+  },
+  {
     "Package": "libgbm1",
     "Version": "24.0.5-1ubuntu1",
     "Architecture": "amd64",
@@ -14392,11 +14462,25 @@
     "Description": "Library for handling GObject introspection data (runtime library) GObject Introspection is a project"
   },
   {
+    "Package": "libgirepository-2.0-0",
+    "Version": "2.80.0-6ubuntu1",
+    "Architecture": "amd64",
+    "Size": "73538",
+    "Description": "GLib runtime library for handling GObject introspection data GLib is a library containing many usefu"
+  },
+  {
     "Package": "libgit2-1.7",
     "Version": "1.7.2+ds-1ubuntu3",
     "Architecture": "amd64",
     "Size": "528564",
     "Description": "low-level Git library libgit2 is a portable, pure C implementation of the Git distributed version co"
+  },
+  {
+    "Package": "libgl-dev",
+    "Version": "1.7.0-1build1",
+    "Architecture": "amd64",
+    "Size": "102444",
+    "Description": "Vendor neutral GL dispatch library -- GL development files This is an implementation of the vendor-n"
   },
   {
     "Package": "libgl1",
@@ -14455,6 +14539,20 @@
     "Description": "Common files for GLib library GLib is a library containing many useful C routines for things such as"
   },
   {
+    "Package": "libglib2.0-dev",
+    "Version": "2.80.0-6ubuntu1",
+    "Architecture": "amd64",
+    "Size": "1859264",
+    "Description": "Development files for the GLib library GLib is a library containing many useful C routines for thing"
+  },
+  {
+    "Package": "libglib2.0-dev-bin",
+    "Version": "2.80.0-6ubuntu1",
+    "Architecture": "amd64",
+    "Size": "137910",
+    "Description": "Development utilities for the GLib library GLib is a library containing many useful C routines for t"
+  },
+  {
     "Package": "libglibmm-2.4-1t64",
     "Version": "2.66.7-1build1",
     "Architecture": "amd64",
@@ -14474,6 +14572,13 @@
     "Architecture": "amd64",
     "Size": "69594",
     "Description": "Vendor neutral GL dispatch library This is an implementation of the vendor-neutral dispatch layer fo"
+  },
+  {
+    "Package": "libglx-dev",
+    "Version": "1.7.0-1build1",
+    "Architecture": "amd64",
+    "Size": "14176",
+    "Description": "Vendor neutral GL dispatch library -- GLX development files This is an implementation of the vendor-"
   },
   {
     "Package": "libglx-mesa0",
@@ -14824,6 +14929,13 @@
     "Architecture": "amd64",
     "Size": "15906",
     "Description": "GObject-based wrapper library for libudev This library makes it much simpler to use libudev from pro"
+  },
+  {
+    "Package": "libgudev-1.0-dev",
+    "Version": "1:238-5ubuntu1",
+    "Architecture": "amd64",
+    "Size": "27212",
+    "Description": "libgudev-1.0 development files This package contains the files needed for developing applications th"
   },
   {
     "Package": "libgupnp-1.6-0",
@@ -26278,6 +26390,13 @@
     "Description": "easy aliasing of methods and attributes in Moo The MooX::Aliases module will allow you to quickly al"
   },
   {
+    "Package": "libmount-dev",
+    "Version": "2.39.3-9ubuntu6",
+    "Architecture": "amd64",
+    "Size": "14892",
+    "Description": "device mounting library - headers This device mounting library is used by mount and umount helpers. "
+  },
+  {
     "Package": "libmount1",
     "Version": "2.39.3-9ubuntu6",
     "Architecture": "amd64",
@@ -26332,6 +26451,13 @@
     "Architecture": "amd64",
     "Size": "145174",
     "Description": "library for parsing the mspub file structure Libmspub is library providing ability to interpret and "
+  },
+  {
+    "Package": "libmtdev-dev",
+    "Version": "1.1.6-1.1build1",
+    "Architecture": "amd64",
+    "Size": "5126",
+    "Description": "Multitouch Protocol Translation Library - dev files libmtdev is a library for translating evdev mult"
   },
   {
     "Package": "libmtdev1t64",
@@ -26796,6 +26922,13 @@
     "Description": "regular expressions library Oniguruma is a library for working with regular expressions. . Different"
   },
   {
+    "Package": "libopengl-dev",
+    "Version": "1.7.0-1build1",
+    "Architecture": "amd64",
+    "Size": "3454",
+    "Description": "Vendor neutral GL dispatch library -- OpenGL development files This is an implementation of the vend"
+  },
+  {
     "Package": "libopengl0",
     "Version": "1.7.0-1build1",
     "Architecture": "amd64",
@@ -27223,6 +27356,13 @@
     "Description": "PCI utilities (shared library) This package contains the libpci shared library files. . The libpci l"
   },
   {
+    "Package": "libpciaccess-dev",
+    "Version": "0.17-3build1",
+    "Architecture": "amd64",
+    "Size": "21966",
+    "Description": "Generic PCI access library for X - development files Provides functionality for X to access the PCI "
+  },
+  {
     "Package": "libpciaccess0",
     "Version": "0.17-3build1",
     "Architecture": "amd64",
@@ -27249,6 +27389,20 @@
     "Architecture": "amd64",
     "Size": "226574",
     "Description": "New Perl Compatible Regular Expression Library- 8 bit runtime files This is PCRE2, the new implement"
+  },
+  {
+    "Package": "libpcre2-dev",
+    "Version": "10.42-4ubuntu2",
+    "Architecture": "amd64",
+    "Size": "736540",
+    "Description": "New Perl Compatible Regular Expression Library - development files This is PCRE2, the new implementa"
+  },
+  {
+    "Package": "libpcre2-posix3",
+    "Version": "10.42-4ubuntu2",
+    "Architecture": "amd64",
+    "Size": "6686",
+    "Description": "New Perl Compatible Regular Expression Library - posix-compatible runtime files This is PCRE2, the n"
   },
   {
     "Package": "libpcsclite1",
@@ -27473,6 +27627,13 @@
     "Architecture": "amd64",
     "Size": "50290",
     "Description": "library that simplifies the interaction with PKCS#11 libpkcs11-helper is a library that simplifies t"
+  },
+  {
+    "Package": "libpkgconf3",
+    "Version": "1.8.1-2build1",
+    "Architecture": "amd64",
+    "Size": "30652",
+    "Description": "shared library for pkgconf pkgconf is an implementation of the pkg-config system, which helps to con"
   },
   {
     "Package": "libplasma-dev",
@@ -27753,6 +27914,13 @@
     "Architecture": "amd64",
     "Size": "57072",
     "Description": "Library for Public Suffix List (shared libraries) Libpsl allows checking domains against the Public "
+  },
+  {
+    "Package": "libpthread-stubs0-dev",
+    "Version": "0.4-1build3",
+    "Architecture": "amd64",
+    "Size": "4746",
+    "Description": "pthread stubs not provided by native libc, development files This library provides weak aliases for "
   },
   {
     "Package": "libpulse-mainloop-glib0",
@@ -31416,6 +31584,13 @@
     "Description": "Base Library for writing document interface filters librevenge is a base library for writing documen"
   },
   {
+    "Package": "librhash0",
+    "Version": "1.4.3-3build1",
+    "Architecture": "amd64",
+    "Size": "128748",
+    "Description": "shared library for hash functions computing LibRHash is a professional, portable, thread-safe C libr"
+  },
+  {
     "Package": "librinutils-dev",
     "Version": "0.10.0-1+24.04+noble+release+build3",
     "Architecture": "all",
@@ -31577,6 +31752,13 @@
     "Description": "SELinux runtime shared libraries This package provides the shared libraries for Security-enhanced Li"
   },
   {
+    "Package": "libselinux1-dev",
+    "Version": "3.5-2ubuntu2",
+    "Architecture": "amd64",
+    "Size": "163698",
+    "Description": "SELinux development headers This package provides the  static libraries and header files needed for "
+  },
+  {
     "Package": "libsemanage-common",
     "Version": "3.5-1build5",
     "Architecture": "all",
@@ -31603,6 +31785,13 @@
     "Architecture": "amd64",
     "Size": "26600",
     "Description": "library to read temperature/voltage/fan sensors Lm-sensors is a hardware health monitoring package f"
+  },
+  {
+    "Package": "libsepol-dev",
+    "Version": "3.5-2build1",
+    "Architecture": "amd64",
+    "Size": "383718",
+    "Description": "SELinux binary policy manipulation library and development files libsepol allows programs to easily "
   },
   {
     "Package": "libsepol2",
@@ -32578,6 +32767,13 @@
     "Description": "universal charset detection library - shared library uchardet is a C language binding of the origina"
   },
   {
+    "Package": "libudev-dev",
+    "Version": "255.4-1ubuntu8",
+    "Architecture": "amd64",
+    "Size": "22026",
+    "Description": "libudev development files This library provides APIs to introspect and enumerate devices on the loca"
+  },
+  {
     "Package": "libudev1",
     "Version": "255.4-1ubuntu8",
     "Architecture": "amd64",
@@ -32879,6 +33075,13 @@
     "Description": "Terminal emulator widget for GTK+ 3.0 - common files The VTE library provides a terminal emulator wi"
   },
   {
+    "Package": "libvulkan-dev",
+    "Version": "1.3.275.0-1build1",
+    "Architecture": "amd64",
+    "Size": "1238904",
+    "Description": "Vulkan loader library -- development files The Loader implements the main VK library. It handles lay"
+  },
+  {
     "Package": "libvulkan1",
     "Version": "1.3.275.0-1build1",
     "Architecture": "amd64",
@@ -32891,6 +33094,13 @@
     "Architecture": "all",
     "Size": "63364",
     "Description": "Wacom model feature query library (common files) libwacom is a library to identify wacom tablets and"
+  },
+  {
+    "Package": "libwacom-dev",
+    "Version": "2.10.0-2",
+    "Architecture": "amd64",
+    "Size": "7590",
+    "Description": "Wacom model feature query library (development files) libwacom is a library to identify wacom tablet"
   },
   {
     "Package": "libwacom9",
@@ -33187,6 +33397,13 @@
     "Description": "X11 client-side library This package provides the locale data files for libx11. . More information a"
   },
   {
+    "Package": "libx11-dev",
+    "Version": "2:1.8.7-1build1",
+    "Architecture": "amd64",
+    "Size": "732214",
+    "Description": "X11 client-side library (development headers) This package provides a client interface to the X Wind"
+  },
+  {
     "Package": "libx11-protocol-perl",
     "Version": "0.56-9",
     "Architecture": "all",
@@ -33206,6 +33423,13 @@
     "Architecture": "amd64",
     "Size": "2131970",
     "Description": "X acceleration library -- runtime This package contains the XA (X acceleration) library.  It is used"
+  },
+  {
+    "Package": "libxau-dev",
+    "Version": "1:1.0.9-1build6",
+    "Architecture": "amd64",
+    "Size": "9570",
+    "Description": "X11 authorisation library (development headers) This package provides the main interface to the X11 "
   },
   {
     "Package": "libxau6",
@@ -33229,11 +33453,25 @@
     "Description": "X C Binding, composite extension This package contains the library files needed to run software usin"
   },
   {
+    "Package": "libxcb-composite0-dev",
+    "Version": "1.15-1ubuntu2",
+    "Architecture": "amd64",
+    "Size": "6526",
+    "Description": "X C Binding, composite extension, development files This package contains the header and library fil"
+  },
+  {
     "Package": "libxcb-damage0",
     "Version": "1.15-1ubuntu2",
     "Architecture": "amd64",
     "Size": "4980",
     "Description": "X C Binding, damage extension This package contains the library files needed to run software using l"
+  },
+  {
+    "Package": "libxcb-damage0-dev",
+    "Version": "1.15-1ubuntu2",
+    "Architecture": "amd64",
+    "Size": "6604",
+    "Description": "X C Binding, damage extension, development files This package contains the header and library files "
   },
   {
     "Package": "libxcb-dpms0",
@@ -33243,11 +33481,25 @@
     "Description": "X C Binding, dpms extension This package contains the library files needed to run software using lib"
   },
   {
+    "Package": "libxcb-dpms0-dev",
+    "Version": "1.15-1ubuntu2",
+    "Architecture": "amd64",
+    "Size": "5940",
+    "Description": "X C Binding, dpms extension, development files This package contains the header and library files ne"
+  },
+  {
     "Package": "libxcb-dri2-0",
     "Version": "1.15-1ubuntu2",
     "Architecture": "amd64",
     "Size": "7222",
     "Description": "X C Binding, dri2 extension This package contains the library files needed to run software using lib"
+  },
+  {
+    "Package": "libxcb-dri2-0-dev",
+    "Version": "1.15-1ubuntu2",
+    "Architecture": "amd64",
+    "Size": "8688",
+    "Description": "X C Binding, dri2 extension, development files This package contains the header and library files ne"
   },
   {
     "Package": "libxcb-dri3-0",
@@ -33257,11 +33509,39 @@
     "Description": "X C Binding, dri3 extension This package contains the library files needed to run software using lib"
   },
   {
+    "Package": "libxcb-dri3-dev",
+    "Version": "1.15-1ubuntu2",
+    "Architecture": "amd64",
+    "Size": "8048",
+    "Description": "X C Binding, dri3 extension, development files This package contains the header and library files ne"
+  },
+  {
+    "Package": "libxcb-ewmh-dev",
+    "Version": "0.4.1-1.1build3",
+    "Architecture": "amd64",
+    "Size": "22654",
+    "Description": "utility libraries for X C Binding -- ewmh, development files This package contains the header and li"
+  },
+  {
+    "Package": "libxcb-ewmh2",
+    "Version": "0.4.1-1.1build3",
+    "Architecture": "amd64",
+    "Size": "18084",
+    "Description": "utility libraries for X C Binding -- ewmh This package contains the library files needed to run soft"
+  },
+  {
     "Package": "libxcb-glx0",
     "Version": "1.15-1ubuntu2",
     "Architecture": "amd64",
     "Size": "24774",
     "Description": "X C Binding, glx extension This package contains the library files needed to run software using libx"
+  },
+  {
+    "Package": "libxcb-glx0-dev",
+    "Version": "1.15-1ubuntu2",
+    "Architecture": "amd64",
+    "Size": "29294",
+    "Description": "X C Binding, glx extension, development files This package contains the header and library files nee"
   },
   {
     "Package": "libxcb-icccm4",
@@ -33271,6 +33551,13 @@
     "Description": "utility libraries for X C Binding -- icccm This package contains the library files needed to run sof"
   },
   {
+    "Package": "libxcb-icccm4-dev",
+    "Version": "0.4.1-1.1build3",
+    "Architecture": "amd64",
+    "Size": "11254",
+    "Description": "utility libraries for X C Binding -- icccm, development files This package contains the header and l"
+  },
+  {
     "Package": "libxcb-image0",
     "Version": "0.4.0-2build1",
     "Architecture": "amd64",
@@ -33278,11 +33565,32 @@
     "Description": "utility libraries for X C Binding -- image This package contains the library files needed to run sof"
   },
   {
+    "Package": "libxcb-image0-dev",
+    "Version": "0.4.0-2build1",
+    "Architecture": "amd64",
+    "Size": "16340",
+    "Description": "utility libraries for X C Binding -- image, development files This package contains the header and l"
+  },
+  {
     "Package": "libxcb-keysyms1",
     "Version": "0.4.0-1build4",
     "Architecture": "amd64",
     "Size": "7956",
     "Description": "utility libraries for X C Binding -- keysyms This package contains the library files needed to run s"
+  },
+  {
+    "Package": "libxcb-keysyms1-dev",
+    "Version": "0.4.0-1build4",
+    "Architecture": "amd64",
+    "Size": "7030",
+    "Description": "utility libraries for X C Binding -- keysyms, development files This package contains the header and"
+  },
+  {
+    "Package": "libxcb-present-dev",
+    "Version": "1.15-1ubuntu2",
+    "Architecture": "amd64",
+    "Size": "7164",
+    "Description": "X C Binding, present extension, development files This package contains the header and library files"
   },
   {
     "Package": "libxcb-present0",
@@ -33299,11 +33607,25 @@
     "Description": "X C Binding, randr extension This package contains the library files needed to run software using li"
   },
   {
+    "Package": "libxcb-randr0-dev",
+    "Version": "1.15-1ubuntu2",
+    "Architecture": "amd64",
+    "Size": "21694",
+    "Description": "X C Binding, randr extension, development files This package contains the header and library files n"
+  },
+  {
     "Package": "libxcb-record0",
     "Version": "1.15-1ubuntu2",
     "Architecture": "amd64",
     "Size": "7368",
     "Description": "X C Binding, record extension This package contains the library files needed to run software using l"
+  },
+  {
+    "Package": "libxcb-record0-dev",
+    "Version": "1.15-1ubuntu2",
+    "Architecture": "amd64",
+    "Size": "8250",
+    "Description": "X C Binding, record extension, development files This package contains the header and library files "
   },
   {
     "Package": "libxcb-render-util0",
@@ -33313,11 +33635,25 @@
     "Description": "utility libraries for X C Binding -- render-util This package contains the library files needed to r"
   },
   {
+    "Package": "libxcb-render-util0-dev",
+    "Version": "0.3.9-1build4",
+    "Architecture": "amd64",
+    "Size": "67374",
+    "Description": "utility libraries for X C Binding -- render-util This package contains the header and library files "
+  },
+  {
     "Package": "libxcb-render0",
     "Version": "1.15-1ubuntu2",
     "Architecture": "amd64",
     "Size": "16230",
     "Description": "X C Binding, render extension This package contains the library files needed to run software using l"
+  },
+  {
+    "Package": "libxcb-render0-dev",
+    "Version": "1.15-1ubuntu2",
+    "Architecture": "amd64",
+    "Size": "19550",
+    "Description": "X C Binding, render extension, development files This package contains the header and library files "
   },
   {
     "Package": "libxcb-res0",
@@ -33327,11 +33663,39 @@
     "Description": "X C Binding, res extension This package contains the library files needed to run software using libx"
   },
   {
+    "Package": "libxcb-res0-dev",
+    "Version": "1.15-1ubuntu2",
+    "Architecture": "amd64",
+    "Size": "7528",
+    "Description": "X C Binding, res extension, development files This package contains the header and library files nee"
+  },
+  {
+    "Package": "libxcb-screensaver0",
+    "Version": "1.15-1ubuntu2",
+    "Architecture": "amd64",
+    "Size": "6318",
+    "Description": "X C Binding, screensaver extension This package contains the library files needed to run software us"
+  },
+  {
+    "Package": "libxcb-screensaver0-dev",
+    "Version": "1.15-1ubuntu2",
+    "Architecture": "amd64",
+    "Size": "7354",
+    "Description": "X C Binding, screensaver extension, development files This package contains the header and library f"
+  },
+  {
     "Package": "libxcb-shape0",
     "Version": "1.15-1ubuntu2",
     "Architecture": "amd64",
     "Size": "6100",
     "Description": "X C Binding, shape extension This package contains the library files needed to run software using li"
+  },
+  {
+    "Package": "libxcb-shape0-dev",
+    "Version": "1.15-1ubuntu2",
+    "Architecture": "amd64",
+    "Size": "7310",
+    "Description": "X C Binding, shape extension, development files This package contains the header and library files n"
   },
   {
     "Package": "libxcb-shm0",
@@ -33341,11 +33705,39 @@
     "Description": "X C Binding, shm extension This package contains the library files needed to run software using libx"
   },
   {
+    "Package": "libxcb-shm0-dev",
+    "Version": "1.15-1ubuntu2",
+    "Architecture": "amd64",
+    "Size": "8246",
+    "Description": "X C Binding, shm extension, development files This package contains the header and library files nee"
+  },
+  {
+    "Package": "libxcb-sync-dev",
+    "Version": "1.15-1ubuntu2",
+    "Architecture": "amd64",
+    "Size": "11118",
+    "Description": "X C Binding, sync extension, development files This package contains the header and library files ne"
+  },
+  {
     "Package": "libxcb-sync1",
     "Version": "1.15-1ubuntu2",
     "Architecture": "amd64",
     "Size": "9312",
     "Description": "X C Binding, sync extension This package contains the library files needed to run software using lib"
+  },
+  {
+    "Package": "libxcb-util-dev",
+    "Version": "0.4.0-1build3",
+    "Architecture": "amd64",
+    "Size": "10798",
+    "Description": "utility libraries for X C Binding -- atom, aux and event This package contains the header and librar"
+  },
+  {
+    "Package": "libxcb-util0-dev",
+    "Version": "0.4.0-1build3",
+    "Architecture": "amd64",
+    "Size": "2380",
+    "Description": "dummy transitional package for utility libraries for X C Binding This is a transitional dummy packag"
   },
   {
     "Package": "libxcb-util1",
@@ -33355,11 +33747,32 @@
     "Description": "utility libraries for X C Binding -- atom, aux and event This package contains the library files nee"
   },
   {
+    "Package": "libxcb-xf86dri0",
+    "Version": "1.15-1ubuntu2",
+    "Architecture": "amd64",
+    "Size": "6832",
+    "Description": "X C Binding, xf86dri extension This package contains the library files needed to run software using "
+  },
+  {
+    "Package": "libxcb-xf86dri0-dev",
+    "Version": "1.15-1ubuntu2",
+    "Architecture": "amd64",
+    "Size": "7724",
+    "Description": "X C Binding, xf86dri extension, development files This package contains the header and library files"
+  },
+  {
     "Package": "libxcb-xfixes0",
     "Version": "1.15-1ubuntu2",
     "Architecture": "amd64",
     "Size": "10190",
     "Description": "X C Binding, xfixes extension This package contains the library files needed to run software using l"
+  },
+  {
+    "Package": "libxcb-xfixes0-dev",
+    "Version": "1.15-1ubuntu2",
+    "Architecture": "amd64",
+    "Size": "12622",
+    "Description": "X C Binding, xfixes extension, development files This package contains the header and library files "
   },
   {
     "Package": "libxcb-xinerama0",
@@ -33369,11 +33782,32 @@
     "Description": "X C Binding, xinerama extension This package contains the library files needed to run software using"
   },
   {
+    "Package": "libxcb-xinerama0-dev",
+    "Version": "1.15-1ubuntu2",
+    "Architecture": "amd64",
+    "Size": "6034",
+    "Description": "X C Binding, xinerama extension, development files This package contains the header and library file"
+  },
+  {
+    "Package": "libxcb-xinput-dev",
+    "Version": "1.15-1ubuntu2",
+    "Architecture": "amd64",
+    "Size": "46110",
+    "Description": "X C Binding, xinput extension, development files This package contains the header and library files "
+  },
+  {
     "Package": "libxcb-xinput0",
     "Version": "1.15-1ubuntu2",
     "Architecture": "amd64",
     "Size": "33240",
     "Description": "X C Binding, xinput extension This package contains the library files needed to run software using l"
+  },
+  {
+    "Package": "libxcb-xkb-dev",
+    "Version": "1.15-1ubuntu2",
+    "Architecture": "amd64",
+    "Size": "42488",
+    "Description": "X C Binding, XKEYBOARD extension, development files This package contains the header and library fil"
   },
   {
     "Package": "libxcb-xkb1",
@@ -33383,6 +33817,20 @@
     "Description": "X C Binding, XKEYBOARD extension This package contains the library files needed to run software usin"
   },
   {
+    "Package": "libxcb-xtest0",
+    "Version": "1.15-1ubuntu2",
+    "Architecture": "amd64",
+    "Size": "4888",
+    "Description": "X C Binding, xtest extension This package contains the library files needed to run software using li"
+  },
+  {
+    "Package": "libxcb-xtest0-dev",
+    "Version": "1.15-1ubuntu2",
+    "Architecture": "amd64",
+    "Size": "5204",
+    "Description": "X C Binding, xtest extension, development files This package contains the header and library files n"
+  },
+  {
     "Package": "libxcb-xv0",
     "Version": "1.15-1ubuntu2",
     "Architecture": "amd64",
@@ -33390,11 +33838,39 @@
     "Description": "X C Binding, xv extension This package contains the library files needed to run software using libxc"
   },
   {
+    "Package": "libxcb-xv0-dev",
+    "Version": "1.15-1ubuntu2",
+    "Architecture": "amd64",
+    "Size": "12096",
+    "Description": "X C Binding, xv extension, development files This package contains the header and library files need"
+  },
+  {
+    "Package": "libxcb-xvmc0",
+    "Version": "1.15-1ubuntu2",
+    "Architecture": "amd64",
+    "Size": "6540",
+    "Description": "X C Binding, xvmc extension This package contains the library files needed to run software using lib"
+  },
+  {
+    "Package": "libxcb-xvmc0-dev",
+    "Version": "1.15-1ubuntu2",
+    "Architecture": "amd64",
+    "Size": "7486",
+    "Description": "X C Binding, xvmc extension, development files This package contains the header and library files ne"
+  },
+  {
     "Package": "libxcb1",
     "Version": "1.15-1ubuntu2",
     "Architecture": "amd64",
     "Size": "47730",
     "Description": "X C Binding This package contains the library files needed to run software using libxcb, the X C Bin"
+  },
+  {
+    "Package": "libxcb1-dev",
+    "Version": "1.15-1ubuntu2",
+    "Architecture": "amd64",
+    "Size": "85790",
+    "Description": "X C Binding, development files This package contains the header and library files needed to build so"
   },
   {
     "Package": "libxcomposite1",
@@ -33423,6 +33899,13 @@
     "Architecture": "amd64",
     "Size": "6150",
     "Description": "X11 damaged region extension library libXdamage provides an X Window System client interface to the "
+  },
+  {
+    "Package": "libxdmcp-dev",
+    "Version": "1:1.1.3-0ubuntu6",
+    "Architecture": "amd64",
+    "Size": "26546",
+    "Description": "X11 authorisation library (development headers) This package provides the main interface to the X11 "
   },
   {
     "Package": "libxdmcp6",
@@ -33495,11 +33978,25 @@
     "Description": "LibXISF is C++ library that can read and write XISF files produced by PixInsight. . It implement XIS"
   },
   {
+    "Package": "libxkbcommon-dev",
+    "Version": "1.6.0-1build1",
+    "Architecture": "amd64",
+    "Size": "56264",
+    "Description": "library interface to the XKB compiler - development files xkbcommon is a library to handle keyboard "
+  },
+  {
     "Package": "libxkbcommon-x11-0",
     "Version": "1.6.0-1build1",
     "Architecture": "amd64",
     "Size": "14536",
     "Description": "library to create keymaps with the XKB X11 protocol This package provides an add-on library called x"
+  },
+  {
+    "Package": "libxkbcommon-x11-dev",
+    "Version": "1.6.0-1build1",
+    "Architecture": "amd64",
+    "Size": "5586",
+    "Description": "library to create keymaps with the XKB X11 protocol - development files This package provides an add"
   },
   {
     "Package": "libxkbcommon0",
@@ -34147,16 +34644,16 @@
   },
   {
     "Package": "lliurex-grub-custom",
-    "Version": "0.25.2",
+    "Version": "0.26",
     "Architecture": "all",
-    "Size": "1462186",
+    "Size": "1154842",
     "Description": "Contains lliurex-grub-custom modifications This package contains the : lliurex-grub resources."
   },
   {
     "Package": "lliurex-grub-custom-disable-osprober",
-    "Version": "0.25.2",
+    "Version": "0.26",
     "Architecture": "all",
-    "Size": "2472",
+    "Size": "2494",
     "Description": "Contains GRUB_DISABLE_OSPROBER configuration This package contains configuration to disable os-probe"
   },
   {
@@ -34259,30 +34756,30 @@
   },
   {
     "Package": "lliurex-meta-adi",
-    "Version": "25.2.7.30",
+    "Version": "25.2.7.31",
     "Architecture": "amd64",
-    "Size": "11092",
+    "Size": "11102",
     "Description": "MetaPackage of Lliurex Adi ceip for gva List of all packages for lliurex"
   },
   {
     "Package": "lliurex-meta-adi-ceip",
-    "Version": "25.2.7.30",
+    "Version": "25.2.7.31",
     "Architecture": "amd64",
-    "Size": "8144",
+    "Size": "8172",
     "Description": "MetaPackage of Lliurex Adi ceip for gva List of all packages for lliurex"
   },
   {
     "Package": "lliurex-meta-adi-fp",
-    "Version": "25.2.7.30",
+    "Version": "25.2.7.31",
     "Architecture": "amd64",
-    "Size": "8146",
+    "Size": "8166",
     "Description": "MetaPackage of Lliurex Adi ceip for gva List of all packages for lliurex"
   },
   {
     "Package": "lliurex-meta-adi-ies",
-    "Version": "25.2.7.30",
+    "Version": "25.2.7.31",
     "Architecture": "amd64",
-    "Size": "8160",
+    "Size": "8176",
     "Description": "MetaPackage of Lliurex Adi ceip for gva List of all packages for lliurex"
   },
   {
@@ -34301,16 +34798,16 @@
   },
   {
     "Package": "lliurex-meta-desktop",
-    "Version": "25.2.7.30",
+    "Version": "25.2.7.31",
     "Architecture": "amd64",
-    "Size": "11106",
+    "Size": "11104",
     "Description": "MetaPackage of Lliurex Adi ceip for gva List of all packages for lliurex"
   },
   {
     "Package": "lliurex-meta-desktop-ceip",
-    "Version": "25.2.7.30",
+    "Version": "25.2.7.31",
     "Architecture": "amd64",
-    "Size": "8140",
+    "Size": "8156",
     "Description": "MetaPackage of Lliurex Adi ceip for gva List of all packages for lliurex"
   },
   {
@@ -34322,16 +34819,16 @@
   },
   {
     "Package": "lliurex-meta-desktop-fp",
-    "Version": "25.2.7.30",
+    "Version": "25.2.7.31",
     "Architecture": "amd64",
-    "Size": "8146",
+    "Size": "8166",
     "Description": "MetaPackage of Lliurex Adi ceip for gva List of all packages for lliurex"
   },
   {
     "Package": "lliurex-meta-desktop-ies",
-    "Version": "25.2.7.30",
+    "Version": "25.2.7.31",
     "Architecture": "amd64",
-    "Size": "8150",
+    "Size": "8172",
     "Description": "MetaPackage of Lliurex Adi ceip for gva List of all packages for lliurex"
   },
   {
@@ -34350,65 +34847,65 @@
   },
   {
     "Package": "lliurex-meta-gva",
-    "Version": "25.2.7.30",
+    "Version": "25.2.7.31",
     "Architecture": "amd64",
-    "Size": "8518",
+    "Size": "8534",
     "Description": "MetaPackage of Lliurex Adi ceip for gva List of all packages for lliurex"
   },
   {
     "Package": "lliurex-meta-gva-adi-ceip",
-    "Version": "25.2.7.30",
+    "Version": "25.2.7.31",
     "Architecture": "amd64",
-    "Size": "8212",
+    "Size": "8228",
     "Description": "MetaPackage of Lliurex Adi ceip for gva List of all packages for lliurex"
   },
   {
     "Package": "lliurex-meta-gva-adi-fp",
-    "Version": "25.2.7.30",
+    "Version": "25.2.7.31",
     "Architecture": "amd64",
-    "Size": "8220",
+    "Size": "8242",
     "Description": "MetaPackage of Lliurex Adi ceip for gva List of all packages for lliurex"
   },
   {
     "Package": "lliurex-meta-gva-adi-ies",
-    "Version": "25.2.7.30",
+    "Version": "25.2.7.31",
     "Architecture": "amd64",
-    "Size": "8234",
+    "Size": "8246",
     "Description": "MetaPackage of Lliurex Adi ceip for gva List of all packages for lliurex"
   },
   {
     "Package": "lliurex-meta-gva-agora",
-    "Version": "25.2.7.30",
+    "Version": "25.2.7.31",
     "Architecture": "amd64",
-    "Size": "8092",
+    "Size": "8106",
     "Description": "MetaPackage of Lliurex Adi ceip for gva List of all packages for lliurex"
   },
   {
     "Package": "lliurex-meta-gva-colab",
-    "Version": "25.2.7.30",
+    "Version": "25.2.7.31",
     "Architecture": "amd64",
-    "Size": "8094",
+    "Size": "8108",
     "Description": "MetaPackage of Lliurex Adi ceip for gva List of all packages for lliurex"
   },
   {
     "Package": "lliurex-meta-gva-desktop-ceip",
-    "Version": "25.2.7.30",
+    "Version": "25.2.7.31",
     "Architecture": "amd64",
-    "Size": "8204",
+    "Size": "8222",
     "Description": "MetaPackage of Lliurex Adi ceip for gva List of all packages for lliurex"
   },
   {
     "Package": "lliurex-meta-gva-desktop-fp",
-    "Version": "25.2.7.30",
+    "Version": "25.2.7.31",
     "Architecture": "amd64",
-    "Size": "8224",
+    "Size": "8244",
     "Description": "MetaPackage of Lliurex Adi ceip for gva List of all packages for lliurex"
   },
   {
     "Package": "lliurex-meta-gva-desktop-ies",
-    "Version": "25.2.7.30",
+    "Version": "25.2.7.31",
     "Architecture": "amd64",
-    "Size": "8232",
+    "Size": "8248",
     "Description": "MetaPackage of Lliurex Adi ceip for gva List of all packages for lliurex"
   },
   {
@@ -34476,9 +34973,9 @@
   },
   {
     "Package": "lliurex-meta-live",
-    "Version": "25.2.7.30",
+    "Version": "25.2.7.31",
     "Architecture": "amd64",
-    "Size": "9976",
+    "Size": "9974",
     "Description": "MetaPackage of Lliurex Adi ceip for gva List of all packages for lliurex"
   },
   {
@@ -34532,9 +35029,9 @@
   },
   {
     "Package": "lliurex-meta-supported",
-    "Version": "25.2.7.30",
+    "Version": "25.2.7.31",
     "Architecture": "amd64",
-    "Size": "14282",
+    "Size": "14312",
     "Description": "MetaPackage of Lliurex Adi ceip for gva List of all packages for lliurex"
   },
   {
@@ -34819,9 +35316,9 @@
   },
   {
     "Package": "lliurex-version-timestamp",
-    "Version": "25.250729.2",
+    "Version": "25.250731",
     "Architecture": "all",
-    "Size": "2360",
+    "Size": "2372",
     "Description": "Package to indicate mirror timestamp This package is generated automatically by mirror scripts to in"
   },
   {
@@ -36890,11 +37387,32 @@
     "Description": "run commands as another user with polkit authorization polkit is an application-level toolkit for de"
   },
   {
+    "Package": "pkg-config",
+    "Version": "1.8.1-2build1",
+    "Architecture": "amd64",
+    "Size": "7264",
+    "Description": "manage compile and link flags for libraries (transitional package) pkgconf is an implementation of t"
+  },
+  {
     "Package": "pkg-kde-tools-neon",
     "Version": "0.0+p24.04+vrelease+git20240819.0607",
     "Architecture": "all",
     "Size": "2850",
     "Description": "Debhelper addon for KF6 Neon specific Debhelper addon for KF6"
+  },
+  {
+    "Package": "pkgconf",
+    "Version": "1.8.1-2build1",
+    "Architecture": "amd64",
+    "Size": "16790",
+    "Description": "manage compile and link flags for libraries pkgconf is an implementation of the pkg-config system, w"
+  },
+  {
+    "Package": "pkgconf-bin",
+    "Version": "1.8.1-2build1",
+    "Architecture": "amd64",
+    "Size": "20730",
+    "Description": "manage compile and link flags for libraries (binaries) pkgconf is an implementation of the pkg-confi"
   },
   {
     "Package": "plank-player",
@@ -37877,6 +38395,13 @@
     "Description": "accurate, machine-readable list of domain name suffixes A machine-readable list of domain name suffi"
   },
   {
+    "Package": "pulse-sddm",
+    "Version": "0.1.4-0lliurex25",
+    "Architecture": "all",
+    "Size": "3962",
+    "Description": "Systemd and sddm scripts for enabling ORCA screen reader at SDDM"
+  },
+  {
     "Package": "pyqt-builder-doc",
     "Version": "1.18.1-0zneon+24.04+noble+release+build3",
     "Architecture": "all",
@@ -38543,9 +39068,9 @@
   },
   {
     "Package": "python3-llxaccessibility",
-    "Version": "0.5.1-0llx25",
+    "Version": "0.5.2-0llx25",
     "Architecture": "all",
-    "Size": "20340",
+    "Size": "20428",
     "Description": "Lib for generate desktop files"
   },
   {
@@ -48734,6 +49259,13 @@
     "Description": "miscellaneous system utilities This package contains a number of important utilities, most of which "
   },
   {
+    "Package": "uuid-dev",
+    "Version": "2.39.3-9ubuntu6",
+    "Architecture": "amd64",
+    "Size": "33534",
+    "Description": "Universally Unique ID library - headers and static libraries The libuuid library generates and parse"
+  },
+  {
     "Package": "uuid-runtime",
     "Version": "2.39.3-9ubuntu6",
     "Architecture": "amd64",
@@ -49266,6 +49798,13 @@
     "Description": "Core documentation for the X.org X Window System This package contains core documentation for the X."
   },
   {
+    "Package": "xorg-sgml-doctools",
+    "Version": "1:1.11-1.1",
+    "Architecture": "all",
+    "Size": "10936",
+    "Description": "Common tools for building X.Org SGML documentation This package contains tools for building the X.Or"
+  },
+  {
     "Package": "xorriso",
     "Version": "1:1.5.6-1.1ubuntu3",
     "Architecture": "amd64",
@@ -49418,6 +49957,13 @@
     "Architecture": "amd64",
     "Size": "75540",
     "Description": "X.Org X server -- VMware display driver This package provides the driver for VMware client sessions,"
+  },
+  {
+    "Package": "xtrans-dev",
+    "Version": "1.4.0-1",
+    "Architecture": "all",
+    "Size": "68900",
+    "Description": "X transport library (development files) xtrans includes a number of routines to make X implementatio"
   },
   {
     "Package": "xwayland",
