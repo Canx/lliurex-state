@@ -1,15 +1,8 @@
 {
-  "timestamp": "2025-12-18 06:00:02",
+  "timestamp": "2025-12-18 08:00:02",
   "source": "local",
   "hostname": "sauron",
   "repos": {
-    "focal": {
-      "status": "online",
-      "url": "http://lliurex.net/focal/",
-      "last_update": "Tue, 29 Jul 2025 12:39:16 UTC",
-      "packages": 41190156,
-      "http_code": 200
-    },
     "jammy": {
       "status": "online",
       "url": "http://lliurex.net/jammy/",
