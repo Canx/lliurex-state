@@ -2,7 +2,9 @@
 
 Monitor del estado de los repositorios de paquetes de LliureX para diferentes versiones de Ubuntu.
 
-**🌐 [Ver información detallada de paquetes](https://canx.github.io/lliurex-state/)**
+**🌐 Ver página con información detallada de paquetes**: https://`TU-USUARIO`.github.io/`TU-REPOSITORIO`/
+
+> **Nota**: Después de hacer fork, actualiza la URL arriba con tu usuario y nombre de repositorio de GitHub.
 
 ## 📖 ¿Qué es este proyecto?
 
@@ -28,10 +30,8 @@ Este repositorio monitorea automáticamente los repositorios de LliureX y propor
 - 💾 Información de versiones y tamaños
 
 ### Páginas Web
-- 🏠 [Página principal](https://canx.github.io/lliurex-state/) con resumen de todas las versiones
-- 📋 Páginas individuales por versión:
-  - [Ubuntu 22.04 LTS (Jammy)](https://canx.github.io/lliurex-state/jammy.html)
-  - [Ubuntu 24.04 LTS (Noble)](https://canx.github.io/lliurex-state/noble.html)
+- 🏠 Página principal con resumen de todas las versiones
+- 📋 Páginas individuales por versión (Jammy, Noble)
 
 ## 📦 Versiones de Ubuntu Soportadas
 
@@ -93,10 +93,11 @@ lliurex-state/
 
 ## 🔧 Replicar este Proyecto
 
-### 1. Clonar el Repositorio
+### 1. Fork y Clonar
 
 ```bash
-git clone https://github.com/Canx/lliurex-state.git
+# Fork en GitHub, luego:
+git clone https://github.com/TU-USUARIO/lliurex-state.git
 cd lliurex-state
 ```
 
@@ -112,13 +113,19 @@ pip3 install -r requirements.txt
 2. Source: **GitHub Actions**
 3. El workflow `.github/workflows/deploy-pages.yml` desplegará automáticamente
 
-### 4. Personalizar
+### 4. Actualizar README
+
+Edita este archivo y reemplaza:
+- `TU-USUARIO` con tu usuario de GitHub
+- `TU-REPOSITORIO` con el nombre de tu repositorio (probablemente `lliurex-state`)
+
+### 5. Personalizar (Opcional)
 
 - Edita `fetch_packages.py` para cambiar las versiones de Ubuntu
 - Modifica `index.html` y `version.html` para personalizar el diseño
 - Ajusta los scripts de actualización según tus necesidades
 
-### 5. Ejecutar Primera Actualización
+### 6. Ejecutar Primera Actualización
 
 ```bash
 # Obtener información de paquetes
@@ -128,6 +135,19 @@ python3 fetch_packages.py
 git add .
 git commit -m "Initial package data"
 git push
+```
+
+### 7. Configurar Cron (Opcional)
+
+Si quieres actualizaciones automáticas locales:
+
+```bash
+# Editar crontab
+crontab -e
+
+# Añadir líneas (ajusta la ruta):
+0 * * * * /ruta/completa/a/lliurex-state/update_local_with_check.sh
+0 2 * * 0 /ruta/completa/a/lliurex-state/update_packages_with_check.sh
 ```
 
 ## 🔗 Enlaces Útiles
