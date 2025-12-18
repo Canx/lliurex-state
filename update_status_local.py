@@ -105,9 +105,6 @@ def main():
     print("\n💾 Saving local status to local_status.json...")
     save_local_status(repo_data)
 
-    print("📝 Regenerating README.md...")
-    subprocess.run([sys.executable, "generate_readme.py"], check=True)
-
     print("\n✅ Local status update completed!")
 
     # Print summary

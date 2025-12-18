@@ -1,75 +1,155 @@
-# LliureX Repository Status
+# LliureX Repository Status Monitor
 
-[![Check Status](https://github.com/Canx/lliurex-state/actions/workflows/check-status.yml/badge.svg)](https://github.com/Canx/lliurex-state/actions/workflows/check-status.yml)
-[![Update Packages](https://github.com/Canx/lliurex-state/actions/workflows/update-packages.yml/badge.svg)](https://github.com/Canx/lliurex-state/actions/workflows/update-packages.yml)
+Monitor del estado de los repositorios de paquetes de LliureX para diferentes versiones de Ubuntu.
 
-Este repositorio monitorea automáticamente el estado de los repositorios de LliureX para diferentes versiones de Ubuntu.
+**🌐 [Ver información detallada de paquetes](https://canx.github.io/lliurex-state/)**
 
-**🌐 [Ver página con información detallada de paquetes](https://Canx.github.io/lliurex-state/)**
+## 📖 ¿Qué es este proyecto?
 
-## 📊 Estado Actual
+Este repositorio monitorea automáticamente los repositorios de LliureX y proporciona:
 
-### 🌍 Estado Externo (GitHub Actions)
+- **Estado en tiempo real** de los repositorios (online/offline)
+- **Información detallada de paquetes** para cada versión de Ubuntu
+- **Historial de actualizaciones** con fechas de modificación de cada paquete
+- **Páginas web interactivas** con búsqueda y filtrado de paquetes
 
-**Última actualización:** 2025-12-16 12:54:53 UTC
+## 🎯 Características
 
-| Versión Ubuntu | Estado | Última Actualización Repo | URL |
-|----------------|--------|---------------------------|-----|
-| Ubuntu 20.04 LTS (focal) | ✅ online | Tue, 29 Jul 2025 12:39:16 UTC | [Link](http://lliurex.net/focal/) |
-| Ubuntu 22.04 LTS (jammy) | ✅ online | Thu, 11 Dec 2025 12:26:11 UTC | [Link](http://lliurex.net/jammy/) |
-| Ubuntu 24.04 LTS (noble) | ✅ online | Tue, 29 Jul 2025 12:42:15 UTC | [Link](http://lliurex.net/noble/) |
-
-
-### 🏠 Estado Local (Red LliureX)
-
-**Última actualización:** 2025-12-18 15:00:02 UTC
-**Servidor:** sauron
-
-| Versión Ubuntu | Estado | Última Actualización Repo | URL |
-|----------------|--------|---------------------------|-----|
-| Ubuntu 22.04 LTS (jammy) | ✅ online | Thu, 11 Dec 2025 12:26:11 UTC | [Link](http://lliurex.net/jammy/) |
-| Ubuntu 24.04 LTS (noble) | ✅ online | Thu, 31 Jul 2025 10:25:45 UTC | [Link](http://lliurex.net/noble/) |
-
-
-## 📦 Repositorios de LliureX
-
-LliureX mantiene repositorios para diferentes versiones LTS de Ubuntu:
-
-- **Focal (20.04 LTS)**: Versión anterior de soporte extendido
-- **Jammy (22.04 LTS)**: Versión LTS actual
-- **Noble (24.04 LTS)**: Versión LTS más reciente
-
-Cada repositorio contiene los paquetes específicos de LliureX adaptados para esa versión de Ubuntu.
-
-## 🔄 Actualización Automática
-
-### Estado de Repositorios
-Se verifica cada hora mediante GitHub Actions, comprobando el estado de disponibilidad y última actualización de los repositorios desde fuera de la red LliureX.
+### Monitoreo Local
+- ✅ Verificación del estado desde la Red de Aulas de LliureX
+- 📊 Información almacenada en `local_status.json`
+- ⏰ Actualización automática mediante cron
 
 ### Información de Paquetes
-Se actualiza semanalmente (domingos a las 02:00 UTC) mediante GitHub Actions, generando páginas HTML con información detallada de todos los paquetes disponibles.
+- 📦 Lista completa de todos los paquetes disponibles
+- 🔍 Búsqueda y filtrado por nombre
+- 📅 Fechas de última actualización de cada paquete
+- 📈 Filtrado por período temporal (última semana, mes, 3 meses, etc.)
+- 💾 Información de versiones y tamaños
 
-### Estado Local
-Para monitorizar el estado desde la red local, ejecuta `update_status_local.py` manualmente o configura un cron job. El README se regenera automáticamente cada vez que se actualiza cualquiera de los estados.
+### Páginas Web
+- 🏠 [Página principal](https://canx.github.io/lliurex-state/) con resumen de todas las versiones
+- 📋 Páginas individuales por versión:
+  - [Ubuntu 22.04 LTS (Jammy)](https://canx.github.io/lliurex-state/jammy.html)
+  - [Ubuntu 24.04 LTS (Noble)](https://canx.github.io/lliurex-state/noble.html)
 
-## 📖 Acerca de LliureX
+## 📦 Versiones de Ubuntu Soportadas
 
-LliureX es una distribución Linux educativa desarrollada por la Generalitat Valenciana, basada en Ubuntu y diseñada específicamente para el ámbito educativo.
+- **Jammy (22.04 LTS)**: Ubuntu 22.04 LTS
+- **Noble (24.04 LTS)**: Ubuntu 24.04 LTS
 
-- **Web oficial:** https://lliurex.net/
-- **Wiki:** https://wiki.lliurex.net/
-- **Portal educativo:** https://portal.edu.gva.es/
+## 🚀 Uso
+
+### Monitoreo Local (Red de Aulas)
+
+```bash
+# Actualizar estado manualmente
+python3 update_status_local.py
+
+# O usar el script con verificación de cambios
+./update_local_with_check.sh
+```
+
+### Actualización de Información de Paquetes
+
+```bash
+# Actualizar información de todos los paquetes
+python3 fetch_packages.py
+
+# O usar el script con verificación de cambios
+./update_packages_with_check.sh
+```
+
+### Configuración de Cron
+
+Para monitoreo automático, añade al crontab:
+
+```bash
+# Monitoreo local cada hora
+0 * * * * /ruta/al/lliurex-state/update_local_with_check.sh
+
+# Actualización de paquetes semanal (domingos a las 2:00)
+0 2 * * 0 /ruta/al/lliurex-state/update_packages_with_check.sh
+```
+
+## 📁 Estructura del Proyecto
+
+```
+lliurex-state/
+├── index.html                      # Página principal
+├── version.html                    # Plantilla para páginas de versión
+├── jammy.html                      # Enlace a página de Jammy
+├── noble.html                      # Enlace a página de Noble
+├── fetch_packages.py               # Script para obtener info de paquetes
+├── update_status_local.py          # Script para monitoreo local
+├── update_packages_with_check.sh   # Actualización de paquetes con verificación
+├── update_local_with_check.sh      # Actualización de estado con verificación
+├── packages_state.json             # Estado actual de paquetes (para web)
+├── changes_timestamps.json         # Fechas de actualización de paquetes
+├── packages_jammy_main.json        # Paquetes de Jammy
+├── packages_noble_main.json        # Paquetes de Noble
+└── local_status.json               # Estado desde red local
+```
+
+## 🔧 Replicar este Proyecto
+
+### 1. Clonar el Repositorio
+
+```bash
+git clone https://github.com/Canx/lliurex-state.git
+cd lliurex-state
+```
+
+### 2. Instalar Dependencias
+
+```bash
+pip3 install -r requirements.txt
+```
+
+### 3. Configurar GitHub Pages
+
+1. Ve a **Settings** → **Pages** en tu repositorio
+2. Source: **GitHub Actions**
+3. El workflow `.github/workflows/deploy-pages.yml` desplegará automáticamente
+
+### 4. Personalizar
+
+- Edita `fetch_packages.py` para cambiar las versiones de Ubuntu
+- Modifica `index.html` y `version.html` para personalizar el diseño
+- Ajusta los scripts de actualización según tus necesidades
+
+### 5. Ejecutar Primera Actualización
+
+```bash
+# Obtener información de paquetes
+python3 fetch_packages.py
+
+# Commit y push
+git add .
+git commit -m "Initial package data"
+git push
+```
 
 ## 🔗 Enlaces Útiles
 
-- [Repositorio Principal](https://lliurex.net/)
-- [Documentación](https://wiki.lliurex.net/)
-- [Descargas](https://lliurex.net/descargas/)
+- **LliureX**: https://lliurex.net/
+- **Wiki LliureX**: https://wiki.lliurex.net/
+- **Portal Educativo GVA**: https://portal.edu.gva.es/
 
-## 📝 Licencia
+## 📄 Licencia
 
-Este proyecto es de código abierto y está disponible bajo la licencia MIT.
+Este proyecto es de código abierto bajo licencia MIT.
+
+## 🤝 Contribuciones
+
+Las contribuciones son bienvenidas. Por favor:
+
+1. Fork el proyecto
+2. Crea una rama para tu feature (`git checkout -b feature/AmazingFeature`)
+3. Commit tus cambios (`git commit -m 'Add some AmazingFeature'`)
+4. Push a la rama (`git push origin feature/AmazingFeature`)
+5. Abre un Pull Request
 
 ---
 
-*Generado automáticamente por GitHub Actions*
+**Nota**: El estado de los repositorios se actualiza automáticamente mediante scripts programados. Los datos mostrados reflejan el último estado conocido desde la Red de Aulas.
