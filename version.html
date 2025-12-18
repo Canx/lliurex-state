@@ -455,9 +455,22 @@
                 const totalSize = Object.values(components).reduce(
                     (sum, c) => sum + (c.total_size || 0), 0
                 );
-                const totalChanges = Object.values(components).reduce(
-                    (sum, c) => sum + (c.recent_changes?.length || 0), 0
-                );
+
+                // Get the most recent update date from timestamps
+                let lastUpdate = 'N/A';
+                if (globalTimestamps && globalTimestamps[version]) {
+                    let mostRecent = '';
+                    for (const comp of Object.values(globalTimestamps[version])) {
+                        for (const ts of Object.values(comp)) {
+                            if (ts > mostRecent) {
+                                mostRecent = ts;
+                            }
+                        }
+                    }
+                    if (mostRecent) {
+                        lastUpdate = mostRecent.split(' ')[0]; // Just the date
+                    }
+                }
 
                 document.getElementById('overall-stats').innerHTML = `
                     <div class="stat-card">
@@ -469,8 +482,8 @@
                         <div class="value">${formatSize(totalSize)}</div>
                     </div>
                     <div class="stat-card">
-                        <h3>Cambios Recientes</h3>
-                        <div class="value">${formatNumber(totalChanges)}</div>
+                        <h3>Última Actualización</h3>
+                        <div class="value" style="font-size: 1.8em;">${lastUpdate}</div>
                     </div>
                 `;
 
