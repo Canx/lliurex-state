@@ -613,6 +613,18 @@
 
             changesHTML += '</div>';
             document.getElementById('recent-changes').innerHTML = changesHTML;
+
+            // Show/hide the section based on whether we have ANY changes in the data
+            // (not based on filtered results, so selector is always visible)
+            const hasAnyChanges = Object.values(globalComponentsData).some(
+                compData => compData.recent_changes && compData.recent_changes.length > 0
+            );
+            const section = document.getElementById('recent-changes-section');
+            if (hasAnyChanges) {
+                section.style.display = 'block';
+            } else {
+                section.style.display = 'none';
+            }
         }
 
         // Update changes when period selector changes
