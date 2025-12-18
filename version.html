@@ -231,6 +231,36 @@
             background: #ccc;
             cursor: not-allowed;
         }
+        .period-selector {
+            margin: 20px 0;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            text-align: center;
+        }
+        .period-selector label {
+            margin-right: 10px;
+            font-weight: 600;
+            color: #667eea;
+        }
+        .period-selector select {
+            padding: 8px 16px;
+            font-size: 1em;
+            border: 2px solid #667eea;
+            border-radius: 5px;
+            background: white;
+            color: #333;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .period-selector select:hover {
+            background: #f0f0f0;
+        }
+        .period-selector select:focus {
+            outline: none;
+            border-color: #764ba2;
+            box-shadow: 0 0 0 3px rgba(118, 75, 162, 0.1);
+        }
     </style>
 </head>
 <body>
@@ -249,6 +279,17 @@
             <!-- Recent Changes -->
             <div class="section" id="recent-changes-section" style="display:none;">
                 <h2>🔄 Cambios Recientes</h2>
+                <div class="period-selector">
+                    <label for="period-select">📅 Mostrar cambios de:</label>
+                    <select id="period-select" onchange="updateChangesPeriod()">
+                        <option value="7">Última semana (7 días)</option>
+                        <option value="30">Último mes (30 días)</option>
+                        <option value="90" selected>Últimos 3 meses (90 días)</option>
+                        <option value="180">Últimos 6 meses (180 días)</option>
+                        <option value="365">Último año (365 días)</option>
+                        <option value="0">Todos los cambios</option>
+                    </select>
+                </div>
                 <div id="recent-changes"></div>
             </div>
 
@@ -265,6 +306,9 @@
             'jammy': { name: 'Ubuntu 22.04 LTS', codename: 'Jammy Jellyfish' },
             'noble': { name: 'Ubuntu 24.04 LTS', codename: 'Noble Numbat' }
         };
+
+        // Global variable to store all components data
+        let globalComponentsData = null;
 
         // Get version from URL parameter or filename
         function getVersion() {
@@ -415,78 +459,11 @@
                     </div>
                 `;
 
-                // Recent changes
-                if (totalChanges > 0) {
-                    let changesHTML = '';
-                    for (const [compName, compData] of Object.entries(components)) {
-                        if (compData.recent_changes && compData.recent_changes.length > 0) {
-                            changesHTML += `<div class="component-card">
-                                <h3>${compName} - ${compData.recent_changes.length} cambios en la última semana</h3>
-                                <table class="packages-table" id="changes-table-${compName}">
-                                    <thead>
-                                        <tr>
-                                            <th>Tipo</th>
-                                            <th>Paquete</th>
-                                            <th>Versión</th>
-                                            <th class="sortable desc" onclick="sortChangesByDate('${compName}')">Fecha de Cambio</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>`;
+                // Store components data globally for filtering
+                globalComponentsData = components;
 
-                            // Already sorted by date (most recent first) from the backend
-                            for (const change of compData.recent_changes) {
-                                const changeType = change.change_type || change.type || 'updated';
-                                const packageName = change.Package || change.package || 'Unknown';
-                                const version = change.Version || change.version || 'N/A';
-                                const detectedAt = change.detected_at;
-
-                                const badgeClass = changeType;
-                                const badgeText = {
-                                    'new': 'NUEVO',
-                                    'updated': 'ACTUALIZADO',
-                                    'removed': 'ELIMINADO'
-                                }[changeType] || 'MODIFICADO';
-
-                                // Format date if available
-                                let dateStr = 'N/A';
-                                let dateSort = '';
-                                if (detectedAt) {
-                                    try {
-                                        const date = new Date(detectedAt);
-                                        dateStr = date.toLocaleDateString('es-ES', {
-                                            day: '2-digit',
-                                            month: '2-digit',
-                                            year: 'numeric',
-                                            hour: '2-digit',
-                                            minute: '2-digit'
-                                        });
-                                        dateSort = detectedAt; // ISO format for sorting
-                                    } catch (e) {
-                                        dateSort = '';
-                                    }
-                                }
-
-                                changesHTML += `
-                                    <tr data-date="${dateSort}">
-                                        <td><span class="change-badge ${badgeClass}">${badgeText}</span></td>
-                                        <td class="package-name">${packageName}</td>
-                                        <td class="package-version">${version}</td>
-                                        <td style="color: #666; font-size: 0.9em;">${dateStr}</td>
-                                    </tr>`;
-                            }
-
-                            changesHTML += `
-                                    </tbody>
-                                </table>
-                            </div>`;
-                        }
-                    }
-
-                    if (changesHTML) {
-                        document.getElementById('recent-changes').innerHTML = changesHTML;
-                        document.getElementById('recent-changes-section').style.display = 'block';
-                    }
-                }
+                // Display recent changes with current period (default: 90 days)
+                renderRecentChanges();
 
                 // Components
                 let componentsHTML = '';
@@ -546,6 +523,100 @@
                 document.getElementById('loading').innerHTML =
                     `<div class="error">Error al cargar los datos: ${error.message}</div>`;
             }
+        }
+
+        // Render recent changes with period filter
+        function renderRecentChanges() {
+            if (!globalComponentsData) return;
+
+            const periodSelect = document.getElementById('period-select');
+            const daysLimit = parseInt(periodSelect.value);
+
+            // Filter changes by period
+            let allChanges = [];
+            for (const [compName, compData] of Object.entries(globalComponentsData)) {
+                if (compData.recent_changes && compData.recent_changes.length > 0) {
+                    for (const change of compData.recent_changes) {
+                        allChanges.push({
+                            component: compName,
+                            ...change
+                        });
+                    }
+                }
+            }
+
+            // Apply period filter if not "all changes" (0)
+            if (daysLimit > 0) {
+                const cutoffDate = new Date();
+                cutoffDate.setDate(cutoffDate.getDate() - daysLimit);
+                const cutoffStr = cutoffDate.toISOString().split('T')[0];
+
+                allChanges = allChanges.filter(change => {
+                    const changeDate = change.date ? change.date.split(' ')[0] : '';
+                    return changeDate >= cutoffStr;
+                });
+            }
+
+            // Sort by date (most recent first)
+            allChanges.sort((a, b) => {
+                const dateA = a.date || '';
+                const dateB = b.date || '';
+                return dateB.localeCompare(dateA);
+            });
+
+            // Build the HTML
+            let changesHTML = `
+                <div class="component-card">
+                    <h3>🔄 Cambios Recientes (${formatNumber(allChanges.length)})</h3>
+            `;
+
+            if (allChanges.length === 0) {
+                changesHTML += '<p style="color: #999; text-align: center; padding: 20px;">No hay cambios en el período seleccionado</p>';
+            } else {
+                changesHTML += `
+                    <table class="changes-table" id="changes-table-all">
+                        <thead>
+                            <tr>
+                                <th>Componente</th>
+                                <th>Paquete</th>
+                                <th>Versión</th>
+                                <th>Tipo</th>
+                                <th class="sortable desc" onclick="sortChangesByDate('all')">
+                                    Fecha
+                                    <span class="sort-arrow">▼</span>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                `;
+
+                for (const change of allChanges) {
+                    const changeType = change.type === 'new' ? '🆕 Nuevo' : '🔄 Actualizado';
+                    const changeDate = change.date || 'Desconocida';
+                    changesHTML += `
+                        <tr data-date="${change.date || ''}">
+                            <td>${change.component}</td>
+                            <td><strong>${change.package}</strong></td>
+                            <td>${change.version || 'N/A'}</td>
+                            <td>${changeType}</td>
+                            <td>${changeDate}</td>
+                        </tr>
+                    `;
+                }
+
+                changesHTML += `
+                        </tbody>
+                    </table>
+                `;
+            }
+
+            changesHTML += '</div>';
+            document.getElementById('recent-changes').innerHTML = changesHTML;
+        }
+
+        // Update changes when period selector changes
+        function updateChangesPeriod() {
+            renderRecentChanges();
         }
 
         // Sort changes table by date
