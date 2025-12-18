@@ -276,12 +276,12 @@
             <!-- Overall Stats -->
             <div class="stats" id="overall-stats"></div>
 
-            <!-- Recent Changes -->
+            <!-- Package Updates -->
             <div class="section" id="recent-changes-section" style="display:none;">
-                <h2>🔄 Cambios Recientes</h2>
+                <h2>📦 Paquetes Actualizados</h2>
 
                 <div class="period-selector">
-                    <label for="period-select">📅 Mostrar cambios de:</label>
+                    <label for="period-select">📅 Mostrar paquetes actualizados en:</label>
                     <select id="period-select" onchange="updateChangesPeriod()">
                         <option value="7">Última semana (7 días)</option>
                         <option value="30">Último mes (30 días)</option>
@@ -308,8 +308,10 @@
             'noble': { name: 'Ubuntu 24.04 LTS', codename: 'Noble Numbat' }
         };
 
-        // Global variable to store all components data
+        // Global variables to store data
         let globalComponentsData = null;
+        let globalTimestamps = null;
+        let globalVersion = null;
 
         // Get version from URL parameter or filename
         function getVersion() {
@@ -411,6 +413,7 @@
 
         async function loadVersionData(version) {
             try {
+                // Load packages state
                 const response = await fetch('packages_state.json');
                 if (!response.ok) {
                     throw new Error('No se pudo cargar packages_state.json');
@@ -423,6 +426,17 @@
                     throw new Error(`No hay datos para la versión ${version}`);
                 }
 
+                // Load timestamps
+                try {
+                    const timestampsResponse = await fetch('changes_timestamps.json');
+                    if (timestampsResponse.ok) {
+                        globalTimestamps = await timestampsResponse.json();
+                    }
+                } catch (e) {
+                    console.warn('Could not load changes_timestamps.json:', e);
+                }
+
+                globalVersion = version;
                 const versionInfo = VERSION_INFO[version];
 
                 // Update title
@@ -527,35 +541,55 @@
         }
 
         // Render recent changes with period filter
-        function renderRecentChanges() {
-            if (!globalComponentsData) return;
+        async function renderRecentChanges() {
+            if (!globalComponentsData || !globalTimestamps || !globalVersion) return;
 
             const periodSelect = document.getElementById('period-select');
             const daysLimit = parseInt(periodSelect.value);
 
-            // Filter changes by period
-            let allChanges = [];
-            for (const [compName, compData] of Object.entries(globalComponentsData)) {
-                if (compData.recent_changes && compData.recent_changes.length > 0) {
-                    for (const change of compData.recent_changes) {
-                        allChanges.push({
-                            component: compName,
-                            ...change
-                        });
-                    }
-                }
-            }
-
-            // Apply period filter if not "all changes" (0)
+            // Calculate cutoff date if filtering
+            let cutoffStr = '';
             if (daysLimit > 0) {
                 const cutoffDate = new Date();
                 cutoffDate.setDate(cutoffDate.getDate() - daysLimit);
-                const cutoffStr = cutoffDate.toISOString().split('T')[0];
+                cutoffStr = cutoffDate.toISOString().split('T')[0];
+            }
 
-                allChanges = allChanges.filter(change => {
-                    const changeDate = change.date ? change.date.split(' ')[0] : '';
-                    return changeDate >= cutoffStr;
-                });
+            // Load packages for the current version and build changes list
+            let allChanges = [];
+            for (const [compName, compData] of Object.entries(globalComponentsData)) {
+                try {
+                    // Load the component's package file
+                    const packagesFile = `packages_${globalVersion}_${compName}.json`;
+                    const packagesRes = await fetch(packagesFile);
+                    if (packagesRes.ok) {
+                        const packages = await packagesRes.json();
+
+                        // Process each package
+                        for (const pkg of packages) {
+                            const pkgName = pkg.Package;
+                            const pkgVersion = pkg.Version;
+                            const pkgKey = `${pkgName}:${pkgVersion}`;
+
+                            // Get timestamp from changes_timestamps
+                            const timestamp = globalTimestamps[pkgKey];
+                            if (timestamp) {
+                                // Apply period filter
+                                const pkgDate = timestamp.split(' ')[0];
+                                if (!cutoffStr || pkgDate >= cutoffStr) {
+                                    allChanges.push({
+                                        component: compName,
+                                        package: pkgName,
+                                        version: pkgVersion,
+                                        date: timestamp
+                                    });
+                                }
+                            }
+                        }
+                    }
+                } catch (e) {
+                    console.warn(`Could not load packages for ${compName}:`, e);
+                }
             }
 
             // Sort by date (most recent first)
@@ -568,11 +602,11 @@
             // Build the HTML
             let changesHTML = `
                 <div class="component-card">
-                    <h3>🔄 Cambios Recientes (${formatNumber(allChanges.length)})</h3>
+                    <h3>📦 Paquetes Actualizados (${formatNumber(allChanges.length)})</h3>
             `;
 
             if (allChanges.length === 0) {
-                changesHTML += '<p style="color: #999; text-align: center; padding: 20px;">No hay cambios en el período seleccionado</p>';
+                changesHTML += '<p style="color: #999; text-align: center; padding: 20px;">No hay paquetes en el período seleccionado</p>';
             } else {
                 changesHTML += `
                     <table class="changes-table" id="changes-table-all">
@@ -581,9 +615,8 @@
                                 <th>Componente</th>
                                 <th>Paquete</th>
                                 <th>Versión</th>
-                                <th>Tipo</th>
                                 <th class="sortable desc" onclick="sortChangesByDate('all')">
-                                    Fecha
+                                    Fecha de Actualización
                                     <span class="sort-arrow">▼</span>
                                 </th>
                             </tr>
@@ -592,14 +625,12 @@
                 `;
 
                 for (const change of allChanges) {
-                    const changeType = change.type === 'new' ? '🆕 Nuevo' : '🔄 Actualizado';
                     const changeDate = change.date || 'Desconocida';
                     changesHTML += `
                         <tr data-date="${change.date || ''}">
                             <td>${change.component}</td>
                             <td><strong>${change.package}</strong></td>
                             <td>${change.version || 'N/A'}</td>
-                            <td>${changeType}</td>
                             <td>${changeDate}</td>
                         </tr>
                     `;
@@ -614,13 +645,10 @@
             changesHTML += '</div>';
             document.getElementById('recent-changes').innerHTML = changesHTML;
 
-            // Show/hide the section based on whether we have ANY changes in the data
+            // Show/hide the section based on whether we have timestamps data
             // (not based on filtered results, so selector is always visible)
-            const hasAnyChanges = Object.values(globalComponentsData).some(
-                compData => compData.recent_changes && compData.recent_changes.length > 0
-            );
             const section = document.getElementById('recent-changes-section');
-            if (hasAnyChanges) {
+            if (globalTimestamps && Object.keys(globalTimestamps).length > 0) {
                 section.style.display = 'block';
             } else {
                 section.style.display = 'none';
