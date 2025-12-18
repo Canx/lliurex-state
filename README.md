@@ -2,7 +2,7 @@
 
 Monitor del estado de los repositorios de paquetes de LliureX para diferentes versiones de Ubuntu.
 
-**🌐 Ver página con información detallada de paquetes**: https://`TU-USUARIO`.github.io/`TU-REPOSITORIO`/
+**🌐 Ver página con información detallada de paquetes**: https://Canx.github.io/lliurex-state/
 
 > **Nota**: Después de hacer fork, actualiza la URL arriba con tu usuario y nombre de repositorio de GitHub.
 
@@ -97,7 +97,7 @@ lliurex-state/
 
 ```bash
 # Fork en GitHub, luego:
-git clone https://github.com/TU-USUARIO/lliurex-state.git
+git clone https://github.com/Canx/lliurex-state.git
 cd lliurex-state
 ```
 
@@ -116,8 +116,8 @@ pip3 install -r requirements.txt
 ### 4. Actualizar README
 
 Edita este archivo y reemplaza:
-- `TU-USUARIO` con tu usuario de GitHub
-- `TU-REPOSITORIO` con el nombre de tu repositorio (probablemente `lliurex-state`)
+- Canx con tu usuario de GitHub
+- lliurex-state con el nombre de tu repositorio (probablemente lliurex-state)
 
 ### 5. Personalizar (Opcional)
 
