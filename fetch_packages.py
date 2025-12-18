@@ -12,7 +12,7 @@ import json
 import os
 
 LLIUREX_BASE_URL = "http://lliurex.net"
-UBUNTU_VERSIONS = ["focal", "jammy", "noble"]
+UBUNTU_VERSIONS = ["jammy", "noble"]
 COMPONENTS = ["main", "import", "testing"]
 
 def load_status_data() -> Dict:

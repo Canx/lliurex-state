@@ -15,7 +15,6 @@ import sys
 
 LLIUREX_BASE_URL = "http://lliurex.net"
 UBUNTU_VERSIONS = [
-    "focal",    # Ubuntu 20.04 LTS
     "jammy",    # Ubuntu 22.04 LTS
     "noble",    # Ubuntu 24.04 LTS
 ]
