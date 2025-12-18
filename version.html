@@ -557,8 +557,22 @@
 
             // Load packages for the current version and build changes list
             let allChanges = [];
+
+            // Check if we have timestamps for this version
+            if (!globalTimestamps[globalVersion]) {
+                console.warn(`No timestamps found for version ${globalVersion}`);
+                return;
+            }
+
             for (const [compName, compData] of Object.entries(globalComponentsData)) {
                 try {
+                    // Check if we have timestamps for this component
+                    const componentTimestamps = globalTimestamps[globalVersion][compName];
+                    if (!componentTimestamps) {
+                        console.warn(`No timestamps found for ${globalVersion}/${compName}`);
+                        continue;
+                    }
+
                     // Load the component's package file
                     const packagesFile = `packages_${globalVersion}_${compName}.json`;
                     const packagesRes = await fetch(packagesFile);
@@ -572,7 +586,7 @@
                             const pkgKey = `${pkgName}:${pkgVersion}`;
 
                             // Get timestamp from changes_timestamps
-                            const timestamp = globalTimestamps[pkgKey];
+                            const timestamp = componentTimestamps[pkgKey];
                             if (timestamp) {
                                 // Apply period filter
                                 const pkgDate = timestamp.split(' ')[0];
