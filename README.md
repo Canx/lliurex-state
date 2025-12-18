@@ -4,7 +4,7 @@ Monitor del estado de los repositorios de paquetes de LliureX para diferentes ve
 
 **🌐 Ver página con información detallada de paquetes**: https://Canx.github.io/lliurex-state/
 
-> **Nota**: Después de hacer fork, actualiza la URL arriba con tu usuario y nombre de repositorio de GitHub.
+> **💡 Después de hacer fork**: Ejecuta `./setup.sh` para configurar automáticamente tu repositorio y actualizar todas las URLs.
 
 ## 📖 ¿Qué es este proyecto?
 
@@ -113,11 +113,14 @@ pip3 install -r requirements.txt
 2. Source: **GitHub Actions**
 3. El workflow `.github/workflows/deploy-pages.yml` desplegará automáticamente
 
-### 4. Actualizar README
+### 4. Configurar Automáticamente
 
-Edita este archivo y reemplaza:
-- Canx con tu usuario de GitHub
-- lliurex-state con el nombre de tu repositorio (probablemente lliurex-state)
+```bash
+# Ejecuta el script de configuración
+./setup.sh
+```
+
+Este script detectará automáticamente tu repositorio y actualizará todas las URLs en el README.
 
 ### 5. Personalizar (Opcional)
 
