@@ -1261,6 +1261,10 @@ def main():
     with open("packages_state.json", "w") as f:
         json.dump(versions_summary_light, f, indent=2)
     print("  ✓ Saved packages_state.json (for web pages)")
+    
+    # Save to Firebase
+    import firebase_config
+    firebase_config.save_to_firebase('packages_state', versions_summary_light)
 
     # HTML generation removed - pages now load data dynamically via JavaScript
     # print(f"\n{'='*60}")

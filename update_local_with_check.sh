@@ -26,9 +26,9 @@ if git diff --quiet local_status.json 2>/dev/null; then
 fi
 
 # There are changes, commit and push
-echo "✨ Changes detected - committing and pushing" >> "$LOG_FILE"
-git add local_status.json >> "$LOG_FILE" 2>&1
-git commit -m "🏠 Update local status from $(hostname)" >> "$LOG_FILE" 2>&1
-git push >> "$LOG_FILE" 2>&1
+# echo "✨ Changes detected - committing and pushing" >> "$LOG_FILE"
+# git add local_status.json >> "$LOG_FILE" 2>&1
+# git commit -m "🏠 Update local status from $(hostname)" >> "$LOG_FILE" 2>&1
+# git push >> "$LOG_FILE" 2>&1
 
 echo "✅ Local status updated successfully" >> "$LOG_FILE"

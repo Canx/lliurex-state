@@ -99,6 +99,15 @@ def save_history(repo_data: Dict):
     with open("history.json", "w") as f:
         json.dump(history, f, indent=2)
 
+    # Save to Firebase
+    import firebase_config
+    # We push the single new entry, not the whole history array (to act as a log)
+    # But wait, the frontend might want the last X entries.
+    # If we use push(), we get unique IDs.
+    # Let's also update a 'latest_status' node for easy access.
+    firebase_config.push_to_firebase('history', repo_data)
+    firebase_config.save_to_firebase('latest_status', repo_data)
+
 def main():
     print("🔍 Fetching LliureX repository status (external)...")
     repo_data = fetch_all_repos()

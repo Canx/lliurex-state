@@ -302,7 +302,11 @@
         </div>
     </div>
 
-    <script>
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+        import { getDatabase, ref, get, child } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js';
+        import { firebaseConfig } from './firebase_frontend_config.js';
+
         const VERSION_INFO = {
             'jammy': { name: 'Ubuntu 22.04 LTS', codename: 'Jammy Jellyfish' },
             'noble': { name: 'Ubuntu 24.04 LTS', codename: 'Noble Numbat' }
@@ -313,13 +317,18 @@
         let globalTimestamps = null;
         let globalVersion = null;
 
-        // Get version from URL parameter or filename
+        // ... helper functions (getVersion, formatSize, formatNumber, createPackageTable, filterPackages, sortChangesByDate, updateChangesPeriod) ...
+        // Need to copy them again or keep them outside if possible. 
+        // In modules, they need to be attached to window if used in 'onclick' or 'onkeyup' attributes.
+        
+        window.updateChangesPeriod = updateChangesPeriod;
+        window.filterPackages = filterPackages;
+        window.sortChangesByDate = sortChangesByDate;
+
         function getVersion() {
             const urlParams = new URLSearchParams(window.location.search);
             const paramVersion = urlParams.get('version');
             if (paramVersion) return paramVersion;
-
-            // Try to get from filename
             const path = window.location.pathname;
             const filename = path.substring(path.lastIndexOf('/') + 1);
             const match = filename.match(/^(jammy|noble)\.html$/);
@@ -365,14 +374,12 @@
                     </thead>
                     <tbody>`;
 
-            // Sort packages alphabetically by name for better browsing
             const sortedPackages = [...packages].sort((a, b) => {
                 const nameA = (a.Package || '').toLowerCase();
                 const nameB = (b.Package || '').toLowerCase();
                 return nameA.localeCompare(nameB);
             });
 
-            // Show all packages (no limit)
             for (const pkg of sortedPackages) {
                 html += `
                     <tr>
@@ -411,317 +418,173 @@
             }
         }
 
-        async function loadVersionData(version) {
-            try {
-                // Load packages state
-                const response = await fetch('packages_state.json');
-                if (!response.ok) {
-                    throw new Error('No se pudo cargar packages_state.json');
-                }
-
-                const data = await response.json();
-                const versionData = data[version];
-
-                if (!versionData) {
-                    throw new Error(`No hay datos para la versión ${version}`);
-                }
-
-                // Load timestamps
-                try {
-                    const timestampsResponse = await fetch('changes_timestamps.json');
-                    if (timestampsResponse.ok) {
-                        globalTimestamps = await timestampsResponse.json();
-                    }
-                } catch (e) {
-                    console.warn('Could not load changes_timestamps.json:', e);
-                }
-
-                globalVersion = version;
-                const versionInfo = VERSION_INFO[version];
-
-                // Update title
-                document.getElementById('page-title').textContent =
-                    `LliureX ${versionInfo.name} - Repositorio de Paquetes`;
-                document.getElementById('version-title').textContent =
-                    `${versionInfo.name} (${version})`;
-                document.getElementById('version-subtitle').textContent =
-                    versionInfo.codename;
-
-                // Overall stats
-                const components = versionData.components || {};
-                const totalPackages = Object.values(components).reduce(
-                    (sum, c) => sum + (c.total_packages || c.package_count || 0), 0
-                );
-                const totalSize = Object.values(components).reduce(
-                    (sum, c) => sum + (c.total_size || 0), 0
-                );
-
-                // Get the most recent update date from timestamps
-                let lastUpdate = 'N/A';
-                if (globalTimestamps && globalTimestamps[version]) {
-                    let mostRecent = '';
-                    for (const comp of Object.values(globalTimestamps[version])) {
-                        for (const ts of Object.values(comp)) {
-                            if (ts > mostRecent) {
-                                mostRecent = ts;
-                            }
-                        }
-                    }
-                    if (mostRecent) {
-                        lastUpdate = mostRecent.split(' ')[0]; // Just the date
-                    }
-                }
-
-                document.getElementById('overall-stats').innerHTML = `
-                    <div class="stat-card">
-                        <h3>Total de Paquetes</h3>
-                        <div class="value">${formatNumber(totalPackages)}</div>
-                    </div>
-                    <div class="stat-card">
-                        <h3>Tamaño Total</h3>
-                        <div class="value">${formatSize(totalSize)}</div>
-                    </div>
-                    <div class="stat-card">
-                        <h3>Última Actualización</h3>
-                        <div class="value" style="font-size: 1.8em;">${lastUpdate}</div>
-                    </div>
-                `;
-
-                // Store components data globally for filtering
-                globalComponentsData = components;
-
-                // Display recent changes with current period (default: 90 days)
-                renderRecentChanges();
-
-                // Components
-                let componentsHTML = '';
-                for (const [compName, compData] of Object.entries(components)) {
-                    componentsHTML += `
-                        <div class="component-card" id="component-${compName}">
-                            <h3>📁 ${compName}</h3>
-                            <div class="component-stats">
-                                <div class="component-stat">
-                                    <span class="component-stat-label">Paquetes</span>
-                                    <span class="component-stat-value">${formatNumber(compData.total_packages || compData.package_count || 0)}</span>
-                                </div>
-                                <div class="component-stat">
-                                    <span class="component-stat-label">Tamaño</span>
-                                    <span class="component-stat-value">${formatSize(compData.total_size || 0)}</span>
-                                </div>
-                            </div>
-                            <div class="loading">Cargando paquetes...</div>
-                        </div>`;
-                }
-
-                document.getElementById('components').innerHTML = componentsHTML;
-
-                // Load full package lists from separate files
-                for (const [compName, compData] of Object.entries(components)) {
-                    try {
-                        const packagesFile = `packages_${version}_${compName}.json`;
-                        const packagesRes = await fetch(packagesFile);
-                        if (packagesRes.ok) {
-                            const packages = await packagesRes.json();
-                            const componentDiv = document.getElementById(`component-${compName}`);
-                            const loadingDiv = componentDiv.querySelector('.loading');
-                            loadingDiv.outerHTML = createPackageTable(packages, compName);
-                        } else {
-                            // Fallback to latest_packages if separate file not available
-                            const componentDiv = document.getElementById(`component-${compName}`);
-                            const loadingDiv = componentDiv.querySelector('.loading');
-                            loadingDiv.outerHTML = createPackageTable(
-                                compData.latest_packages || [],
-                                compName
-                            );
-                        }
-                    } catch (e) {
-                        console.warn(`Could not load packages for ${compName}:`, e);
-                        const componentDiv = document.getElementById(`component-${compName}`);
-                        const loadingDiv = componentDiv.querySelector('.loading');
-                        loadingDiv.outerHTML = '<p style="color: #999;">No se pudieron cargar los paquetes</p>';
-                    }
-                }
-
-                // Show content
-                document.getElementById('loading').style.display = 'none';
-                document.getElementById('content').style.display = 'block';
-
-            } catch (error) {
-                console.error('Error loading data:', error);
-                document.getElementById('loading').innerHTML =
-                    `<div class="error">Error al cargar los datos: ${error.message}</div>`;
-            }
+        function sortChangesByDate(componentName) {
+            const table = document.getElementById(`changes-table-${componentName}`);
+            const tbody = table.querySelector('tbody');
+            const rows = Array.from(tbody.querySelectorAll('tr'));
+            const header = table.querySelector('th.sortable');
+            const isDesc = header.classList.contains('desc');
+            header.classList.remove('asc', 'desc');
+            rows.sort((a, b) => {
+                const dateA = a.getAttribute('data-date') || '';
+                const dateB = b.getAttribute('data-date') || '';
+                return isDesc ? dateA.localeCompare(dateB) : dateB.localeCompare(dateA);
+            });
+            header.classList.add(isDesc ? 'asc' : 'desc');
+            rows.forEach(row => tbody.appendChild(row));
         }
 
-        // Render recent changes with period filter
-        async function renderRecentChanges() {
-            if (!globalComponentsData || !globalTimestamps || !globalVersion) return;
+        function updateChangesPeriod() {
+            renderRecentChanges();
+        }
 
+        async function renderRecentChanges() {
+            if (!globalComponentsData || !globalVersion) return;
             const periodSelect = document.getElementById('period-select');
             const daysLimit = parseInt(periodSelect.value);
-
-            // Calculate cutoff date if filtering
             let cutoffStr = '';
             if (daysLimit > 0) {
                 const cutoffDate = new Date();
                 cutoffDate.setDate(cutoffDate.getDate() - daysLimit);
                 cutoffStr = cutoffDate.toISOString().split('T')[0];
             }
-
-            // Load packages for the current version and build changes list
             let allChanges = [];
+            
+            // Try to load timestamps from local first (they are small)
+            if (!globalTimestamps) {
+                try {
+                    const tsRes = await fetch('changes_timestamps.json');
+                    if (tsRes.ok) globalTimestamps = await tsRes.json();
+                } catch (e) {}
+            }
 
-            // Check if we have timestamps for this version
-            if (!globalTimestamps[globalVersion]) {
-                console.warn(`No timestamps found for version ${globalVersion}`);
+            if (!globalTimestamps || !globalTimestamps[globalVersion]) {
+                document.getElementById('recent-changes-section').style.display = 'none';
                 return;
             }
 
             for (const [compName, compData] of Object.entries(globalComponentsData)) {
                 try {
-                    // Check if we have timestamps for this component
                     const componentTimestamps = globalTimestamps[globalVersion][compName];
-                    if (!componentTimestamps) {
-                        console.warn(`No timestamps found for ${globalVersion}/${compName}`);
-                        continue;
-                    }
-
-                    // Load the component's package file
+                    if (!componentTimestamps) continue;
                     const packagesFile = `packages_${globalVersion}_${compName}.json`;
                     const packagesRes = await fetch(packagesFile);
                     if (packagesRes.ok) {
                         const packages = await packagesRes.json();
-
-                        // Process each package
                         for (const pkg of packages) {
-                            const pkgName = pkg.Package;
-                            const pkgVersion = pkg.Version;
-                            const pkgKey = `${pkgName}:${pkgVersion}`;
-
-                            // Get timestamp from changes_timestamps
+                            const pkgKey = `${pkg.Package}:${pkg.Version}`;
                             const timestamp = componentTimestamps[pkgKey];
                             if (timestamp) {
-                                // Apply period filter
                                 const pkgDate = timestamp.split(' ')[0];
                                 if (!cutoffStr || pkgDate >= cutoffStr) {
                                     allChanges.push({
                                         component: compName,
-                                        package: pkgName,
-                                        version: pkgVersion,
+                                        package: pkg.Package,
+                                        version: pkg.Version,
                                         date: timestamp
                                     });
                                 }
                             }
                         }
                     }
-                } catch (e) {
-                    console.warn(`Could not load packages for ${compName}:`, e);
-                }
+                } catch (e) {}
             }
 
-            // Sort by date (most recent first)
-            allChanges.sort((a, b) => {
-                const dateA = a.date || '';
-                const dateB = b.date || '';
-                return dateB.localeCompare(dateA);
-            });
-
-            // Build the HTML
-            let changesHTML = `
-                <div class="component-card">
-                    <h3>📦 Paquetes Actualizados (${formatNumber(allChanges.length)})</h3>
-            `;
-
+            allChanges.sort((a, b) => (b.date || '').localeCompare(a.date || ''));
+            let changesHTML = `<div class="component-card"><h3>📦 Paquetes Actualizados (${formatNumber(allChanges.length)})</h3>`;
             if (allChanges.length === 0) {
                 changesHTML += '<p style="color: #999; text-align: center; padding: 20px;">No hay paquetes en el período seleccionado</p>';
             } else {
-                changesHTML += `
-                    <table class="changes-table" id="changes-table-all">
-                        <thead>
-                            <tr>
-                                <th>Componente</th>
-                                <th>Paquete</th>
-                                <th>Versión</th>
-                                <th class="sortable desc" onclick="sortChangesByDate('all')">
-                                    Fecha de Actualización
-                                    <span class="sort-arrow">▼</span>
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                `;
-
+                changesHTML += `<table class="changes-table" id="changes-table-all"><thead><tr><th>Componente</th><th>Paquete</th><th>Versión</th><th class="sortable desc" onclick="sortChangesByDate('all')">Fecha de Actualización <span class="sort-arrow">▼</span></th></tr></thead><tbody>`;
                 for (const change of allChanges) {
-                    const changeDate = change.date || 'Desconocida';
-                    changesHTML += `
-                        <tr data-date="${change.date || ''}">
-                            <td>${change.component}</td>
-                            <td><strong>${change.package}</strong></td>
-                            <td>${change.version || 'N/A'}</td>
-                            <td>${changeDate}</td>
-                        </tr>
-                    `;
+                    changesHTML += `<tr data-date="${change.date || ''}"><td>${change.component}</td><td><strong>${change.package}</strong></td><td>${change.version || 'N/A'}</td><td>${change.date || 'Desconocida'}</td></tr>`;
                 }
-
-                changesHTML += `
-                        </tbody>
-                    </table>
-                `;
+                changesHTML += `</tbody></table>`;
             }
-
             changesHTML += '</div>';
             document.getElementById('recent-changes').innerHTML = changesHTML;
+            document.getElementById('recent-changes-section').style.display = 'block';
+        }
 
-            // Show/hide the section based on whether we have timestamps data
-            // (not based on filtered results, so selector is always visible)
-            const section = document.getElementById('recent-changes-section');
-            if (globalTimestamps && Object.keys(globalTimestamps).length > 0) {
-                section.style.display = 'block';
-            } else {
-                section.style.display = 'none';
+        async function loadVersionData(version) {
+            let firebaseApp = null;
+            let dbRef = null;
+            if (firebaseConfig && firebaseConfig.databaseURL) {
+                try {
+                    firebaseApp = initializeApp(firebaseConfig);
+                    dbRef = ref(getDatabase(firebaseApp));
+                } catch (e) {}
+            }
+
+            try {
+                // 1. Load Packages State
+                let versionData = null;
+                if (dbRef) {
+                    try {
+                        const snapshot = await get(child(dbRef, `packages_state/${version}`));
+                        if (snapshot.exists()) versionData = snapshot.val();
+                    } catch (e) {}
+                }
+                if (!versionData) {
+                    const res = await fetch('packages_state.json');
+                    if (res.ok) {
+                        const data = await res.json();
+                        versionData = data[version];
+                    }
+                }
+
+                if (!versionData) throw new Error(`No hay datos para la versión ${version}`);
+
+                globalVersion = version;
+                const versionInfo = VERSION_INFO[version];
+                document.getElementById('page-title').textContent = `LliureX ${versionInfo.name} - Repositorio de Paquetes`;
+                document.getElementById('version-title').textContent = `${versionInfo.name} (${version})`;
+                document.getElementById('version-subtitle').textContent = versionInfo.codename;
+
+                const components = versionData.components || {};
+                const totalPackages = Object.values(components).reduce((sum, c) => sum + (c.total_packages || 0), 0);
+                const totalSize = Object.values(components).reduce((sum, c) => sum + (c.total_size || 0), 0);
+
+                document.getElementById('overall-stats').innerHTML = `
+                    <div class="stat-card"><h3>Total de Paquetes</h3><div class="value">${formatNumber(totalPackages)}</div></div>
+                    <div class="stat-card"><h3>Tamaño Total</h3><div class="value">${formatSize(totalSize)}</div></div>
+                    <div class="stat-card"><h3>Versión</h3><div class="value" style="font-size: 1.8em;">${version.toUpperCase()}</div></div>
+                `;
+
+                globalComponentsData = components;
+                renderRecentChanges();
+
+                let componentsHTML = '';
+                for (const compName of Object.keys(components)) {
+                    componentsHTML += `
+                        <div class="component-card" id="component-${compName}">
+                            <h3>📁 ${compName}</h3>
+                            <div class="component-stats">
+                                <div class="component-stat"><span class="component-stat-label">Paquetes</span><span class="component-stat-value">${formatNumber(components[compName].total_packages)}</span></div>
+                                <div class="component-stat"><span class="component-stat-label">Tamaño</span><span class="component-stat-value">${formatSize(components[compName].total_size)}</span></div>
+                            </div>
+                            <div class="loading">Cargando paquetes...</div>
+                        </div>`;
+                }
+                document.getElementById('components').innerHTML = componentsHTML;
+
+                for (const compName of Object.keys(components)) {
+                    try {
+                        const packagesRes = await fetch(`packages_${version}_${compName}.json`);
+                        if (packagesRes.ok) {
+                            const packages = await packagesRes.json();
+                            document.getElementById(`component-${compName}`).querySelector('.loading').outerHTML = createPackageTable(packages, compName);
+                        }
+                    } catch (e) {}
+                }
+
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('content').style.display = 'block';
+            } catch (error) {
+                document.getElementById('loading').innerHTML = `<div class="error">Error: ${error.message}</div>`;
             }
         }
 
-        // Update changes when period selector changes
-        function updateChangesPeriod() {
-            renderRecentChanges();
-        }
-
-        // Sort changes table by date
-        function sortChangesByDate(componentName) {
-            const table = document.getElementById(`changes-table-${componentName}`);
-            const tbody = table.querySelector('tbody');
-            const rows = Array.from(tbody.querySelectorAll('tr'));
-            const header = table.querySelector('th.sortable');
-
-            // Determine current sort direction
-            const isDesc = header.classList.contains('desc');
-
-            // Remove all sort classes
-            header.classList.remove('asc', 'desc');
-
-            // Sort rows
-            rows.sort((a, b) => {
-                const dateA = a.getAttribute('data-date') || '';
-                const dateB = b.getAttribute('data-date') || '';
-
-                if (isDesc) {
-                    // Switch to ascending
-                    return dateA.localeCompare(dateB);
-                } else {
-                    // Switch to descending
-                    return dateB.localeCompare(dateA);
-                }
-            });
-
-            // Apply new sort class
-            header.classList.add(isDesc ? 'asc' : 'desc');
-
-            // Reorder rows in DOM
-            rows.forEach(row => tbody.appendChild(row));
-        }
-
-        // Load data when page loads
         const version = getVersion();
         loadVersionData(version);
     </script>

@@ -95,6 +95,10 @@ def save_local_status(repo_data: Dict):
     """Save local status data (overwrites with current state only)"""
     with open("local_status.json", "w") as f:
         json.dump(repo_data, f, indent=2)
+        
+    # Save to Firebase
+    import firebase_config
+    firebase_config.save_to_firebase('local_status', repo_data)
 
 def main():
     print("🔍 Fetching LliureX repository status from LOCAL network...")

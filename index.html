@@ -224,12 +224,21 @@
         </footer>
     </div>
 
-    <script>
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+        import { getDatabase, ref, get, child, query, limitToLast } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js';
+        import { firebaseConfig } from './firebase_frontend_config.js';
+
         const VERSIONS = {
             'jammy': { name: 'Ubuntu 22.04 LTS', codename: 'Jammy Jellyfish' },
             'noble': { name: 'Ubuntu 24.04 LTS', codename: 'Noble Numbat' }
         };
 
+        // ... existing format helper functions (formatSize, formatNumber, createStatusItem, createPackageCard) ...
+        // I need to copy them here because 'type="module"' creates a module scope, 
+        // but the previous script was global. 
+        // Ideally I should refactor to keep them, but 'replace' tool is tricky with partial replacements if I change the script tag type.
+        
         function formatSize(bytes) {
             if (!bytes) return 'N/A';
             const units = ['B', 'KB', 'MB', 'GB', 'TB'];
@@ -306,84 +315,128 @@
         }
 
         async function loadData() {
+            let firebaseApp = null;
+            let dbRef = null;
+
+            // Try to initialize Firebase
+            if (firebaseConfig && firebaseConfig.databaseURL) {
+                try {
+                    firebaseApp = initializeApp(firebaseConfig);
+                    const database = getDatabase(firebaseApp);
+                    dbRef = ref(database);
+                    console.log("Firebase initialized");
+                } catch (e) {
+                    console.warn("Firebase initialization failed:", e);
+                }
+            }
+
             try {
-                // Load external status (from history.json)
-                try {
-                    const historyRes = await fetch('history.json');
-                    if (historyRes.ok) {
-                        const history = await historyRes.json();
-                        if (history && history.length > 0) {
-                            const external = history[history.length - 1];
-                            document.getElementById('external-timestamp').textContent =
-                                `Última actualización: ${external.timestamp} UTC`;
-
-                            let externalHTML = '';
-                            for (const [version, info] of Object.entries(external.repos)) {
-                                externalHTML += createStatusItem(version, info);
-                            }
-                            document.getElementById('external-repos').innerHTML = externalHTML;
-                            document.getElementById('external-status').style.display = 'block';
+                // 1. Load External Status
+                let external = null;
+                if (dbRef) {
+                    try {
+                        // Get last item from history
+                        const historyQuery = query(child(dbRef, 'history'), limitToLast(1));
+                        const snapshot = await get(historyQuery);
+                        if (snapshot.exists()) {
+                            const val = snapshot.val();
+                            // val is an object with one key (the push ID)
+                            external = Object.values(val)[0];
                         }
+                    } catch (e) {
+                        console.warn("Firebase history load failed:", e);
                     }
-                } catch (e) {
-                    console.warn('Could not load external status:', e);
+                }
+                
+                // Fallback to local file
+                if (!external) {
+                    try {
+                        const res = await fetch('history.json');
+                        if (res.ok) {
+                            const history = await res.json();
+                            if (history && history.length > 0) external = history[history.length - 1];
+                        }
+                    } catch (e) { console.warn("Local history load failed", e); }
                 }
 
-                // Load local status
-                try {
-                    const localRes = await fetch('local_status.json');
-                    if (localRes.ok) {
-                        const local = await localRes.json();
-                        // Handle both formats
-                        const localData = Array.isArray(local) ? local[local.length - 1] : local;
-
-                        if (localData && localData.repos) {
-                            document.getElementById('local-timestamp').textContent =
-                                `Última actualización: ${localData.timestamp} UTC`;
-
-                            let localHTML = '';
-                            for (const [version, info] of Object.entries(localData.repos)) {
-                                localHTML += createStatusItem(version, info);
-                            }
-                            document.getElementById('local-repos').innerHTML = localHTML;
-                            document.getElementById('local-status').style.display = 'block';
-                        }
+                if (external) {
+                    document.getElementById('external-timestamp').textContent =
+                        `Última actualización: ${external.timestamp} UTC`;
+                    let externalHTML = '';
+                    for (const [version, info] of Object.entries(external.repos)) {
+                        externalHTML += createStatusItem(version, info);
                     }
-                } catch (e) {
-                    console.warn('Could not load local status:', e);
+                    document.getElementById('external-repos').innerHTML = externalHTML;
+                    document.getElementById('external-status').style.display = 'block';
                 }
 
-                // Load package state
-                try {
-                    const packagesRes = await fetch('packages_state.json');
-                    if (packagesRes.ok) {
-                        const packagesState = await packagesRes.json();
+                // 2. Load Local Status
+                let localData = null;
+                if (dbRef) {
+                    try {
+                        const snapshot = await get(child(dbRef, 'local_status'));
+                        if (snapshot.exists()) localData = snapshot.val();
+                    } catch (e) { console.warn("Firebase local_status load failed", e); }
+                }
 
-                        let cardsHTML = '';
-                        for (const version of ['jammy', 'noble']) {
-                            if (packagesState[version]) {
-                                cardsHTML += createPackageCard(version, packagesState[version]);
-                            }
+                if (!localData) {
+                    try {
+                        const res = await fetch('local_status.json');
+                        if (res.ok) {
+                            const local = await res.json();
+                            localData = Array.isArray(local) ? local[local.length - 1] : local;
                         }
+                    } catch (e) { console.warn("Local status load failed", e); }
+                }
 
-                        if (cardsHTML) {
-                            document.getElementById('package-cards').innerHTML = cardsHTML;
-                        } else {
-                            // No package data available yet
-                            document.getElementById('package-cards').innerHTML = `
-                                <div style="background: white; padding: 40px; border-radius: 10px; text-align: center; box-shadow: 0 10px 40px rgba(0,0,0,0.2);">
-                                    <p style="color: #666; font-size: 1.1em;">
-                                        📦 La información detallada de paquetes se actualizará semanalmente.
-                                    </p>
-                                </div>`;
+                if (localData && localData.repos) {
+                    document.getElementById('local-timestamp').textContent =
+                        `Última actualización: ${localData.timestamp} UTC`;
+                    let localHTML = '';
+                    for (const [version, info] of Object.entries(localData.repos)) {
+                        localHTML += createStatusItem(version, info);
+                    }
+                    document.getElementById('local-repos').innerHTML = localHTML;
+                    document.getElementById('local-status').style.display = 'block';
+                }
+
+                // 3. Load Package State
+                let packagesState = null;
+                if (dbRef) {
+                    try {
+                        const snapshot = await get(child(dbRef, 'packages_state'));
+                        if (snapshot.exists()) packagesState = snapshot.val();
+                    } catch (e) { console.warn("Firebase packages_state load failed", e); }
+                }
+
+                if (!packagesState) {
+                    try {
+                        const res = await fetch('packages_state.json');
+                        if (res.ok) packagesState = await res.json();
+                    } catch (e) { console.warn("Local packages_state load failed", e); }
+                }
+
+                if (packagesState) {
+                    let cardsHTML = '';
+                    for (const version of ['jammy', 'noble']) {
+                        if (packagesState[version]) {
+                            cardsHTML += createPackageCard(version, packagesState[version]);
                         }
                     }
-                } catch (e) {
-                    console.warn('Could not load package state:', e);
-                    // Don't show error, just hide the section
+                    if (cardsHTML) {
+                        document.getElementById('package-cards').innerHTML = cardsHTML;
+                    }
+                } else {
+                     document.getElementById('package-cards').innerHTML = `
+                        <div style="background: white; padding: 40px; border-radius: 10px; text-align: center; box-shadow: 0 10px 40px rgba(0,0,0,0.2);">
+                            <p style="color: #666; font-size: 1.1em;">
+                                📦 La información detallada de paquetes se actualizará semanalmente.
+                            </p>
+                        </div>`;
                 }
 
                 document.getElementById('loading').style.display = 'none';
+
             } catch (error) {
                 console.error('Error loading data:', error);
                 document.getElementById('loading').innerHTML =

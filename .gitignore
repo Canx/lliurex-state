@@ -1,5 +1,7 @@
 # Python
 __pycache__/
+*.pyc
+serviceAccountKey.json
 *.py[cod]
 *$py.class
 *.so
