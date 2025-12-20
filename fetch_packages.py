@@ -78,8 +78,13 @@ def parse_packages_file(content: str) -> List[Dict]:
 
     return packages
 
-def fetch_packages_for_version(version: str, component: str = "main") -> tuple[List[Dict], Optional[str]]:
-    """Fetch all packages for a specific Ubuntu version and component
+def fetch_packages_for_version(repo_version: str, dist_name: str, component: str = "main") -> tuple[List[Dict], Optional[str]]:
+    """Fetch all packages for a specific Ubuntu version/dist and component
+
+    Args:
+        repo_version: The version folder in the repo (e.g. 'jammy')
+        dist_name: The distribution name (e.g. 'jammy', 'jammy-updates')
+        component: The component name (e.g. 'main')
 
     Returns:
         tuple: (packages list, last_modified timestamp)
@@ -91,10 +96,10 @@ def fetch_packages_for_version(version: str, component: str = "main") -> tuple[L
     architectures = ["amd64", "i386", "all"]
 
     for arch in architectures:
-        url = f"{LLIUREX_BASE_URL}/{version}/dists/{version}/{component}/binary-{arch}/Packages.gz"
+        url = f"{LLIUREX_BASE_URL}/{repo_version}/dists/{dist_name}/{component}/binary-{arch}/Packages.gz"
 
         try:
-            print(f"  Fetching {component}/binary-{arch}...", end=' ')
+            print(f"  Fetching {dist_name}/{component}/binary-{arch}...", end=' ')
             response = requests.get(url, timeout=30)
 
             if response.status_code == 200:
@@ -116,6 +121,8 @@ def fetch_packages_for_version(version: str, component: str = "main") -> tuple[L
                 arch_packages = parse_packages_file(content)
                 packages.extend(arch_packages)
                 print(f"✓ {len(arch_packages)} packages")
+            elif response.status_code == 404:
+                print(f"✗ HTTP 404 (Not Found)")
             else:
                 print(f"✗ HTTP {response.status_code}")
         except Exception as e:
@@ -1186,13 +1193,27 @@ def main():
         all_packages_state[version] = {}
 
         for component in COMPONENTS:
-            print(f"\nFetching {component} packages:")
-            packages, repo_last_modified = fetch_packages_for_version(version, component)
+            print(f"\nFetching {component} packages (including updates):")
+            
+            # Fetch from base, updates, and security
+            dists_to_check = [version, f"{version}-updates", f"{version}-security"]
+            combined_packages = []
+            latest_modified = None
 
-            if packages:
-                if repo_last_modified:
-                    print(f"  Repository last modified: {repo_last_modified}")
-                summary = get_package_summary(packages, version, component, repo_last_modified)
+            for dist in dists_to_check:
+                packages, repo_last_modified = fetch_packages_for_version(version, dist, component)
+                if packages:
+                    combined_packages.extend(packages)
+                    # Keep the most recent timestamp found
+                    if repo_last_modified:
+                        if not latest_modified or repo_last_modified > latest_modified:
+                            latest_modified = repo_last_modified
+
+            if combined_packages:
+                if latest_modified:
+                    print(f"  Repository last modified (newest): {latest_modified}")
+                
+                summary = get_package_summary(combined_packages, version, component, latest_modified)
                 components_data[component] = summary
 
                 # Store current state
