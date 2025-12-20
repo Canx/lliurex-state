@@ -568,14 +568,46 @@
                 }
                 document.getElementById('components').innerHTML = componentsHTML;
 
-                for (const compName of Object.keys(components)) {
-                    try {
-                        const packagesRes = await fetch(`packages_${version}_${compName}.json`);
-                        if (packagesRes.ok) {
-                            const packages = await packagesRes.json();
-                            document.getElementById(`component-${compName}`).querySelector('.loading').outerHTML = createPackageTable(packages, compName);
+                // Load full package lists from separate files
+                for (const [compName, compData] of Object.entries(components)) {
+                    let packages = null;
+                    
+                    // 1. Try Firebase first
+                    if (dbRef) {
+                         try {
+                            const snapshot = await get(child(dbRef, `packages_full/${version}/${compName}`));
+                            if (snapshot.exists()) packages = snapshot.val();
+                        } catch (e) { console.warn(`Firebase load failed for ${compName}`, e); }
+                    }
+                    
+                    // 2. Fallback to local file
+                    if (!packages) {
+                        try {
+                            const packagesFile = `packages_${version}_${compName}.json`;
+                            const packagesRes = await fetch(packagesFile);
+                            if (packagesRes.ok) {
+                                packages = await packagesRes.json();
+                            }
+                        } catch (e) {}
+                    }
+
+                    if (packages) {
+                        const componentDiv = document.getElementById(`component-${compName}`);
+                        if (componentDiv) {
+                            const loadingDiv = componentDiv.querySelector('.loading');
+                            if (loadingDiv) loadingDiv.outerHTML = createPackageTable(packages, compName);
                         }
-                    } catch (e) {}
+                    } else {
+                        // Fallback to latest_packages if separate file not available
+                        const componentDiv = document.getElementById(`component-${compName}`);
+                        if (componentDiv) {
+                            const loadingDiv = componentDiv.querySelector('.loading');
+                            if (loadingDiv) loadingDiv.outerHTML = createPackageTable(
+                                compData.latest_packages || [],
+                                compName
+                            );
+                        }
+                    }
                 }
 
                 document.getElementById('loading').style.display = 'none';

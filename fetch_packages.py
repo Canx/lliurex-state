@@ -1257,6 +1257,13 @@ def main():
                 with open(filename, "w") as pf:
                     json.dump(packages, pf, indent=2)
                 print(f"  ✓ Saved {filename} ({len(packages)} packages)")
+                
+                # Save full list to Firebase (under a separate node to avoid loading it with the summary)
+                try:
+                    import firebase_config
+                    firebase_config.save_to_firebase(f"packages_full/{version}/{comp_name}", packages)
+                except Exception as e:
+                    print(f"  ⚠️ Could not save {filename} to Firebase: {e}")
 
     with open("packages_state.json", "w") as f:
         json.dump(versions_summary_light, f, indent=2)

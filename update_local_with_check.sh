@@ -17,7 +17,7 @@ git pull >> "$LOG_FILE" 2>&1
 
 # Update local status
 echo "Updating local status..." >> "$LOG_FILE"
-/usr/bin/python3 update_status_local.py >> "$LOG_FILE" 2>&1
+python3 update_status_local.py >> "$LOG_FILE" 2>&1
 
 # Check if there are actual changes in local_status.json
 if git diff --quiet local_status.json 2>/dev/null; then
