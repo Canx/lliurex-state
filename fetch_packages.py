@@ -1175,6 +1175,17 @@ def generate_index_page(versions_summary: Dict, status_data: Optional[Dict] = No
 
     return html
 
+def sanitize_keys_for_firebase(data):
+    """Recursively replace dots in keys with commas for Firebase compatibility"""
+    if isinstance(data, dict):
+        new_data = {}
+        for k, v in data.items():
+            # Replace forbidden characters in Firebase keys
+            new_key = k.replace('.', ',').replace('$', '_').replace('#', '_').replace('[', '(').replace(']', ')')
+            new_data[new_key] = sanitize_keys_for_firebase(v)
+        return new_data
+    return data
+
 def main():
     print("🔍 Fetching package information from LliureX repositories...\n")
 
@@ -1293,6 +1304,15 @@ def main():
     # Save to Firebase
     import firebase_config
     firebase_config.save_to_firebase('packages_state', versions_summary_light)
+    
+    # Save timestamps to Firebase (needed for version.html)
+    try:
+        all_timestamps = load_change_timestamps()
+        # Sanitize keys (replace . with ,) because Firebase doesn't allow . in keys
+        sanitized_timestamps = sanitize_keys_for_firebase(all_timestamps)
+        firebase_config.save_to_firebase('changes_timestamps', sanitized_timestamps)
+    except Exception as e:
+        print(f"  ⚠️ Could not save changes_timestamps to Firebase: {e}")
 
     # HTML generation removed - pages now load data dynamically via JavaScript
     # print(f"\n{'='*60}")

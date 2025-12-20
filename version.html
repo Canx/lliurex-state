@@ -450,12 +450,23 @@
             }
             let allChanges = [];
             
-            // Try to load timestamps from local first (they are small)
+            // Try to load timestamps
             if (!globalTimestamps) {
-                try {
-                    const tsRes = await fetch('changes_timestamps.json');
-                    if (tsRes.ok) globalTimestamps = await tsRes.json();
-                } catch (e) {}
+                // 1. Try Firebase first
+                if (dbRef) {
+                     try {
+                        const snapshot = await get(child(dbRef, 'changes_timestamps'));
+                        if (snapshot.exists()) globalTimestamps = snapshot.val();
+                    } catch (e) { console.warn("Firebase timestamps load failed", e); }
+                }
+
+                // 2. Fallback to local
+                if (!globalTimestamps) {
+                    try {
+                        const tsRes = await fetch('changes_timestamps.json');
+                        if (tsRes.ok) globalTimestamps = await tsRes.json();
+                    } catch (e) {}
+                }
             }
 
             if (!globalTimestamps || !globalTimestamps[globalVersion]) {
@@ -473,7 +484,14 @@
                         const packages = await packagesRes.json();
                         for (const pkg of packages) {
                             const pkgKey = `${pkg.Package}:${pkg.Version}`;
-                            const timestamp = componentTimestamps[pkgKey];
+                            // Try exact key first, then sanitized key (Firebase doesn't allow dots in keys)
+                            let timestamp = componentTimestamps[pkgKey];
+                            
+                            if (!timestamp) {
+                                const sanitizedKey = pkgKey.replace(/\./g, ',').replace(/\$/g, '_').replace(/#/g, '_').replace(/\[/g, '(').replace(/\]/g, ')');
+                                timestamp = componentTimestamps[sanitizedKey];
+                            }
+
                             if (timestamp) {
                                 const pkgDate = timestamp.split(' ')[0];
                                 if (!cutoffStr || pkgDate >= cutoffStr) {
